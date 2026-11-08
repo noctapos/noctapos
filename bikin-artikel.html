@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bikin Artikel | NoctaPOS</title>
+<style>
+:root{--paper:#F4F2EC;--ink:#0B1933;--em:#12A97E;--mut:rgba(11,25,51,.65);--bd:rgba(11,25,51,.14)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header.top{padding:22px 24px;background:var(--ink);color:#fff}
+header.top h1{margin:0;font-size:22px}header.top p{margin:4px 0 0;opacity:.75;font-size:14px}
+.app{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;max-width:1280px;margin:0 auto;padding:22px}
+@media(max-width:900px){.app{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:20px}
+.card h2{margin:0 0 14px;font-size:17px}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 5px}
+label small{font-weight:400;color:var(--mut)}
+input,select,textarea{width:100%;font:inherit;padding:11px 12px;border:1.5px solid var(--bd);border-radius:12px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:3px solid rgba(18,169,126,.35);border-color:var(--em)}
+textarea{min-height:260px;resize:vertical;line-height:1.55}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.row{grid-template-columns:1fr}}
+.tb{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.tb button,.btn{font:inherit;font-weight:700;border:0;border-radius:99px;padding:9px 16px;cursor:pointer}
+.tb button{background:#eef2f1;color:var(--ink)}.tb button:hover{background:#dfe8e5}
+.btn{background:var(--em);color:#fff;padding:12px 22px}.btn:hover{filter:brightness(1.07)}
+.btn.dark{background:var(--ink)}.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--bd)}
+.hint{font-size:13px;color:var(--mut);margin-top:6px}
+.hint code{background:#eef2f1;padding:1px 6px;border-radius:6px}
+.rel{display:grid;gap:6px;max-height:210px;overflow:auto;border:1.5px solid var(--bd);border-radius:12px;padding:10px}
+.rel label{display:flex;gap:10px;align-items:flex-start;font-weight:500;margin:0;font-size:14px}
+.rel input{width:auto;margin-top:4px}
+.msg{margin-top:12px;padding:10px 14px;border-radius:12px;font-size:14px;display:none}
+.msg.err{display:block;background:#fde2e2;color:#9b1c1c}.msg.ok{display:block;background:#dcf5ea;color:#0b6b4b}
+iframe{width:100%;height:560px;border:1px solid var(--bd);border-radius:14px;background:#fff}
+.steps{margin:12px 0 0;padding-left:20px;font-size:14.5px}.steps li{margin:6px 0}
+pre{margin:10px 0 0;background:#0f1b33;color:#d7e6e1;padding:12px;border-radius:12px;font-size:12px;max-height:150px;overflow:auto;white-space:pre-wrap;word-break:break-all}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.link{background:none;border:0;color:var(--mut);text-decoration:underline;cursor:pointer;font:inherit;font-size:13px;padding:0;margin-top:8px}
+</style></head><body>
+<header class="top"><h1>Bikin Artikel NoctaPOS</h1><p>Isi form, klik tombol, dapat file artikel + kode kartunya. Taruh file ini di folder Web (sejajar index.html) supaya preview-nya pakai desain asli.</p></header>
+<div class="app">
+<section class="card">
+  <h2>1. Isi artikel</h2>
+  <label for="title">Judul</label><input id="title" placeholder="Contoh: Cara Hitung Margin Pulsa yang Benar">
+  <label for="lead">Ringkasan <small>(1–2 kalimat; dipakai di bawah judul, kartu, dan Google)</small></label>
+  <textarea id="lead" style="min-height:80px" placeholder="Ringkasan singkat artikel..."></textarea>
+  <div class="row">
+    <div><label for="cat">Kategori</label>
+      <select id="cat"><option>Kas &amp; Keuangan</option><option>Stok &amp; Kulakan</option><option>Tim &amp; Absensi</option><option>Fitur &amp; Panduan</option></select></div>
+    <div><label for="date">Tanggal terbit</label><input id="date" type="date"></div>
+  </div>
+  <div class="row">
+    <div><label for="t1">Tag 1 <small>(opsional)</small></label><input id="t1" placeholder="Contoh: Kas Laci"></div>
+    <div><label for="t2">Tag 2 <small>(opsional)</small></label><input id="t2" placeholder="Contoh: BRILink"></div>
+  </div>
+  <label for="icon">Gambar sampul</label>
+  <select id="icon">
+    <option value="0">Dokumen (hijau)</option><option value="1">Kotak stok (oranye)</option><option value="2">Toko / laci (biru)</option>
+    <option value="3">Tim (ungu)</option><option value="4">Grafik (tosca)</option><option value="5">Pengaturan (abu)</option>
+  </select>
+  <label for="body">Isi artikel</label>
+  <div class="tb">
+    <button type="button" data-t="h">Subjudul</button><button type="button" data-t="ul">Daftar poin</button>
+    <button type="button" data-t="b">Tebal</button><button type="button" data-t="a">Tautan</button>
+  </div>
+  <textarea id="body" placeholder="Tulis artikel di sini. Pisahkan paragraf dengan satu baris kosong."></textarea>
+  <p class="hint">Cara nulis: paragraf dipisah <b>baris kosong</b>. Subjudul: awali <code>## </code>. Daftar: awali tiap baris <code>- </code> (atau <code>1. </code>). Tebal: <code>**teks**</code>. Tautan: <code>[teks](https://...)</code>.</p>
+  <label>Artikel terkait <small>(maks. 2, opsional)</small></label>
+  <div class="rel" id="rel"></div>
+  <button class="link" id="resetExtra" type="button">Hapus daftar artikel tambahan buatan tool ini</button>
+</section>
+
+<section>
+  <div class="card">
+    <h2>2. Preview</h2>
+    <iframe id="pv" title="Preview artikel"></iframe>
+    <div class="acts"><button class="btn ghost" id="refresh" type="button">Perbarui preview</button></div>
+  </div>
+  <div class="card" style="margin-top:22px">
+    <h2>3. Simpan hasilnya</h2>
+    <label for="fname">Nama file <small>(otomatis dari judul, boleh diubah)</small></label>
+    <input id="fname" placeholder="artikel-nama-artikel.html">
+    <div class="acts">
+      <button class="btn" id="dl" type="button">Download file artikel</button>
+      <button class="btn dark" id="cp" type="button">Salin kode kartu</button>
+    </div>
+    <div class="msg" id="msg"></div>
+    <ol class="steps">
+      <li>Pindahkan file yang terdownload ke folder <b>artikel/</b>.</li>
+      <li>Buka <b>artikel.html</b> di VS Code, tekan Ctrl+F, cari <code>id="blogGrid"&gt;</code>, lalu <b>paste kode kartu tepat setelahnya</b>.</li>
+      <li>Simpan, buka di browser, cek. Selesai.</li>
+    </ol>
+    <pre id="cardOut">(kode kartu muncul di sini)</pre>
+  </div>
+</section>
+</div>
+
+<script>
+/*CORE*/
+var ICONS=[
+ 'M4 2h8v12H4zM6 5h4M6 8h4',
+ 'M2 5l6-3 6 3v7l-6 3-6-3zM2 5l6 3 6-3M8 8v7',
+ 'M2 6l1-3h10l1 3v1a2 2 0 01-4 0 2 2 0 01-4 0 2 2 0 01-4 0zM3 9v5h10V9',
+ 'M6 8a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM1.5 14a4.5 4.5 0 019 0M11 6a2 2 0 100-4M12 9.5a4 4 0 012.5 4.5',
+ 'M2 13V3M2 13h12M5 10l3-3 2 2 4-5',
+ 'M8 10a2 2 0 100-4 2 2 0 000 4zM8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.5 1.5M11.5 11.5L13 13M3 13l1.5-1.5M11.5 4.5L13 3'];
+var BULAN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+/* artikel yang sudah ada (untuk pilihan "artikel terkait") */
+var EXISTING=[
+ {file:'artikel-kulakan-berdasarkan-data.html',title:'Kulakan Pulsa dan Aksesori Berdasarkan Data, Bukan Firasat',desc:'Barang yang terasa laku belum tentu paling menghasilkan. Begini cara membaca data penjualan sebelum belanja stok.',cat:'Stok & Kulakan',tags:['Stok','Analisis AI'],g:1,date:'24 Okt 2026',min:4},
+ {file:'artikel-batas-minimum-uang-laci.html',title:'Kenapa Konter BRILink Perlu Batas Minimum Uang Laci',desc:'Pelanggan datang untuk tarik tunai besar, tetapi uang di laci tidak cukup. Peringatan dini mencegah hal itu.',cat:'Kas & Keuangan',tags:['Notifikasi','BRILink'],g:2,date:'21 Okt 2026',min:3},
+ {file:'artikel-absensi-gps-konter.html',title:'Absensi GPS untuk Konter: Menutup Celah Kehadiran',desc:'Absensi manual mudah dimanipulasi. Lokasi GPS dan kasir yang terkunci sebelum absen membuat jadwal lebih tertib.',cat:'Tim & Absensi',tags:['Absensi','Karyawan'],g:3,date:'18 Okt 2026',min:3},
+ {file:'artikel-kpi-bonus-adil.html',title:'Menyusun KPI Sederhana dan Bonus yang Adil untuk Karyawan Toko',desc:'KPI tidak harus rumit. Tiga sampai lima indikator sudah cukup untuk menilai karyawan konter.',cat:'Tim & Absensi',tags:['KPI','Gaji'],g:4,date:'14 Okt 2026',min:4},
+ {file:'artikel-kasir-offline-pwa.html',title:'Jualan Tetap Jalan Saat Sinyal Mati: Cara Kerja Kasir Offline',desc:'Sinyal di konter tidak selalu stabil. Aplikasi kasir yang offline-first membuat transaksi tetap tercatat.',cat:'Fitur & Panduan',tags:['Offline','PWA'],g:5,date:'10 Okt 2026',min:3}
+];
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function inline(s){
+  s=esc(s);
+  s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  return s;
+}
+function bodyHTML(txt){
+  var out=[];
+  txt.replace(/\r/g,'').trim().split(/\n\s*\n/).forEach(function(b){
+    var lines=b.split('\n').map(function(l){return l.trim()}).filter(Boolean);
+    if(!lines.length)return;
+    if(/^##\s+/.test(lines[0])){out.push('<h2>'+inline(lines[0].replace(/^##\s+/,''))+'</h2>');lines=lines.slice(1);if(!lines.length)return}
+    if(lines.every(function(l){return /^[-*]\s+/.test(l)}))
+      out.push('<ul>'+lines.map(function(l){return '<li>'+inline(l.replace(/^[-*]\s+/,''))+'</li>'}).join('')+'</ul>');
+    else if(lines.every(function(l){return /^\d+[.)]\s+/.test(l)}))
+      out.push('<ol>'+lines.map(function(l){return '<li>'+inline(l.replace(/^\d+[.)]\s+/,''))+'</li>'}).join('')+'</ol>');
+    else out.push('<p>'+inline(lines.join(' '))+'</p>');
+  });
+  return out.join('');
+}
+function slugify(t){
+  var s=String(t).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  return 'artikel-'+(s.slice(0,60).replace(/-+$/,'')||'baru')+'.html';
+}
+function fmtDate(v){var p=(v||'').split('-');if(p.length<3)return '';return (+p[2])+' '+BULAN[+p[1]-1]+' '+p[0]}
+function readMin(text){var w=(text.match(/\S+/g)||[]).length;return Math.max(1,Math.ceil(w/200))}
+function cardHTML(a,href){
+  var tg=(a.tags||[]).map(function(t,i){return '<span class="tg t'+((a.g+i)%5)+'">'+esc(t)+'</span>'}).join('');
+  return '<a class="am-card " href="'+href+'" data-cat="'+esc(a.cat)+'"><div class="am-img g'+a.g+'"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width=".7" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICONS[a.g]+'"/></svg></div><div class="am-body"><div class="am-tags">'+tg+'</div><h3>'+esc(a.title)+'</h3><p>'+esc(a.desc)+'</p><small>'+esc(a.date)+' &middot; '+a.min+' menit baca</small></div></a>';
+}
+var SC='scr'+'ipt';
+function pageHTML(a,bodyTxt,related,pre,preview){
+  var rel=related.length?'<h3 class="rel-h">Artikel terkait</h3><div class="am-grid">'+related.map(function(r){return cardHTML(r,r.file)}).join('')+'</div>':'';
+  return '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>\n'
++'<title>'+esc(a.title)+' | NoctaPOS</title><meta name="description" content="'+esc(a.desc)+'"/>\n'
++'<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2716%27 fill=%27%230B1933%27/%3E%3C/svg%3E"/>\n'
++'<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet"/>\n'
++'<link rel="stylesheet" href="'+pre+'assets/css/site.css">'+(preview?'<style>a{pointer-events:none}</style>':'')+'</head><body>\n'
++'<div class="header-wrap">\n    <header class="navbar">\n      <a href="'+pre+'index.html#" aria-label="NoctaPOS Beranda">\n'
++'        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" height="36" style="display:block;width:auto">\n          <g transform="translate(40,40) scale(0.625)">\n'
++'            <rect x="16" y="16" width="480" height="480" rx="120" fill="#0B1933"/>\n'
++'            <path d="M115 110L175 110 175 220 337 402 397 402 397 200 337 220 337 300 175 110Z" fill="#fff"/>\n'
++'            <rect x="115" y="110" width="60" height="292" fill="#fff"/>\n            <rect x="337" y="200" width="60" height="202" fill="#fff"/>\n'
++'            <polygon points="205,110 310,110 280,215" fill="#0FAF80"/>\n            <polygon points="310,110 397,200 310,200" fill="#12A97E"/>\n          </g>\n'
++'          <text x="420" y="245" font-family="Bricolage Grotesque, system-ui, sans-serif" font-size="145" font-weight="800" letter-spacing="-3">\n'
++'            <tspan fill="#0B1933">Nocta</tspan><tspan fill="#12A97E">POS</tspan>\n          </text>\n        </svg>\n      </a>\n\n'
++'      <nav class="nav-links"><a href="'+pre+'index.html#beranda" >Beranda</a><a href="'+pre+'index.html#day">Simulasi Harian</a><a href="'+pre+'index.html#kenapa">Kenapa NoctaPOS</a><a href="'+pre+'index.html#harga">Harga</a><a href="'+pre+'index.html#artikel">Artikel</a><a href="'+pre+'index.html#faq">FAQ</a></nav>\n\n'
++'      <div class="nav-actions">\n        <a data-app="masuk" href="'+pre+'index.html" class="nav-login">Login</a>\n'
++'        <a data-app="daftar" href="'+pre+'Daftar.html" class="btn btn-em" style="padding: 10px 20px; font-size: 14px;">\n          <span>Coba Gratis</span>\n          <span>&rarr;</span>\n        </a>\n      </div>\n    </header>\n  </div>\n'
++'<main><div class="wrap sub"><article class="post"><nav class="crumb"><a href="'+pre+'artikel.html">Artikel</a> &rsaquo; '+esc(a.cat)+'</nav><h1>'+esc(a.title)+'</h1><p class="meta">'+esc(a.date)+' &middot; '+a.min+' menit baca</p>'
++'<div class="am-img g'+a.g+'"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width=".7" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICONS[a.g]+'"/></svg></div>'
++'<p class="lead">'+esc(a.desc)+'</p>'+bodyHTML(bodyTxt)
++'<div class="post-cta"><b>Rapikan kas dan stok toko dengan NoctaPOS.</b><a data-app="daftar" href="'+pre+'Daftar.html" class="btn btn-em">Coba Gratis</a></div></article>'+rel+'</div></main>\n'
++'<footer><div class="wrap"><div class="foot-grid">\n'
++'<div><b style="font-size:22px">NoctaPOS</b><p>Aplikasi kasir untuk konter pulsa dan agen BRILink. Kas cocok, stok jelas, tetap jalan saat offline.</p></div>\n'
++'<div class="foot-col"><h4>Produk</h4><ul><li><a href="'+pre+'fitur.html">Fitur lengkap</a></li><li><a href="'+pre+'index.html#harga">Harga &amp; paket</a></li><li><a href="'+pre+'bandingkan.html">Perbandingan</a></li><li><a href="'+pre+'index.html#day">Simulasi harian</a></li></ul></div>\n'
++'<div class="foot-col"><h4>Belajar</h4><ul><li><a href="'+pre+'artikel.html">Artikel</a></li><li><a href="'+pre+'index.html#faq">FAQ</a></li></ul></div>\n'
++'<div class="foot-col"><h4>Mulai</h4><ul><li><a data-app="daftar" href="'+pre+'Daftar.html">Coba gratis</a></li><li><a data-app="masuk" href="'+pre+'index.html">Login</a></li></ul></div>\n'
++'</div><div class="foot-bot" style="padding-top:24px;font-size:13.5px;opacity:.7">&copy; 2026 NoctaPOS</div></div></footer>'
++(preview?'':'<'+SC+' src="'+pre+'assets/js/site.js"></'+SC+'>')+'</body></html>';
+}
+/*ENDCORE*/
+
+/* ---------- antarmuka ---------- */
+var $=function(i){return document.getElementById(i)};
+var KEY='nocta_artikel_tambahan';
+function loadExtra(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+function saveExtra(list){try{localStorage.setItem(KEY,JSON.stringify(list))}catch(e){}}
+var fnameTouched=false, selected=[];
+
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+$('date').value=today();
+
+function renderRel(){
+  var all=loadExtra().concat(EXISTING), box=$('rel');
+  box.innerHTML='';
+  all.forEach(function(a){
+    var l=document.createElement('label'),c=document.createElement('input');
+    c.type='checkbox';c.value=a.file;c.checked=selected.indexOf(a.file)>-1;
+    c.addEventListener('change',function(){
+      selected=[].slice.call(box.querySelectorAll('input:checked')).map(function(x){return x.value});
+      limitRel();preview();
+    });
+    l.appendChild(c);l.appendChild(document.createTextNode(a.title));box.appendChild(l);
+  });
+  limitRel();
+}
+function limitRel(){
+  var boxes=$('rel').querySelectorAll('input'),n=$('rel').querySelectorAll('input:checked').length;
+  [].forEach.call(boxes,function(b){b.disabled=n>=2&&!b.checked});
+}
+function current(){
+  var tags=[$('t1').value.trim(),$('t2').value.trim()].filter(Boolean);
+  var lead=$('lead').value.trim(),body=$('body').value;
+  return {
+    a:{file:$('fname').value.trim(),title:$('title').value.trim()||'Judul artikel',desc:lead||'Ringkasan artikel.',cat:$('cat').value,tags:tags,g:+$('icon').value,date:fmtDate($('date').value)||fmtDate(today()),min:readMin(lead+' '+body)},
+    body:body||'Isi artikel akan tampil di sini.'
+  };
+}
+function relatedList(){
+  var all=loadExtra().concat(EXISTING);
+  return selected.map(function(f){return all.filter(function(a){return a.file===f})[0]}).filter(Boolean);
+}
+var timer;
+function preview(){
+  clearTimeout(timer);
+  timer=setTimeout(function(){var c=current();$('pv').srcdoc=pageHTML(c.a,c.body,relatedList(),'',true)},350);
+}
+function msg(t,ok){var m=$('msg');m.textContent=t;m.className='msg '+(ok?'ok':'err')}
+function validate(){
+  if(!$('title').value.trim()){msg('Judul belum diisi.');return false}
+  if(!$('lead').value.trim()){msg('Ringkasan belum diisi.');return false}
+  if(!$('body').value.trim()){msg('Isi artikel masih kosong.');return false}
+  var f=$('fname').value.trim();
+  if(!/^[a-z0-9][a-z0-9-]*\.html$/.test(f)){msg('Nama file harus huruf kecil/angka/minus dan berakhiran .html');return false}
+  return true;
+}
+function cardOutput(){var c=current();return cardHTML(c.a,'artikel/'+c.a.file)}
+function refreshCard(){if($('title').value.trim())$('cardOut').textContent=cardOutput()}
+
+$('title').addEventListener('input',function(){
+  if(!fnameTouched)$('fname').value=$('title').value.trim()?slugify($('title').value):'';
+});
+$('fname').addEventListener('input',function(){fnameTouched=true});
+['title','lead','body','cat','date','t1','t2','icon','fname'].forEach(function(i){
+  $(i).addEventListener('input',function(){preview();refreshCard()});
+  $(i).addEventListener('change',function(){preview();refreshCard()});
+});
+$('refresh').addEventListener('click',function(){var c=current();$('pv').srcdoc=pageHTML(c.a,c.body,relatedList(),'',true)});
+
+$('dl').addEventListener('click',function(){
+  if(!validate())return;
+  var c=current(),html=pageHTML(c.a,c.body,relatedList(),'../',false);
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=c.a.file;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000);
+  var extra=loadExtra().filter(function(x){return x.file!==c.a.file});extra.unshift(c.a);saveExtra(extra);renderRel();
+  $('cardOut').textContent=cardOutput();
+  msg('File '+c.a.file+' terdownload. Pindahkan ke folder artikel/, lalu tempel kode kartu ke artikel.html.',true);
+});
+$('cp').addEventListener('click',function(){
+  if(!validate())return;
+  var t=cardOutput();$('cardOut').textContent=t;
+  function ok(){msg('Kode kartu tersalin. Paste tepat setelah id="blogGrid"> di artikel.html.',true)}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){fallback()});else fallback();
+  function fallback(){var r=document.createRange();r.selectNodeContents($('cardOut'));var s=getSelection();s.removeAllRanges();s.addRange(r);msg('Kode kartu sudah diblok di kotak bawah. Tekan Ctrl+C untuk menyalin.',true)}
+});
+$('resetExtra').addEventListener('click',function(){if(confirm('Hapus daftar artikel tambahan yang diingat tool ini? (File artikel aslinya tidak terhapus)')){saveExtra([]);selected=[];renderRel();preview()}});
+
+/* toolbar */
+$('body').previousElementSibling.addEventListener('click',function(e){
+  var t=e.target.getAttribute('data-t');if(!t)return;
+  var ta=$('body'),s=ta.selectionStart,en=ta.selectionEnd,v=ta.value,sel=v.slice(s,en),ins;
+  function lineStart(p){return v.lastIndexOf('\n',p-1)+1}
+  if(t==='b'){ins='**'+(sel||'teks tebal')+'**';ta.value=v.slice(0,s)+ins+v.slice(en)}
+  else if(t==='a'){var u=prompt('Alamat tautan (https://...)');if(!u)return;ins='['+(sel||'teks tautan')+']('+u+')';ta.value=v.slice(0,s)+ins+v.slice(en)}
+  else{var mark=t==='h'?'## ':'- ',ls=lineStart(s);
+    if(t==='h'&&s===en&&v.slice(ls,s).trim()===''&&v.slice(s).split('\n')[0].trim()===''){ta.value=v.slice(0,ls)+'## Subjudul'+v.slice(ls);ta.focus();ta.setSelectionRange(ls+3,ls+11);preview();return}
+    ta.value=v.slice(0,ls)+mark+v.slice(ls)}
+  ta.focus();preview();
+});
+
+renderRel();preview();
+</script>
+</body></html>
