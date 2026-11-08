@@ -461,3 +461,48 @@ $$('.chip').forEach(c=>c.addEventListener('click',()=>{$$('.chip').forEach(x=>x.
   window.addEventListener('hashchange', function () { select(location.hash.slice(1), false, false); });
   select(location.hash.slice(1), false, false);
 })();
+
+
+/* Storyboard di HP: ketuk gambar untuk memperbesar (teks di dalam gambar kecil) */
+(function () {
+  'use strict';
+  var board = document.getElementById('sb');
+  var frame = board && board.querySelector('.sb-frame');
+  if (!frame) return;
+  var mq = window.matchMedia('(max-width:720px)');
+  var box = document.createElement('div');
+  box.className = 'sb-zoom';
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', 'Gambar storyboard diperbesar');
+  box.innerHTML = '<button type="button" aria-label="Tutup">&times;</button><img alt=""><p>Geser untuk melihat, cubit untuk zoom</p>';
+  document.body.appendChild(box);
+  var img = box.querySelector('img'), closeBtn = box.querySelector('button');
+  var pausedByZoom = false;
+
+  function open() {
+    var cur = frame.querySelector('.sb-slide.on');
+    var im = cur && cur.querySelector('img');
+    if (!im || cur.classList.contains('is-missing')) return;
+    img.src = im.currentSrc || im.src;
+    img.alt = im.alt;
+    box.classList.add('on');
+    document.body.classList.add('sb-lock');
+    box.scrollTop = 0; box.scrollLeft = 0;
+    /* jeda autoplay selama gambar dibuka */
+    var play = document.getElementById('sbPlay');
+    if (play && !board.classList.contains('paused')) { play.click(); pausedByZoom = true; }
+    closeBtn.focus();
+  }
+  function close() {
+    box.classList.remove('on');
+    document.body.classList.remove('sb-lock');
+    var play = document.getElementById('sbPlay');
+    if (pausedByZoom && play && board.classList.contains('paused')) play.click();
+    pausedByZoom = false;
+  }
+  frame.addEventListener('click', function () { if (mq.matches) open(); });
+  closeBtn.addEventListener('click', close);
+  box.addEventListener('click', function (e) { if (e.target === box) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && box.classList.contains('on')) close(); });
+})();
