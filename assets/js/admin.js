@@ -9,7 +9,7 @@
 
   function gate() {
     var ok = sessionStorage.getItem('nocta_admin_ok') === '1';
-    $('#login').hidden = ok; $('#panel').hidden = !ok;
+    $('#login').hidden = ok; $('#panel').hidden = !ok; $('#logout').hidden = !ok;
     if (ok && !q) init();
   }
   $('#loginForm').addEventListener('submit', function (e) {
@@ -32,9 +32,11 @@
   }
   function renderList() {
     S.list().then(function (l) {
+      var pub = l.filter(function (x) { return x.status === 'published'; }).length;
+      $('#stAll').textContent = l.length; $('#stPub').textContent = pub; $('#stDr').textContent = l.length - pub;
       $('#cats').innerHTML = l.map(function (a) { return '<option value="' + esc(a.category) + '">'; }).join('');
       $('#list').innerHTML = l.length ? l.map(function (a) {
-        return '<div class="row"><div><b>' + esc(a.title) + '</b><small>' + (a.status === 'published' ? 'Terbit' : 'Draft') + ' &middot; ' + esc(a.category) + '</small></div><div class="acts">' +
+        return '<div class="row"><div><b>' + esc(a.title) + '</b><small><span class="pill ' + (a.status === 'published' ? 'ok">Terbit' : 'dr">Draft') + '</span>' + esc(a.category) + '</small></div><div class="acts">' +
           (a.status === 'published' ? '<a href="' + esc(a.legacyUrl || 'detail.html?slug=' + encodeURIComponent(a.slug)) + '" target="_blank">Lihat</a>' : '') +
           '<button type="button" data-e="' + a.id + '">Edit</button><button type="button" data-d="' + a.id + '">Hapus</button></div></div>';
       }).join('') : '<p>Belum ada artikel.</p>';
