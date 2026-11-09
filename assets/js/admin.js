@@ -5,7 +5,7 @@
   var q, cur = null, slugTouched = false;
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function slugify(t) { return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80); }
-  function msg(t, ok) { var m = $('#msg'); m.textContent = t; m.style.color = ok ? '#0b8a5e' : '#c0392b'; }
+  function msg(t, ok) { var m = $('#msg'); m.textContent = t; m.className = t ? (ok ? 'ok' : 'err') : ''; }
 
   function gate() {
     var ok = sessionStorage.getItem('nocta_admin_ok') === '1';
@@ -32,8 +32,6 @@
   }
   function renderList() {
     S.list().then(function (l) {
-      var pub = l.filter(function (x) { return x.status === 'published'; }).length;
-      $('#stAll').textContent = l.length; $('#stPub').textContent = pub; $('#stDr').textContent = l.length - pub;
       $('#cats').innerHTML = l.map(function (a) { return '<option value="' + esc(a.category) + '">'; }).join('');
       $('#list').innerHTML = l.length ? l.map(function (a) {
         return '<div class="row"><div><b>' + esc(a.title) + '</b><small><span class="pill ' + (a.status === 'published' ? 'ok">Terbit' : 'dr">Draft') + '</span>' + esc(a.category) + '</small></div><div class="acts">' +
