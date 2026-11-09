@@ -1,65 +1,65 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="robots" content="noindex,nofollow" /><meta name="color-scheme" content="light only" /><title>Ruang Redaksi — NoctaPOS</title>
+<meta name="robots" content="noindex,nofollow" /><meta name="color-scheme" content="light only" /><title>Admin Artikel — NoctaPOS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" />
 <style>
-:root{color-scheme:light only;--paper:#F4F2EC;--ink:#0B1933;--em:#12A97E;--em-soft:rgba(18,169,126,.12);--warn:#F2B544;--warn-soft:rgba(242,181,68,.2);--muted:rgba(11,25,51,.66);--bd:rgba(11,25,51,.12);--bds:rgba(11,25,51,.22);--shadow:0 12px 32px -8px rgba(11,25,51,.08),0 2px 6px rgba(11,25,51,.04);--mono:'IBM Plex Mono',ui-monospace,monospace;--hand:'Caveat',cursive;--disp:'Bricolage Grotesque',system-ui,sans-serif}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;font-family:Poppins,system-ui,sans-serif;color:var(--ink);background:radial-gradient(900px 420px at 85% -80px,rgba(18,169,126,.16),transparent 70%),radial-gradient(700px 380px at -5% 0,rgba(11,25,51,.07),transparent 70%),var(--paper);min-height:100vh}
-.top{position:sticky;top:12px;z-index:5;max-width:1120px;margin:12px auto 0;padding:0 14px}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border:1.5px solid var(--bd);border-radius:99px;height:60px;padding:0 10px 0 20px;box-shadow:var(--shadow)}
-.bar .l{display:flex;align-items:center;gap:12px}.badge{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:#fff;padding:5px 11px;border-radius:99px}
-.wrap{max-width:1120px;margin:0 auto;padding:30px 14px 80px}
-h1{font:800 clamp(30px,4.6vw,46px)/1.05 var(--disp);letter-spacing:-.03em;margin:0}h2{font:700 20px var(--disp);margin:0}
-.hand{font:700 26px var(--hand);color:var(--em);display:block;margin-bottom:4px;transform:rotate(-2deg);transform-origin:left}
-.sub{color:var(--muted);margin:10px 0 0;font-size:16px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
-.st{background:#fff;border:1.5px solid var(--bd);border-radius:22px;padding:16px 20px;box-shadow:var(--shadow)}.st b{display:block;font:800 34px var(--disp);letter-spacing:-.03em;line-height:1}.st span{font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
-.card{background:#fff;border:1.5px solid var(--bd);border-radius:28px;padding:26px;box-shadow:var(--shadow)}.side{position:sticky;top:88px}
-.step{display:flex;align-items:center;gap:10px;font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--em);margin:26px 0 4px}.step:first-of-type{margin-top:0}.step:after{content:"";flex:1;border-top:1px dashed var(--bds)}
-label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
-input,textarea,select{width:100%;padding:12px 15px;border:1.5px solid var(--bds);border-radius:16px;font:inherit;font-size:15px;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--em);transition:border-color .2s,box-shadow .2s}
+:root{color-scheme:light only;--paper:#F4F2EC;--ink:#0B1933;--em:#12A97E;--em-d:#0b7d5c;--em-soft:rgba(18,169,126,.12);--warn-soft:rgba(242,181,68,.22);--muted:rgba(11,25,51,.62);--bd:rgba(11,25,51,.12);--bds:rgba(11,25,51,.2);--shadow:0 18px 44px -16px rgba(11,25,51,.14),0 2px 8px rgba(11,25,51,.05);--disp:'Bricolage Grotesque',system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:Poppins,system-ui,sans-serif;color:var(--ink);background:#F6F5F0;min-height:100vh;position:relative;overflow-x:hidden}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none}.bg i{position:absolute;border-radius:50%;background:var(--em-soft)}
+.bg .a{width:340px;height:340px;left:-120px;top:-110px}.bg .b{width:420px;height:420px;right:-170px;top:60px;background:rgba(18,169,126,.15)}.bg .c{width:300px;height:420px;left:-170px;top:58%;border-radius:45%;background:rgba(18,169,126,.1)}.bg .d{width:360px;height:360px;right:-150px;top:72%;background:rgba(18,169,126,.12)}
+.bg b{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--em);opacity:.55}
+.wrap{position:relative;z-index:1;max-width:840px;margin:0 auto;padding:44px 16px 56px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.tag{display:inline-flex;align-items:center;gap:7px;background:var(--em-soft);color:var(--em-d);font:600 13px Poppins,sans-serif;padding:6px 14px;border-radius:99px;border:1px solid rgba(18,169,126,.25)}
+h1{font:800 clamp(32px,5vw,44px)/1.05 var(--disp);letter-spacing:-.03em;margin:12px 0 6px}h2{font:700 19px var(--disp);margin:0;display:flex;align-items:center;gap:10px}
+.sub{color:var(--muted);margin:0;font-size:15px}.hact{display:flex;gap:10px;align-items:center}.hact a{font-size:13px;font-weight:600;color:var(--em-d);text-decoration:none}
+.card{background:rgba(255,255,255,.94);border:1px solid var(--bd);border-radius:26px;padding:28px;box-shadow:var(--shadow);margin-bottom:22px}
+label{display:block;font-size:13px;font-weight:600;margin:16px 0 7px}.card>label:first-child{margin-top:0}
+input,textarea,select{width:100%;padding:12px 15px;border:1.5px solid var(--bd);border-radius:14px;font:inherit;font-size:15px;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--em);transition:border-color .2s,box-shadow .2s}
 input:focus,textarea:focus,select:focus{outline:0;border-color:var(--em);box-shadow:0 0 0 4px var(--em-soft)}
-input::placeholder,textarea::placeholder{color:rgba(11,25,51,.4);-webkit-text-fill-color:rgba(11,25,51,.4)}textarea{min-height:84px;resize:vertical}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-button,.btn{font:600 14px Poppins,sans-serif;min-height:44px;padding:0 22px;border-radius:99px;border:1.5px solid var(--bds);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s,background .2s}
+input::placeholder,textarea::placeholder{color:rgba(11,25,51,.38);-webkit-text-fill-color:rgba(11,25,51,.38)}textarea{min-height:84px;resize:vertical}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+button,.btn{font:600 13.5px Poppins,sans-serif;min-height:44px;padding:0 20px;border-radius:99px;border:1.5px solid var(--bds);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .2s,box-shadow .2s}
 button:hover,.btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px -8px rgba(11,25,51,.3)}
-.pri{background:var(--em);border-color:var(--em);color:#fff;box-shadow:0 10px 24px -8px rgba(18,169,126,.65)}.dark{background:var(--ink);border-color:var(--ink);color:#fff}
-.acts-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:26px;padding-top:20px;border-top:1px dashed var(--bds)}#msg{font-size:14px;font-weight:600}
-.ql-toolbar.ql-snow{border:1.5px solid var(--bds);border-radius:16px 16px 0 0;background:var(--paper);font-family:inherit}.ql-container.ql-snow{border:1.5px solid var(--bds);border-top:0;border-radius:0 0 16px 16px;font-family:Poppins,sans-serif}
-#editor{height:320px;font-size:16px;background:#fff}.ql-editor{color:var(--ink);line-height:1.7}.ql-editor.ql-blank::before{color:rgba(11,25,51,.4);font-style:normal}
-.row{display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-top:1px dashed var(--bd);align-items:center}.row:first-child{border-top:0}.row b{font-size:14px;line-height:1.35;display:block}.row small{display:block;margin-top:5px;color:var(--muted);font-size:12px}
-.pill{font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:99px;margin-right:6px}.ok{background:var(--em-soft);color:#0b7d5c}.dr{background:var(--warn-soft);color:#8a5d00}
-.acts{display:flex;gap:6px;align-items:center;flex-shrink:0}.acts button{min-height:32px;padding:0 13px;font-size:12px}.acts a{font-size:12px;color:var(--em);font-weight:600;margin-right:4px;text-decoration:none}
-#list{max-height:430px;overflow:auto;margin:12px 0 4px}.tools{display:flex;gap:8px;flex-wrap:wrap}.tools .btn,.tools button{min-height:38px;font-size:13px;padding:0 16px}
-.note{font-size:12.5px;color:var(--muted);background:var(--warn-soft);border-radius:16px;padding:11px 14px;margin:16px 0 0;line-height:1.5}
-.login{max-width:430px;margin:9vh auto 0}.login .card{padding:34px}.login h1{font-size:34px;margin-top:18px}#loginErr{color:#c0392b;font-size:14px;margin:8px 0 0;min-height:20px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.side{position:static}}@media(max-width:560px){.g2,.stats{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.st{padding:12px}.st b{font-size:26px}.card{padding:20px;border-radius:24px}.bar .badge{display:none}}
+.pri{background:var(--em);border-color:var(--em);color:#fff;box-shadow:0 10px 22px -8px rgba(18,169,126,.7)}
+.i{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.acts-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:24px}
+#msg{display:inline-flex;align-items:center;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:99px;flex:1;min-width:200px}#msg:empty{display:none}#msg.ok{background:var(--em-soft);color:var(--em-d)}#msg.err{background:rgba(192,57,43,.1);color:#c0392b}
+.ql-toolbar.ql-snow{border:1.5px solid var(--bd);border-radius:14px 14px 0 0;background:#fff;font-family:inherit}.ql-container.ql-snow{border:1.5px solid var(--bd);border-top:0;border-radius:0 0 14px 14px;font-family:Poppins,sans-serif}
+#editor{height:300px;font-size:15.5px;background:#fff}.ql-editor{color:var(--ink);line-height:1.7}.ql-editor.ql-blank::before{color:rgba(11,25,51,.38);font-style:normal}
+.row{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--bd);align-items:center}.row:first-child{border-top:0}.row b{font-size:14.5px;line-height:1.35;display:block}.row small{display:block;margin-top:4px;color:var(--muted);font-size:12.5px}
+.pill{font:600 10.5px Poppins,sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:2px 9px;border-radius:99px;margin-right:7px}.pill.ok{background:var(--em-soft);color:var(--em-d)}.pill.dr{background:var(--warn-soft);color:#8a5d00}
+.acts{display:flex;gap:8px;align-items:center;flex-shrink:0}.acts button{min-height:34px;padding:0 16px;font-size:12.5px}.acts a{font-size:12.5px;color:var(--em-d);font-weight:600;margin-right:6px;text-decoration:underline}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.tools .btn,.tools button{min-height:40px}
+.note{font-size:12.5px;color:var(--muted);background:var(--warn-soft);border-radius:14px;padding:11px 14px;margin:16px 0 0;line-height:1.5}
+.login{max-width:430px;margin:8vh auto 0}.login .card{padding:34px}.login h1{font-size:32px;margin-top:18px}#loginErr{color:#c0392b;font-size:14px;margin:8px 0 12px;min-height:20px}
+.foot{position:relative;z-index:1;height:110px;margin-top:10px;background:linear-gradient(180deg,#0c5646,#0B1933);clip-path:ellipse(75% 100% at 50% 100%)}
+@media(max-width:620px){.g2{grid-template-columns:1fr}.card{padding:20px;border-radius:22px}.row{flex-direction:column;align-items:flex-start}}
 </style></head><body>
-<div class="top"><div class="bar"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" height="32" style="display:block;width:auto"><g transform="translate(40,40) scale(0.625)"><rect x="16" y="16" width="480" height="480" rx="120" fill="#0B1933"/><path d="M115 110L175 110 175 220 337 402 397 402 397 200 337 220 337 300 175 110Z" fill="#fff"/><rect x="115" y="110" width="60" height="292" fill="#fff"/><rect x="337" y="200" width="60" height="202" fill="#fff"/><polygon points="205,110 310,110 280,215" fill="#0FAF80"/><polygon points="310,110 397,200 310,200" fill="#12A97E"/></g><text x="420" y="245" font-family="Bricolage Grotesque, system-ui, sans-serif" font-size="145" font-weight="800" letter-spacing="-3"><tspan fill="#0B1933">Nocta</tspan><tspan fill="#12A97E">POS</tspan></text></svg><span class="badge">Admin</span></div>
-<div class="acts"><a href="artikel.html" target="_blank">Lihat blog &rarr;</a><button id="logout" type="button">Keluar</button></div></div></div>
+<div class="bg"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i><b style="left:38px;top:96px"></b><b style="right:60px;top:64%;width:11px;height:11px"></b></div>
 <div class="wrap">
-<section id="login" class="login" hidden><div class="card"><span class="hand">pintu redaksi</span><h1>Masuk Admin</h1><p class="sub">Khusus pengelola artikel NoctaPOS.</p>
+<section id="login" class="login" hidden><div class="card"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" height="38" style="display:block;width:auto"><g transform="translate(40,40) scale(0.625)"><rect x="16" y="16" width="480" height="480" rx="120" fill="#0B1933"/><path d="M115 110L175 110 175 220 337 402 397 402 397 200 337 220 337 300 175 110Z" fill="#fff"/><rect x="115" y="110" width="60" height="292" fill="#fff"/><rect x="337" y="200" width="60" height="202" fill="#fff"/><polygon points="205,110 310,110 280,215" fill="#0FAF80"/><polygon points="310,110 397,200 310,200" fill="#12A97E"/></g><text x="420" y="245" font-family="Bricolage Grotesque, system-ui, sans-serif" font-size="145" font-weight="800" letter-spacing="-3"><tspan fill="#0B1933">Nocta</tspan><tspan fill="#12A97E">POS</tspan></text></svg>
+<h1>Masuk Admin</h1><p class="sub">Khusus pengelola artikel NoctaPOS.</p>
 <form id="loginForm"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" /><p id="loginErr"></p><button class="pri" type="submit" style="width:100%">Masuk</button></form>
 <p class="note">Mode tes: password dummy ada di <code>admin.js</code> dan belum aman. Nanti diganti Firebase Auth.</p></div></section>
 <div id="panel" hidden>
-<span class="hand">ruang redaksi</span><h1>Tulis &amp; terbitkan artikel</h1><p class="sub" id="mode">Artikel baru</p>
-<div class="stats"><div class="st"><b id="stAll">0</b><span>Total</span></div><div class="st"><b id="stPub">0</b><span>Terbit</span></div><div class="st"><b id="stDr">0</b><span>Draft</span></div></div>
-<div class="grid"><div class="card">
-<div class="step">01 &middot; Judul</div><label for="f-title" style="margin-top:8px">Judul artikel</label><input id="f-title" maxlength="140" placeholder="Judul yang bikin pemilik konter penasaran" />
-<div class="step">02 &middot; Detail</div>
+<div class="head"><div><span class="tag"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Kelola Artikel</span><h1>Admin Artikel</h1><p class="sub" id="mode">Artikel baru</p></div>
+<div class="hact"><a href="artikel.html" target="_blank">Lihat blog &rarr;</a><button id="logout" type="button" style="min-height:38px">Keluar</button></div></div>
+<div class="card"><label for="f-title">Judul</label><input id="f-title" maxlength="140" placeholder="Judul yang bikin pemilik konter penasaran" />
 <div class="g2"><div><label for="f-slug">Slug (alamat artikel)</label><input id="f-slug" /></div><div><label for="f-cat">Kategori</label><input id="f-cat" list="cats" placeholder="mis. Kas &amp; Keuangan" /><datalist id="cats"></datalist></div></div>
 <div class="g2"><div><label for="f-tags">Tag (maksimal 2, pisah koma)</label><input id="f-tags" placeholder="Kas Laci, BRILink" /></div><div><label for="f-grad">Warna sampul bawaan</label><select id="f-grad"><option value="0">Hijau</option><option value="1">Oranye</option><option value="2">Biru</option><option value="3">Ungu</option><option value="4">Tosca</option><option value="5">Abu-abu</option></select></div></div>
 <label for="f-cover">Link gambar sampul (opsional)</label><input id="f-cover" placeholder="https://…" />
 <label for="f-excerpt">Ringkasan (tampil di kartu)</label><textarea id="f-excerpt" maxlength="220" placeholder="Satu atau dua kalimat yang mengundang untuk membaca."></textarea>
-<div class="step">03 &middot; Isi</div><div id="editor"></div>
-<div class="acts-bar"><button id="btnPost" class="pri" type="button">Post sekarang</button><button id="btnDraft" class="dark" type="button">Simpan draft</button><button id="btnReset" type="button">Artikel baru</button><span id="msg" role="status"></span></div></div>
-<aside class="card side"><h2>Semua artikel</h2><div id="list"></div>
-<div class="tools"><button id="btnExport" type="button">Ekspor JSON</button><label class="btn" style="margin:0">Impor JSON<input id="importFile" type="file" accept="application/json" hidden /></label></div>
-<p class="note">Mode tes: artikel tersimpan di browser ini saja. Ekspor JSON untuk cadangan dan untuk pindah ke Firestore nanti.</p></aside></div></div></div>
+<label>Isi artikel</label><div id="editor"></div>
+<div class="acts-bar"><button id="btnPost" class="pri" type="button"><svg class="i" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Post</button><button id="btnDraft" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Simpan draft</button><button id="btnReset" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Artikel baru</button><span id="msg" role="status"></span></div></div>
+<div class="card"><h2><svg class="i" style="width:22px;height:22px;color:var(--em)" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8M8 9h2"/></svg>Semua artikel</h2><div id="list" style="margin-top:8px"></div>
+<div class="tools"><button id="btnExport" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Ekspor JSON (cadangan)</button><label class="btn" style="margin:0"><svg class="i" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Impor JSON<input id="importFile" type="file" accept="application/json" hidden /></label></div>
+<p class="note">Mode tes: artikel tersimpan di browser ini saja. Ekspor JSON untuk cadangan dan untuk pindah ke Firestore nanti.</p></div>
+</div></div>
+<div class="foot"></div>
 <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 <script src="assets/js/articles-store.js"></script>
 <script src="assets/js/admin.js"></script>
