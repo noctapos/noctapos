@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" /><title>Admin Artikel — NoctaPOS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" />
+<style>
+:root{--ink:#0B1933;--em:#12A97E;--bd:rgba(11,25,51,.16);--paper:#F4F2EC}
+*{box-sizing:border-box}body{margin:0;font-family:Poppins,system-ui,sans-serif;background:var(--paper);color:var(--ink)}
+.box{max-width:960px;margin:0 auto;padding:28px 18px 60px}.card{background:#fff;border:1.5px solid var(--bd);border-radius:22px;padding:22px;margin-bottom:20px}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:0 0 14px}label{display:block;font-size:13px;font-weight:600;margin:14px 0 5px}
+input,textarea,select{width:100%;padding:11px 13px;border:1.5px solid var(--bd);border-radius:12px;font:inherit;font-size:15px;background:#fff}
+textarea{min-height:76px;resize:vertical}.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+button,.btn{font:inherit;font-weight:600;font-size:14px;padding:11px 20px;border-radius:99px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer}
+.pri{background:var(--em);border-color:var(--em);color:#fff}.bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+#editor{height:300px;background:#fff;font-size:16px}.row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--bd);align-items:center}
+.row small{display:block;opacity:.6}.acts{display:flex;gap:8px;align-items:center}.acts button{padding:6px 14px;font-size:13px}.acts a{font-size:13px;color:var(--em);font-weight:600}
+.note{font-size:13px;background:#fff7e0;border-radius:12px;padding:10px 14px;margin-top:14px}#msg{font-size:14px;font-weight:600}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+</style></head><body><div class="box">
+<section id="login" class="card" style="max-width:420px;margin:60px auto" hidden>
+<h1>Admin NoctaPOS</h1><p style="opacity:.7;margin:0">Masuk untuk memposting artikel.</p>
+<form id="loginForm"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" /><p id="loginErr" style="color:#c0392b;font-size:14px;margin:8px 0 0"></p>
+<div class="bar"><button class="pri" type="submit">Masuk</button></div></form>
+<p class="note">Mode tes: password dummy ada di <code>admin.js</code> dan belum aman. Nanti diganti Firebase Auth.</p></section>
+<div id="panel" hidden>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px"><div><h1>Admin Artikel</h1><span id="mode" style="opacity:.7">Artikel baru</span></div><div class="acts"><a href="artikel.html" target="_blank">Lihat halaman artikel</a><button id="logout" type="button">Keluar</button></div></div>
+<div class="card"><label for="f-title" style="margin-top:0">Judul</label><input id="f-title" maxlength="140" />
+<div class="g2"><div><label for="f-slug">Slug (alamat artikel)</label><input id="f-slug" /></div><div><label for="f-cat">Kategori</label><input id="f-cat" list="cats" placeholder="mis. Kas &amp; Keuangan" /><datalist id="cats"></datalist></div></div>
+<div class="g2"><div><label for="f-tags">Tag (maksimal 2, pisah koma)</label><input id="f-tags" placeholder="Kas Laci, BRILink" /></div><div><label for="f-grad">Warna sampul bawaan</label><select id="f-grad"><option value="0">Hijau</option><option value="1">Oranye</option><option value="2">Biru</option><option value="3">Ungu</option><option value="4">Tosca</option><option value="5">Abu-abu</option></select></div></div>
+<label for="f-cover">Link gambar sampul (opsional)</label><input id="f-cover" placeholder="https://…" />
+<label for="f-excerpt">Ringkasan (tampil di kartu)</label><textarea id="f-excerpt" maxlength="220"></textarea>
+<label>Isi artikel</label><div id="editor"></div>
+<div class="bar"><button id="btnPost" class="pri" type="button">Post</button><button id="btnDraft" type="button">Simpan draft</button><button id="btnReset" type="button">Artikel baru</button><span id="msg" role="status"></span></div></div>
+<div class="card"><h2>Semua artikel</h2><div id="list"></div>
+<div class="bar"><button id="btnExport" type="button">Ekspor JSON (cadangan)</button><label class="btn" style="margin:0">Impor JSON<input id="importFile" type="file" accept="application/json" hidden /></label></div>
+<p class="note">Mode tes: artikel tersimpan di browser ini saja. Ekspor JSON berguna sebagai cadangan dan untuk pindah ke Firestore nanti.</p></div>
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<script src="assets/js/articles-store.js"></script>
+<script src="assets/js/admin.js"></script>
+</body></html>
