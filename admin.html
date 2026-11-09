@@ -1,40 +1,65 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="robots" content="noindex,nofollow" /><meta name="color-scheme" content="light only" /><title>Admin Artikel — NoctaPOS</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<meta name="robots" content="noindex,nofollow" /><meta name="color-scheme" content="light only" /><title>Ruang Redaksi — NoctaPOS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" />
 <style>
-:root{color-scheme:light only;--ink:#0B1933;--em:#12A97E;--bd:rgba(11,25,51,.16);--paper:#F4F2EC}
-*{box-sizing:border-box}body{margin:0;font-family:Poppins,system-ui,sans-serif;background:var(--paper);color:var(--ink)}
-.box{max-width:960px;margin:0 auto;padding:28px 18px 60px}.card{background:#fff;border:1.5px solid var(--bd);border-radius:22px;padding:22px;margin-bottom:20px}
-h1{font-size:26px;margin:0 0 4px}h2{font-size:18px;margin:0 0 14px}label{display:block;font-size:13px;font-weight:600;margin:14px 0 5px}
-input,textarea,select{width:100%;padding:11px 13px;border:1.5px solid var(--bd);border-radius:12px;font:inherit;font-size:15px;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--ink)}input::placeholder,textarea::placeholder{color:rgba(11,25,51,.45);-webkit-text-fill-color:rgba(11,25,51,.45)}.ql-editor{color:var(--ink)}
-textarea{min-height:76px;resize:vertical}.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-button,.btn{font:inherit;font-weight:600;font-size:14px;padding:11px 20px;border-radius:99px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer}
-.pri{background:var(--em);border-color:var(--em);color:#fff}.bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
-#editor{height:300px;background:#fff;font-size:16px}.row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--bd);align-items:center}
-.row small{display:block;opacity:.6}.acts{display:flex;gap:8px;align-items:center}.acts button{padding:6px 14px;font-size:13px}.acts a{font-size:13px;color:var(--em);font-weight:600}
-.note{font-size:13px;background:#fff7e0;border-radius:12px;padding:10px 14px;margin-top:14px}#msg{font-size:14px;font-weight:600}
-@media(max-width:700px){.g2{grid-template-columns:1fr}}
-</style></head><body><div class="box">
-<section id="login" class="card" style="max-width:420px;margin:60px auto" hidden>
-<h1>Admin NoctaPOS</h1><p style="opacity:.7;margin:0">Masuk untuk memposting artikel.</p>
-<form id="loginForm"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" /><p id="loginErr" style="color:#c0392b;font-size:14px;margin:8px 0 0"></p>
-<div class="bar"><button class="pri" type="submit">Masuk</button></div></form>
-<p class="note">Mode tes: password dummy ada di <code>admin.js</code> dan belum aman. Nanti diganti Firebase Auth.</p></section>
+:root{color-scheme:light only;--paper:#F4F2EC;--ink:#0B1933;--em:#12A97E;--em-soft:rgba(18,169,126,.12);--warn:#F2B544;--warn-soft:rgba(242,181,68,.2);--muted:rgba(11,25,51,.66);--bd:rgba(11,25,51,.12);--bds:rgba(11,25,51,.22);--shadow:0 12px 32px -8px rgba(11,25,51,.08),0 2px 6px rgba(11,25,51,.04);--mono:'IBM Plex Mono',ui-monospace,monospace;--hand:'Caveat',cursive;--disp:'Bricolage Grotesque',system-ui,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Poppins,system-ui,sans-serif;color:var(--ink);background:radial-gradient(900px 420px at 85% -80px,rgba(18,169,126,.16),transparent 70%),radial-gradient(700px 380px at -5% 0,rgba(11,25,51,.07),transparent 70%),var(--paper);min-height:100vh}
+.top{position:sticky;top:12px;z-index:5;max-width:1120px;margin:12px auto 0;padding:0 14px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);border:1.5px solid var(--bd);border-radius:99px;height:60px;padding:0 10px 0 20px;box-shadow:var(--shadow)}
+.bar .l{display:flex;align-items:center;gap:12px}.badge{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:#fff;padding:5px 11px;border-radius:99px}
+.wrap{max-width:1120px;margin:0 auto;padding:30px 14px 80px}
+h1{font:800 clamp(30px,4.6vw,46px)/1.05 var(--disp);letter-spacing:-.03em;margin:0}h2{font:700 20px var(--disp);margin:0}
+.hand{font:700 26px var(--hand);color:var(--em);display:block;margin-bottom:4px;transform:rotate(-2deg);transform-origin:left}
+.sub{color:var(--muted);margin:10px 0 0;font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}
+.st{background:#fff;border:1.5px solid var(--bd);border-radius:22px;padding:16px 20px;box-shadow:var(--shadow)}.st b{display:block;font:800 34px var(--disp);letter-spacing:-.03em;line-height:1}.st span{font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.card{background:#fff;border:1.5px solid var(--bd);border-radius:28px;padding:26px;box-shadow:var(--shadow)}.side{position:sticky;top:88px}
+.step{display:flex;align-items:center;gap:10px;font:600 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--em);margin:26px 0 4px}.step:first-of-type{margin-top:0}.step:after{content:"";flex:1;border-top:1px dashed var(--bds)}
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+input,textarea,select{width:100%;padding:12px 15px;border:1.5px solid var(--bds);border-radius:16px;font:inherit;font-size:15px;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--em);transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--em);box-shadow:0 0 0 4px var(--em-soft)}
+input::placeholder,textarea::placeholder{color:rgba(11,25,51,.4);-webkit-text-fill-color:rgba(11,25,51,.4)}textarea{min-height:84px;resize:vertical}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+button,.btn{font:600 14px Poppins,sans-serif;min-height:44px;padding:0 22px;border-radius:99px;border:1.5px solid var(--bds);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s,background .2s}
+button:hover,.btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px -8px rgba(11,25,51,.3)}
+.pri{background:var(--em);border-color:var(--em);color:#fff;box-shadow:0 10px 24px -8px rgba(18,169,126,.65)}.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.acts-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:26px;padding-top:20px;border-top:1px dashed var(--bds)}#msg{font-size:14px;font-weight:600}
+.ql-toolbar.ql-snow{border:1.5px solid var(--bds);border-radius:16px 16px 0 0;background:var(--paper);font-family:inherit}.ql-container.ql-snow{border:1.5px solid var(--bds);border-top:0;border-radius:0 0 16px 16px;font-family:Poppins,sans-serif}
+#editor{height:320px;font-size:16px;background:#fff}.ql-editor{color:var(--ink);line-height:1.7}.ql-editor.ql-blank::before{color:rgba(11,25,51,.4);font-style:normal}
+.row{display:flex;justify-content:space-between;gap:10px;padding:13px 0;border-top:1px dashed var(--bd);align-items:center}.row:first-child{border-top:0}.row b{font-size:14px;line-height:1.35;display:block}.row small{display:block;margin-top:5px;color:var(--muted);font-size:12px}
+.pill{font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:99px;margin-right:6px}.ok{background:var(--em-soft);color:#0b7d5c}.dr{background:var(--warn-soft);color:#8a5d00}
+.acts{display:flex;gap:6px;align-items:center;flex-shrink:0}.acts button{min-height:32px;padding:0 13px;font-size:12px}.acts a{font-size:12px;color:var(--em);font-weight:600;margin-right:4px;text-decoration:none}
+#list{max-height:430px;overflow:auto;margin:12px 0 4px}.tools{display:flex;gap:8px;flex-wrap:wrap}.tools .btn,.tools button{min-height:38px;font-size:13px;padding:0 16px}
+.note{font-size:12.5px;color:var(--muted);background:var(--warn-soft);border-radius:16px;padding:11px 14px;margin:16px 0 0;line-height:1.5}
+.login{max-width:430px;margin:9vh auto 0}.login .card{padding:34px}.login h1{font-size:34px;margin-top:18px}#loginErr{color:#c0392b;font-size:14px;margin:8px 0 0;min-height:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.side{position:static}}@media(max-width:560px){.g2,.stats{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.st{padding:12px}.st b{font-size:26px}.card{padding:20px;border-radius:24px}.bar .badge{display:none}}
+</style></head><body>
+<div class="top"><div class="bar"><div class="l"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" height="32" style="display:block;width:auto"><g transform="translate(40,40) scale(0.625)"><rect x="16" y="16" width="480" height="480" rx="120" fill="#0B1933"/><path d="M115 110L175 110 175 220 337 402 397 402 397 200 337 220 337 300 175 110Z" fill="#fff"/><rect x="115" y="110" width="60" height="292" fill="#fff"/><rect x="337" y="200" width="60" height="202" fill="#fff"/><polygon points="205,110 310,110 280,215" fill="#0FAF80"/><polygon points="310,110 397,200 310,200" fill="#12A97E"/></g><text x="420" y="245" font-family="Bricolage Grotesque, system-ui, sans-serif" font-size="145" font-weight="800" letter-spacing="-3"><tspan fill="#0B1933">Nocta</tspan><tspan fill="#12A97E">POS</tspan></text></svg><span class="badge">Admin</span></div>
+<div class="acts"><a href="artikel.html" target="_blank">Lihat blog &rarr;</a><button id="logout" type="button">Keluar</button></div></div></div>
+<div class="wrap">
+<section id="login" class="login" hidden><div class="card"><span class="hand">pintu redaksi</span><h1>Masuk Admin</h1><p class="sub">Khusus pengelola artikel NoctaPOS.</p>
+<form id="loginForm"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" /><p id="loginErr"></p><button class="pri" type="submit" style="width:100%">Masuk</button></form>
+<p class="note">Mode tes: password dummy ada di <code>admin.js</code> dan belum aman. Nanti diganti Firebase Auth.</p></div></section>
 <div id="panel" hidden>
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px"><div><h1>Admin Artikel</h1><span id="mode" style="opacity:.7">Artikel baru</span></div><div class="acts"><a href="artikel.html" target="_blank">Lihat halaman artikel</a><button id="logout" type="button">Keluar</button></div></div>
-<div class="card"><label for="f-title" style="margin-top:0">Judul</label><input id="f-title" maxlength="140" />
+<span class="hand">ruang redaksi</span><h1>Tulis &amp; terbitkan artikel</h1><p class="sub" id="mode">Artikel baru</p>
+<div class="stats"><div class="st"><b id="stAll">0</b><span>Total</span></div><div class="st"><b id="stPub">0</b><span>Terbit</span></div><div class="st"><b id="stDr">0</b><span>Draft</span></div></div>
+<div class="grid"><div class="card">
+<div class="step">01 &middot; Judul</div><label for="f-title" style="margin-top:8px">Judul artikel</label><input id="f-title" maxlength="140" placeholder="Judul yang bikin pemilik konter penasaran" />
+<div class="step">02 &middot; Detail</div>
 <div class="g2"><div><label for="f-slug">Slug (alamat artikel)</label><input id="f-slug" /></div><div><label for="f-cat">Kategori</label><input id="f-cat" list="cats" placeholder="mis. Kas &amp; Keuangan" /><datalist id="cats"></datalist></div></div>
 <div class="g2"><div><label for="f-tags">Tag (maksimal 2, pisah koma)</label><input id="f-tags" placeholder="Kas Laci, BRILink" /></div><div><label for="f-grad">Warna sampul bawaan</label><select id="f-grad"><option value="0">Hijau</option><option value="1">Oranye</option><option value="2">Biru</option><option value="3">Ungu</option><option value="4">Tosca</option><option value="5">Abu-abu</option></select></div></div>
 <label for="f-cover">Link gambar sampul (opsional)</label><input id="f-cover" placeholder="https://…" />
-<label for="f-excerpt">Ringkasan (tampil di kartu)</label><textarea id="f-excerpt" maxlength="220"></textarea>
-<label>Isi artikel</label><div id="editor"></div>
-<div class="bar"><button id="btnPost" class="pri" type="button">Post</button><button id="btnDraft" type="button">Simpan draft</button><button id="btnReset" type="button">Artikel baru</button><span id="msg" role="status"></span></div></div>
-<div class="card"><h2>Semua artikel</h2><div id="list"></div>
-<div class="bar"><button id="btnExport" type="button">Ekspor JSON (cadangan)</button><label class="btn" style="margin:0">Impor JSON<input id="importFile" type="file" accept="application/json" hidden /></label></div>
-<p class="note">Mode tes: artikel tersimpan di browser ini saja. Ekspor JSON berguna sebagai cadangan dan untuk pindah ke Firestore nanti.</p></div>
-</div></div>
+<label for="f-excerpt">Ringkasan (tampil di kartu)</label><textarea id="f-excerpt" maxlength="220" placeholder="Satu atau dua kalimat yang mengundang untuk membaca."></textarea>
+<div class="step">03 &middot; Isi</div><div id="editor"></div>
+<div class="acts-bar"><button id="btnPost" class="pri" type="button">Post sekarang</button><button id="btnDraft" class="dark" type="button">Simpan draft</button><button id="btnReset" type="button">Artikel baru</button><span id="msg" role="status"></span></div></div>
+<aside class="card side"><h2>Semua artikel</h2><div id="list"></div>
+<div class="tools"><button id="btnExport" type="button">Ekspor JSON</button><label class="btn" style="margin:0">Impor JSON<input id="importFile" type="file" accept="application/json" hidden /></label></div>
+<p class="note">Mode tes: artikel tersimpan di browser ini saja. Ekspor JSON untuk cadangan dan untuk pindah ke Firestore nanti.</p></aside></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 <script src="assets/js/articles-store.js"></script>
 <script src="assets/js/admin.js"></script>
