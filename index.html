@@ -18,6 +18,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/site.css">
   
+<style id="trust-strip-css">
+.trust-strip{display:grid;grid-template-columns:repeat(4,1fr);margin-top:46px;background:rgba(255,255,255,.72);border:1.5px solid var(--border);border-radius:99px;padding:18px 22px;box-shadow:0 14px 40px -18px rgba(11,25,51,.18);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.ts-item{display:flex;align-items:center;gap:14px;padding:4px 20px;min-width:0}.ts-item+.ts-item{border-left:1px solid var(--border)}
+.ts-ic{width:52px;height:52px;border-radius:50%;background:var(--em-soft);display:grid;place-items:center;flex-shrink:0;color:var(--em)}
+.ts-ic svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ts-tx b{display:block;font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.25}.ts-tx span{display:block;margin-top:3px;font-size:13px;color:var(--muted);line-height:1.35}
+@media(max-width:1000px){.trust-strip{grid-template-columns:1fr 1fr;border-radius:32px;gap:16px 0;padding:20px}.ts-item:nth-child(3){border-left:0}}
+@media(max-width:560px){.trust-strip{grid-template-columns:1fr;border-radius:26px;gap:0;padding:6px 18px;margin-top:34px}.ts-item{padding:14px 0}.ts-item+.ts-item{border-left:0;border-top:1px solid var(--border)}}
+</style>
 </head>
 <body>
 
@@ -161,8 +170,8 @@
           </div>
         </div>
 
-        <!-- 4 Bottom Badges matching Mockup -->
-        <div class="hero-badges"><div class="h-badge"><div class="h-badge-ic"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div><span>Kas Laci &amp; Saldo Bank <br />Otomatis Pisah</span></div><div class="h-badge"><div class="h-badge-ic"><svg viewBox="0 0 24 24"><path d="M12 22s7-6 7-12a7 7 0 10-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div><span>Absensi Karyawan (GPS) <br />&amp; Hitung Gaji</span></div><div class="h-badge"><div class="h-badge-ic"><svg viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg></div><span>Rekomendasi Kulakan <br />Berbasis AI</span></div><div class="h-badge"><div class="h-badge-ic"><svg viewBox="0 0 24 24"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/></svg></div><span>Mode Darurat (Tetap <br />Jalan Tanpa Sinyal)</span></div></div>
+        <!-- Strip keunggulan platform -->
+        <div class="trust-strip" role="list"><div class="ts-item" role="listitem"><div class="ts-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="14" height="10" rx="1.5"/><path d="M6 18h6M9 14v4"/><rect x="18" y="8" width="4" height="9" rx="1"/></svg></div><div class="ts-tx"><b>Support di Semua Perangkat</b><span>Android, iOS, Tablet &amp; Desktop</span></div></div><div class="ts-item" role="listitem"><div class="ts-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 14h6l-1 8 9-12h-6z" fill="currentColor"/></svg></div><div class="ts-tx"><b>Akses via PWA</b><span>Ringan, cepat &amp; bisa offline</span></div></div><div class="ts-item" role="listitem"><div class="ts-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.5-8.97A6 6 0 0 1 18 9.5a4 4 0 0 1-.5 8.5z"/><path d="M9.5 13.5l2 2 3.5-4"/></svg></div><div class="ts-tx"><b>Sinkronisasi Real-Time</b><span>Di mana pun, kapan pun</span></div></div><div class="ts-item" role="listitem"><div class="ts-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3v7c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V5z" fill="currentColor"/><path d="M8.5 12l2.5 2.5 4.5-5" stroke="#fff"/></svg></div><div class="ts-tx"><b>Aman &amp; Stabil</b><span>Data Anda selalu terlindungi</span></div></div></div>
       </div>
     </section>
 
