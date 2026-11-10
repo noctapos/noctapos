@@ -1,25 +1,30 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>Kontak | NoctaPOS</title><meta name="description" content="Hubungi NoctaPOS lewat email, WhatsApp, atau Instagram, dan kirim kritik dan saran untuk aplikasi kasir NoctaPOS."/>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2716%27 fill=%27%230B1933%27/%3E%3C/svg%3E"/>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"/><link rel="alternate icon" href="favicon.ico"/><link rel="apple-touch-icon" href="apple-touch-icon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="assets/css/site.css"><style>
-.ct-h2{font-size:clamp(26px,3.4vw,36px);letter-spacing:-.03em;line-height:1.1;margin:0}.ct-sub{color:var(--muted);margin:8px 0 0;font-size:16px;max-width:560px}
-.ct-sec{padding-top:44px}.ct-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:26px}
-.ct-card{display:flex;gap:16px;align-items:center;background:#fff;border:1.5px solid var(--border);border-radius:24px;padding:20px 22px;box-shadow:var(--shadow-card);color:var(--ink);text-decoration:none;transition:transform .25s,box-shadow .25s;min-width:0}
-a.ct-card:hover{transform:translateY(-3px)}
-.ct-ic{width:52px;height:52px;border-radius:50%;background:var(--em-soft);border:1.5px solid rgba(18,169,126,.3);display:grid;place-items:center;flex-shrink:0;color:var(--em)}
-.ct-ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.ct-card small{display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.ct-card b{display:block;margin-top:4px;font-size:16.5px;line-height:1.3;overflow-wrap:anywhere}
-.ct-split{display:grid;grid-template-columns:5fr 7fr;gap:22px;margin-top:26px;align-items:stretch}
-.ct-side{background:var(--ink);color:#fff;border-radius:28px;padding:34px}.ct-side h3{font-size:28px;letter-spacing:-.03em;line-height:1.1;margin:0 0 12px}.ct-side p{opacity:.82;line-height:1.6;margin:0 0 18px}
-.ct-side ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}.ct-side li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.5}.ct-side li:before{content:"\2713";color:var(--em);font-weight:800}
-.ct-form{background:#fff;border:1.5px solid var(--border);border-radius:28px;padding:30px;box-shadow:var(--shadow-card)}
-.ct-form label{display:block;font-size:13.5px;font-weight:600;margin:16px 0 6px}.ct-form label:first-of-type{margin-top:0}.ct-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.ct-form input,.ct-form select,.ct-form textarea{width:100%;padding:13px 16px;border:1.5px solid var(--border-strong);border-radius:16px;font:inherit;font-size:15px;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--em);transition:border-color .2s,box-shadow .2s}
-.ct-form input:focus,.ct-form select:focus,.ct-form textarea:focus{outline:0;border-color:var(--em);box-shadow:0 0 0 4px var(--em-soft)}.ct-form textarea{min-height:140px;resize:vertical}
-.ct-form .btn{margin-top:22px}#ct-status{display:none;margin-top:16px;font-size:14.5px;font-weight:600;line-height:1.5;padding:12px 16px;border-radius:16px}
-#ct-status.ok{background:var(--em-soft);color:#0b7d5c}#ct-status.err{background:rgba(192,57,43,.1);color:#c0392b}
-@media(max-width:900px){.ct-split{grid-template-columns:1fr}}@media(max-width:640px){.ct-grid,.ct-row{grid-template-columns:1fr}.ct-form,.ct-side{padding:22px;border-radius:24px}}
+main{position:relative}.ct-blob{position:absolute;border-radius:50%;pointer-events:none;z-index:0}.ct-blob.a{width:520px;height:520px;right:-190px;top:-60px;background:radial-gradient(circle,rgba(18,169,126,.17),transparent 68%)}.ct-blob.b{width:560px;height:560px;left:-240px;bottom:-120px;background:radial-gradient(circle,rgba(18,169,126,.13),transparent 68%)}
+.ct-wrap{position:relative;z-index:1}.ct-hero{padding:72px 0 34px}
+.ct-eyebrow{display:inline-flex;align-items:center;gap:12px;color:var(--em);font-weight:600;font-size:16px}.ct-eyebrow:before{content:"";width:30px;height:2px;background:var(--em);border-radius:2px}
+.ct-hero h1{font-size:clamp(36px,5.4vw,58px);letter-spacing:-.035em;line-height:1.05;margin:16px 0 14px;max-width:560px}.ct-hero p{color:var(--muted);font-size:17px;line-height:1.55;margin:0}
+.ct-strip{display:grid;grid-template-columns:repeat(4,1fr) 1.15fr;padding:24px 0 30px;border-bottom:1px solid var(--border)}
+.ct-s{display:block;padding:2px 24px;color:var(--ink);text-decoration:none;min-width:0}.ct-s:first-child{padding-left:0}.ct-s+.ct-s{border-left:1px solid var(--border)}
+.ct-s svg{width:28px;height:28px;fill:none;stroke:var(--em);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;display:block;margin-bottom:12px}
+.ct-s b{display:block;font-size:13.5px;font-weight:700}.ct-s span{display:block;margin-top:5px;font-size:13px;line-height:1.45;color:var(--muted);overflow-wrap:anywhere}a.ct-s:hover span{color:var(--em)}
+.ct-soc{display:flex;gap:10px;margin-top:12px}.ct-soc a{width:42px;height:42px;border-radius:50%;background:var(--em-soft);display:grid;place-items:center;color:var(--ink);transition:all .2s}.ct-soc a:hover{background:var(--em);color:#fff;transform:translateY(-2px)}.ct-soc svg{margin:0;width:19px;height:19px;stroke:currentColor}
+.ct-box{display:grid;grid-template-columns:5fr 7fr;margin:44px 0 20px;border:1.5px solid var(--border);border-radius:30px;overflow:hidden;background:#fff;box-shadow:var(--shadow-card)}
+.ct-left{background:rgba(18,169,126,.13);padding:44px 38px}.ct-left h2{font-size:clamp(26px,3.2vw,34px);letter-spacing:-.03em;line-height:1.12;margin:16px 0 14px}.ct-left p{color:var(--muted);line-height:1.6;margin:0;max-width:300px}
+.ct-form{padding:34px}.ct-r{display:grid;grid-template-columns:1fr 1fr;gap:14px}.ct-f{position:relative;margin-bottom:14px}.ct-r .ct-f{margin-bottom:0}.ct-r{margin-bottom:14px}
+.ct-f svg{position:absolute;left:16px;top:16px;width:18px;height:18px;fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;opacity:.8}.ct-f .chev{left:auto;right:16px}
+.ct-f input,.ct-f select,.ct-f textarea{width:100%;padding:14px 16px 14px 46px;border:1.5px solid var(--border-strong);border-radius:16px;font:inherit;font-size:14.5px;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--em);transition:border-color .2s,box-shadow .2s}
+.ct-f select{appearance:none;-webkit-appearance:none;padding-right:44px;cursor:pointer}.ct-f select:invalid{-webkit-text-fill-color:rgba(11,25,51,.45)}.ct-f option{-webkit-text-fill-color:var(--ink);color:var(--ink)}
+.ct-f textarea{min-height:130px;resize:vertical;padding-bottom:34px}.ct-f input::placeholder,.ct-f textarea::placeholder{color:rgba(11,25,51,.42);-webkit-text-fill-color:rgba(11,25,51,.42)}
+.ct-f input:focus,.ct-f select:focus,.ct-f textarea:focus{outline:0;border-color:var(--em);box-shadow:0 0 0 4px var(--em-soft)}
+.ct-cnt{position:absolute;right:16px;bottom:11px;font-size:12px;color:var(--muted)}.ct-form .btn{margin-top:8px}
+#ct-status{display:none;margin-top:16px;font-size:14.5px;font-weight:600;line-height:1.5;padding:12px 16px;border-radius:16px}#ct-status.ok{background:var(--em-soft);color:#0b7d5c}#ct-status.err{background:rgba(192,57,43,.1);color:#c0392b}
+@media(max-width:1000px){.ct-strip{grid-template-columns:repeat(2,1fr);gap:24px 0}.ct-s{padding:2px 22px}.ct-s:nth-child(odd){padding-left:0;border-left:0}.ct-s:last-child{grid-column:1/-1;border-left:0;padding-left:0;padding-top:20px;border-top:1px solid var(--border)}}
+@media(max-width:860px){.ct-box{grid-template-columns:1fr}.ct-left{padding:32px 26px}.ct-left p{max-width:none}}
+@media(max-width:560px){.ct-hero{padding-top:40px}.ct-strip{grid-template-columns:1fr}.ct-s,.ct-s:nth-child(odd){padding:0 0 18px;border:0}.ct-s+.ct-s{border-left:0;padding-top:0}.ct-r{grid-template-columns:1fr}.ct-r .ct-f{margin-bottom:14px}.ct-r{margin-bottom:0}.ct-form{padding:22px}}
 </style>
 </head><body>
 <div class="header-wrap">
@@ -51,48 +56,45 @@ a.ct-card:hover{transform:translateY(-3px)}
       </div>
     </header>
   </div>
-<main><div class="wrap sub">
-<div class="page-head"><h1>Hubungi NoctaPOS</h1><p>Ada pertanyaan soal aplikasi kasir, atau ingin memberi masukan? Kami siap mendengar.</p></div>
-
-<section class="ct-sec" id="kontak">
-<h2 class="ct-h2">Kontak kami</h2><p class="ct-sub">Pilih jalur yang paling nyaman untukmu.</p>
-<div class="ct-grid">
-<a class="ct-card" href="mailto:noctapos@gmail.com"><div class="ct-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div><div><small>Email</small><b>noctapos@gmail.com</b></div></a>
-<!-- GANTI nomor WhatsApp: pakai format 62812xxxxxxxx (tanpa + dan tanpa 0 di depan) pada href, lalu tampilannya di <b> -->
-<a class="ct-card" href="https://wa.me/62812XXXXXXXX?text=Halo%20NoctaPOS" target="_blank" rel="noopener"><div class="ct-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg></div><div><small>WhatsApp</small><b>+62 812-XXXX-XXXX</b></div></a>
+<main><div class="ct-blob a"></div><div class="ct-blob b"></div>
+<div class="wrap sub ct-wrap">
+<section class="ct-hero"><span class="ct-eyebrow">Hubungi Kami</span><h1>Kami siap membantu Anda</h1><p>Ada pertanyaan, saran, atau kendala?<br>Tim NoctaPOS selalu siap membantu Anda.</p></section>
+<section class="ct-strip" id="kontak">
+<a class="ct-s" href="mailto:noctapos@gmail.com"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><b>Email</b><span>noctapos@gmail.com</span></a>
+<!-- GANTI nomor WhatsApp: format 62812xxxxxxxx (tanpa + dan tanpa 0 di depan) -->
+<a class="ct-s" href="https://wa.me/62812XXXXXXXX?text=Halo%20NoctaPOS" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg><b>WhatsApp</b><span>+62 812-XXXX-XXXX</span></a>
 <!-- GANTI nomor telepon -->
-<a class="ct-card" href="tel:+62812XXXXXXXX"><div class="ct-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></div><div><small>Telepon</small><b>+62 812-XXXX-XXXX</b></div></a>
-<a class="ct-card" href="https://www.instagram.com/noctapos" target="_blank" rel="noopener"><div class="ct-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></div><div><small>Instagram</small><b>@noctapos</b></div></a>
+<a class="ct-s" href="tel:+62812XXXXXXXX"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg><b>Telepon</b><span>+62 812-XXXX-XXXX</span></a>
 <!-- GANTI alamat / lokasi -->
-<div class="ct-card" style="grid-column:1/-1"><div class="ct-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6 7-12a7 7 0 1 0-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><small>Lokasi</small><b>Isi alamat lengkap di sini, Kota, Provinsi</b></div></div>
-</div></section>
-
-<section class="ct-sec" id="kritik-saran">
-<h2 class="ct-h2">Kritik &amp; saran</h2><p class="ct-sub">Masukanmu membantu NoctaPOS jadi lebih baik untuk para pemilik konter.</p>
-<div class="ct-split">
-<div class="ct-side"><h3>Suaramu menentukan arah NoctaPOS.</h3><p>Ceritakan apa yang sudah membantu, apa yang membingungkan, atau fitur yang kamu butuhkan.</p>
-<ul><li>Kritik tentang tampilan atau cara kerja aplikasi</li><li>Saran fitur untuk konter dan agen BRILink</li><li>Kendala yang kamu temui saat memakai NoctaPOS</li></ul></div>
+<div class="ct-s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6 7-12a7 7 0 1 0-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><b>Lokasi</b><span>Isi alamat lengkap, Kota, Provinsi</span></div>
+<div class="ct-s"><b>Ikuti Kami di</b><div class="ct-soc">
+<a href="https://www.instagram.com/noctapos" target="_blank" rel="noopener" aria-label="Instagram NoctaPOS"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+<!-- Tambahkan sosmed lain di sini setelah ada linknya, contoh: <a href="https://www.youtube.com/@namakanal" target="_blank" rel="noopener" aria-label="YouTube">...ikon...</a> -->
+</div></div>
+</section>
+<section class="ct-box" id="kritik-saran">
+<div class="ct-left"><span class="ct-eyebrow">Kritik &amp; Saran</span><h2>Tinggalkan pesan kepada kami</h2><p>Isi formulir di samping, dan tim kami akan segera menghubungi Anda.</p></div>
 <form id="ct-form" class="ct-form" action="https://formsubmit.co/ajax/noctapos@gmail.com" method="POST">
 <input type="hidden" name="_subject" value="Kritik &amp; Saran Baru - NoctaPOS" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
 <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
-<div class="ct-row"><div><label for="ct-name">Nama</label><input id="ct-name" name="name" required autocomplete="name" maxlength="80" /></div>
-<div><label for="ct-email">Email</label><input id="ct-email" type="email" name="email" required autocomplete="email" /></div></div>
-<label for="ct-type">Jenis masukan</label><select id="ct-type" name="jenis"><option>Saran</option><option>Kritik</option><option>Kritik dan saran</option><option>Pertanyaan lain</option></select>
-<label for="ct-msg">Pesan</label><textarea id="ct-msg" name="message" required maxlength="1500" placeholder="Tulis kritik atau saranmu di sini…"></textarea>
-<button class="btn btn-em" type="submit" id="ct-btn"><span>Kirim masukan</span><span>&rarr;</span></button>
+<div class="ct-r"><div class="ct-f"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input name="name" required maxlength="80" autocomplete="name" placeholder="Nama Lengkap" aria-label="Nama Lengkap" /></div>
+<div class="ct-f"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><input type="email" name="email" required autocomplete="email" placeholder="Email Anda" aria-label="Email Anda" /></div></div>
+<div class="ct-f"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><select name="jenis" required aria-label="Kategori"><option value="" disabled selected>Pilih Kategori</option><option>Kritik</option><option>Saran</option><option>Kendala penggunaan</option><option>Pertanyaan lain</option></select><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div>
+<div class="ct-f"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg><textarea id="ct-msg" name="message" required maxlength="500" placeholder="Pesan Anda..." aria-label="Pesan Anda"></textarea><span class="ct-cnt" id="ct-cnt">0/500</span></div>
+<button class="btn btn-em" type="submit" id="ct-btn"><span>Kirim Pesan</span><span>&rarr;</span></button>
 <p id="ct-status" role="status" aria-live="polite"></p></form>
-</div></section>
-</div></main>
+</section></div></main>
 <footer><div class="wrap"><div class="foot-grid">
-<div><b style="font-size:22px">NoctaPOS</b><p>Aplikasi kasir untuk konter pulsa dan agen BRILink. Kas cocok, stok jelas, tetap jalan saat offline.</p></div>
+<div><a class="f-brand" href="index.html" aria-label="NoctaPOS Beranda"><svg class="f-mark" viewBox="16 16 480 480" aria-hidden="true"><rect x="16" y="16" width="480" height="480" rx="120" fill="#fff"/><path d="M115 110L175 110 175 220 337 402 397 402 397 200 337 220 337 300 175 110Z" fill="#0B1933"/><rect x="115" y="110" width="60" height="292" fill="#0B1933"/><rect x="337" y="200" width="60" height="202" fill="#0B1933"/><polygon points="205,110 310,110 280,215" fill="#0FAF80"/><polygon points="310,110 397,200 310,200" fill="#12A97E"/></svg><b>NoctaPOS</b></a><p>Aplikasi kasir untuk konter pulsa dan agen BRILink. Kas cocok, stok jelas, tetap jalan saat offline.</p><div class="f-social"><a href="https://www.instagram.com/noctapos" target="_blank" rel="noopener" aria-label="Instagram NoctaPOS"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a href="mailto:noctapos@gmail.com" aria-label="Email NoctaPOS"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a></div></div>
 <div class="foot-col"><h4>Produk</h4><ul><li><a href="fitur.html">Fitur lengkap</a></li><li><a href="index.html#harga">Harga &amp; paket</a></li><li><a href="bandingkan.html">Perbandingan</a></li><li><a href="index.html#day">Simulasi harian</a></li></ul></div>
 <div class="foot-col"><h4>Belajar</h4><ul><li><a href="artikel.html">Artikel</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
 <div class="foot-col"><h4>Mulai</h4><ul><li><a data-app="daftar" href="Daftar.html">Coba gratis</a></li><li><a data-app="masuk" href="index.html">Login</a></li><li><a href="contact.html">Kontak</a></li></ul></div>
 </div><div class="foot-bot" style="padding-top:24px;font-size:13.5px;opacity:.7">&copy; 2026 NoctaPOS</div></div></footer><script src="assets/js/site.js"></script>
 <script>
-(function(){var f=document.getElementById('ct-form'),b=document.getElementById('ct-btn'),s=document.getElementById('ct-status');if(!f)return;
+(function(){var f=document.getElementById('ct-form'),b=document.getElementById('ct-btn'),s=document.getElementById('ct-status'),m=document.getElementById('ct-msg'),c=document.getElementById('ct-cnt');if(!f)return;
+function cnt(){c.textContent=m.value.length+'/500'}m.addEventListener('input',cnt);
 f.addEventListener('submit',function(e){e.preventDefault();var o=b.innerHTML;b.disabled=true;b.textContent='Mengirim…';s.style.display='none';s.className='';
-fetch(f.action,{method:'POST',body:new FormData(f),headers:{Accept:'application/json'}}).then(function(r){if(!r.ok)throw 0;f.reset();s.className='ok';s.style.display='block';s.textContent='Terima kasih! Masukanmu sudah terkirim.'})
+fetch(f.action,{method:'POST',body:new FormData(f),headers:{Accept:'application/json'}}).then(function(r){if(!r.ok)throw 0;f.reset();cnt();s.className='ok';s.style.display='block';s.textContent='Terima kasih! Pesan Anda sudah terkirim.'})
 .catch(function(){s.className='err';s.style.display='block';s.textContent='Maaf, pesan belum terkirim. Silakan kirim langsung ke noctapos@gmail.com.'})
 .then(function(){b.disabled=false;b.innerHTML=o})});})();
 </script></body></html>
