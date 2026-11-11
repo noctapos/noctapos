@@ -33,6 +33,18 @@
   window.matchMedia('(min-width: 961px)').addEventListener('change', function (m) { if (m.matches) set(false); });
 })();
 
+/* ---------- NAV: dropdown Support (klik / keyboard; hover diurus CSS) ---------- */
+(function () {
+  'use strict';
+  function closeAll(except) { Array.prototype.forEach.call(document.querySelectorAll('.nav-dd.open'), function (d) { if (d !== except) { d.classList.remove('open'); var b = d.querySelector('.nav-dd-btn'); if (b) b.setAttribute('aria-expanded', 'false'); } }); }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.nav-dd-btn');
+    if (btn) { var dd = btn.parentNode, on = !dd.classList.contains('open'); closeAll(dd); dd.classList.toggle('open', on); btn.setAttribute('aria-expanded', on ? 'true' : 'false'); return; }
+    if (!(e.target.closest && e.target.closest('.nav-dd'))) closeAll();
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
+})();
+
 /* ---------- app ---------- */
 (function(){
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
