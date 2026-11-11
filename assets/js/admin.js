@@ -4,6 +4,11 @@
   var PASS = 'nocta-admin', S = window.ArticleStore, $ = function (s) { return document.querySelector(s); };
   var q, cur = null, slugTouched = false, T = 'artikel', F = 'all';
   var TXT = { artikel: 'Artikel baru', panduan: 'Panduan baru' };
+  function addCat(n, keep) {
+    var sel = $('#f-gcat');
+    if (!Array.prototype.some.call(sel.options, function (x) { return x.value === n; })) sel.insertBefore(new Option(n), sel.querySelector('option[value="__new"]'));
+    if (!keep) sel.value = n;
+  }
   function catEl() { return T === 'panduan' ? $('#f-gcat') : $('#f-cat'); }
   function setType(t) {
     T = t;
@@ -45,6 +50,7 @@
   function renderList() {
     S.list({ type: 'all' }).then(function (all) {
       var l = all.filter(function (a) { return F === 'all' || a.type === F; });
+      all.filter(function (a) { return a.type === 'panduan'; }).forEach(function (a) { if (a.category) addCat(a.category, true); });
       $('#cats').innerHTML = all.filter(function (a) { return a.type !== 'panduan'; }).map(function (a) { return '<option value="' + esc(a.category) + '">'; }).join('');
       $('#list').innerHTML = l.length ? l.map(function (a) {
         return '<div class="row"><div><b>' + esc(a.title) + '</b><small><span class="pill ' + (a.status === 'published' ? 'ok">Terbit' : 'dr">Draft') + '</span><span class="pill ' + (a.type === 'panduan' ? 'gp">Panduan' : 'tp">Artikel') + '</span>' + esc(a.category) + '</small></div><div class="acts">' +
@@ -78,6 +84,12 @@
       var r = q.getSelection(true); q.insertEmbed(r.index, 'image', u, 'user'); q.setSelection(r.index + 1);
     } } } } });
     setType('artikel');
+    var lastCat = $('#f-gcat').value;
+    $('#f-gcat').addEventListener('change', function () {
+      if (this.value !== '__new') { lastCat = this.value; return; }
+      var n = (prompt('Nama kategori panduan baru:') || '').trim().slice(0, 40);
+      if (n) { addCat(n); lastCat = n; } else this.value = lastCat;
+    });
     $('#t-artikel').addEventListener('click', function () { if (!cur) setType('artikel'); });
     $('#t-panduan').addEventListener('click', function () { if (!cur) setType('panduan'); });
     $('#ftabs').addEventListener('click', function (e) { if (!e.target.dataset.f) return; F = e.target.dataset.f; Array.prototype.forEach.call($('#ftabs').children, function (b) { b.classList.toggle('on', b === e.target); }); renderList(); });

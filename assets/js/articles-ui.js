@@ -77,6 +77,13 @@
     { n: 'Fitur Lainnya', d: 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z' }
   ];
   function gIcon(cat) { var c = GCATS.filter(function (x) { return x.n === cat; })[0] || GCATS[5]; return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + c.d + '"/></svg>'; }
+  /* kategori = daftar bawaan + kategori baru apa pun yang dipakai panduan (ikon default) */
+  function catList(l) {
+    var out = GCATS.slice();
+    l.forEach(function (a) { if (a.category && !out.some(function (c) { return c.n === a.category; })) out.push({ n: a.category, d: GCATS[5].d }); });
+    return out;
+  }
+  var CAT_LIMIT = 6;
   function gHref(a) { return 'panduan-detail.html?slug=' + encodeURIComponent(a.slug); }
   function gCard(a) {
     return '<a class="gd-card" href="' + esc(gHref(a)) + '"><span class="gd-ic">' + gIcon(a.category) + '</span><span class="gd-tx"><small>' + esc(a.category) + '</small><b>' + esc(a.title) + '</b><span>' + esc(a.excerpt) + '</span></span><span class="gd-go" aria-hidden="true">&rarr;</span></a>';
@@ -93,8 +100,13 @@
     var P = new URLSearchParams(location.search), st = { cat: P.get('cat') || '', q: (P.get('q') || '').trim() };
     var cats = $('#gdCats'), list = $('#gdList'), ttl = $('#gdListTitle'), empty = $('#gdEmpty'), inp = $('#gdQ'), track = $('#gdTrack'), dots = $('#gdDots');
     inp.value = st.q;
+    var ALL = catList(l), open = ALL.slice(CAT_LIMIT).some(function (c) { return c.n === st.cat; }), more = $('#gdMore');
+    more.hidden = ALL.length <= CAT_LIMIT;
+    function moreLabel() { more.innerHTML = open ? 'Tampilkan lebih sedikit &uarr;' : 'Lihat selengkapnya &darr;'; more.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+    more.addEventListener('click', function () { open = !open; moreLabel(); tiles(); });
+    moreLabel();
     function tiles() {
-      cats.innerHTML = GCATS.map(function (c) { return '<button type="button" class="gd-cat' + (st.cat === c.n ? ' on' : '') + '" data-c="' + esc(c.n) + '"><span class="gd-cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + c.d + '"/></svg></span>' + esc(c.n) + '</button>'; }).join('');
+      cats.innerHTML = (open ? ALL : ALL.slice(0, CAT_LIMIT)).map(function (c) { return '<button type="button" class="gd-cat' + (st.cat === c.n ? ' on' : '') + '" data-c="' + esc(c.n) + '"><span class="gd-cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + c.d + '"/></svg></span>' + esc(c.n) + '</button>'; }).join('');
     }
     function render() {
       var q = st.q.toLowerCase();
@@ -133,7 +145,7 @@
       document.title = a.title + ' — Panduan NoctaPOS';
       var md = document.querySelector('meta[name=description]'); if (md) md.content = a.excerpt;
       var same = all.filter(function (x) { return x.category === a.category; }).reverse(), idx = same.map(function (x) { return x.id; }).indexOf(a.id);
-      var others = GCATS.filter(function (c) { return c.n !== a.category; }).map(function (c) { return '<a href="panduan-pengguna.html?cat=' + encodeURIComponent(c.n) + '">' + esc(c.n) + '</a>'; }).join('');
+      var others = catList(all).filter(function (c) { return c.n !== a.category; }).map(function (c) { return '<a href="panduan-pengguna.html?cat=' + encodeURIComponent(c.n) + '">' + esc(c.n) + '</a>'; }).join('');
       var side = '<aside class="gd-side"><form class="gd-sq" action="panduan-pengguna.html" role="search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input name="q" placeholder="Cari panduan…" aria-label="Cari panduan"></form><h2>Lainnya dalam ' + esc(a.category) + '</h2><nav class="gd-sl">' +
         same.map(function (x) { return '<a href="' + esc(gHref(x)) + '"' + (x.id === a.id ? ' class="on" aria-current="page"' : '') + '>' + esc(x.title) + '</a>'; }).join('') + '</nav><h2>Kategori lain</h2><nav class="gd-sl">' + others + '</nav></aside>';
       var pn = (idx > 0 ? '<a class="gd-pn" href="' + esc(gHref(same[idx - 1])) + '"><small>&larr; Sebelumnya</small>' + esc(same[idx - 1].title) + '</a>' : '<span></span>') + (idx >= 0 && idx < same.length - 1 ? '<a class="gd-pn nx" href="' + esc(gHref(same[idx + 1])) + '"><small>Berikutnya &rarr;</small>' + esc(same[idx + 1].title) + '</a>' : '<span></span>');
