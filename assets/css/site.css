@@ -4154,3 +4154,19 @@ body.sb-lock{overflow:hidden}
     background:var(--em);transform-origin:left;transform:scaleX(var(--p,0));opacity:.9}
   .sb-board.paused .sb-sheet::after{opacity:.35}
 }
+
+/* ---------- REVISI NAVBAR MOBILE (2) ---------- */
+@media(max-width:960px){
+  /* "Coba Gratis" seukuran teks logo, lebih minimalis */
+  .navbar .nav-actions .btn{
+    min-height:42px;padding:0 16px!important;font-size:14px!important;font-weight:700;gap:8px;
+  }
+  .navbar .nav-actions .btn span:last-child{font-size:15px}
+  .nav-toggle{width:44px;height:44px;margin-left:8px}
+  .nav-toggle span{width:18px}
+  /* jarak navbar ke teks "Sistem Kasir Konter..." */
+  .header-wrap + main .hero{padding-top:34px!important}
+}
+@media(max-width:380px){
+  .navbar .nav-actions .btn{padding:0 13px!important;font-size:13.5px!important;gap:6px}
+}
