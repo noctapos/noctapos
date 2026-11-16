@@ -29,11 +29,13 @@
 </style>
 <style>
 /* Revisi: pill harga hero, kalimat segmen usaha, baris spesifikasi paket */
-.hero-price-pill{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:8px 16px;border-radius:999px;background:#E8F8F1;border:1px solid #BFEBD9;color:#0B6B4F;font-size:13.5px;font-weight:700;line-height:1.35;max-width:100%}
-.hero-seg{margin-top:12px;font-size:14.5px;line-height:1.55;color:var(--muted)}
-.hero-seg b{color:var(--ink)}
+.hero-price-pill{display:inline-flex;align-items:center;gap:10px;margin-top:16px;padding:7px 18px 7px 8px;border-radius:999px;background:#E3F5EC;border:1px solid #BFE6D4;color:var(--ink);font-size:14px;line-height:1.35;max-width:100%}
+.hpp-badge{flex:none;padding:5px 12px;border-radius:999px;background:#12A97E;color:#fff;font-size:11.5px;font-weight:800;letter-spacing:.02em}
+.hero-price-pill b{font-weight:800}
+.hero-price-pill a{color:#0E9F73;font-weight:800;text-decoration:underline;text-underline-offset:2px}
 .p-spec-row b{text-align:right}
-@media(max-width:560px){.hero-price-pill{font-size:12.5px;padding:8px 14px;border-radius:16px}}
+.hero-lead .hero-hl{color:#12A97E;font-weight:800}
+@media(max-width:560px){.hero-price-pill{font-size:12.5px;padding:6px 14px 6px 6px;gap:8px;border-radius:18px}}
 </style>
 </head>
 <body>
@@ -78,24 +80,22 @@
           <div>
             <div class="doodle-tag">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v4M5 7l3 3M19 7l-3 3"/></svg>
-              <span>Aplikasi Kasir &amp; Manajemen Konter Terpadu</span>
+              <span>Sistem Kasir Konter, BRILink, Ritel &amp; UMKM</span>
             </div>
 
             <h1><span>Kas cocok.</span><span>Karyawan terpantau.</span><span><em style="font-style:normal" class="brush-em">Sinyal mati,</em></span><span>transaksi jalan.</span></h1>
 
-            <p class="hero-lead">Lebih dari sekadar kasir konter dan agen BRILink. Pisahkan saldo laci &amp; bank otomatis, atur absensi dan gaji karyawan, hingga rekomendasi kulakan AI. Dilengkapi mode darurat (offline) agar Anda tetap bisa jualan saat WiFi putus.</p>
-
-            <p class="hero-seg">Kini tersedia mode tampilan khusus untuk <b>Minimarket/Ritel</b> dan <b>F&amp;B/Kedai Kopi/UMKM</b>, lengkap dengan Barang Non-Stok, Catatan Meja &amp; Kalkulator HPP Resep.</p>
+            <p class="hero-lead">Dirancang untuk <b class="hero-hl">Konter &amp; Agen BRILink, Toko Ritel,</b> hingga <b class="hero-hl">F&amp;B.</b> Pisahkan saldo laci &amp; bank otomatis, hitung HPP resep, pantau absensi GPS &amp; gaji staf, hingga saran kulakan AI. Tetap lancar berjualan meski WiFi putus.</p>
 
             <div class="hero-ctas">
               <a data-app="daftar" href="Daftar.html" class="btn btn-dark">
-                <span>Coba Gratis Sekarang</span>
+                <span>Coba Gratis 7 Hari</span>
                 <span>&rarr;</span>
               </a>
-              <a href="fitur.html" class="btn btn-outline">Lihat Fitur</a>
+              <a href="#kenapa" class="btn btn-outline">Lihat Keunggulan</a>
             </div>
 
-            <div class="hero-price-pill">🔥 Mulai Rp 1.300-an/hari (Rp 39.200/bln) • Coba Gratis 7 Hari Fitur PRO</div>
+            <div class="hero-price-pill"><span class="hpp-badge">HEMAT 20%</span><span>Mulai <b>Rp 1.300-an/hari</b> (Rp 39.200/bln) &middot; <a href="#harga">Cek Paket &rarr;</a></span></div>
           </div>
 
           <!-- Right Column: Tablet landscape (dashboard + notifikasi iOS) + printer -->
