@@ -256,6 +256,7 @@ $$('.chip').forEach(c=>c.addEventListener('click',()=>{$$('.chip').forEach(x=>x.
         if (j === i) heads[j].setAttribute('aria-current', 'step'); else heads[j].removeAttribute('aria-current');
         s.style.setProperty('--p', 0);
       });
+      board.style.setProperty('--p', 0);
       nowEl.textContent = pad(i + 1);
       timeEl.textContent = heads[i].querySelector('.sb-name').textContent;
     }
@@ -277,6 +278,7 @@ $$('.chip').forEach(c=>c.addEventListener('click',()=>{$$('.chip').forEach(x=>x.
         elapsed += dt;
         if (elapsed >= DUR) go(i + 1);
         steps[i].style.setProperty('--p', Math.min(elapsed / DUR, 1).toFixed(4));
+        board.style.setProperty('--p', Math.min(elapsed / DUR, 1).toFixed(4));
       }
     }
     function start() { if (!raf) { last = 0; raf = requestAnimationFrame(tick); } }
