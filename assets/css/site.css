@@ -3974,3 +3974,107 @@ body.sb-lock{overflow:hidden}
 @media (max-width:620px){.gd-cats{grid-template-columns:repeat(2,1fr)}.gd-cat:nth-child(n){border-left:1px solid var(--border);border-top:1px solid var(--border)}.gd-cat:nth-child(odd){border-left:0}.gd-cat:nth-child(-n+2){border-top:0}.gd-pop{flex-basis:88%;min-width:0}.gd-help{padding:30px 24px}.gd-help svg{display:none}.gd-pns{grid-template-columns:1fr}.gd-pn.nx{grid-column:auto}.gd-arrows{display:none}}
 
 .gd-n{font-weight:600;font-size:12.5px;color:var(--muted);margin-top:-6px}
+
+/* =====================================================================
+   MOBILE MINIMALIS (HP) — PALING AKHIR supaya menimpa aturan di atasnya.
+   Gambar/ilustrasi besar disembunyikan, jarak dirapatkan, kartu diringkas.
+   Hanya tata letak, redaksi tidak diubah. Tanggal: 2026-11-16
+   ===================================================================== */
+@media(max-width:720px){
+  html,body{overflow-x:clip}
+  .wrap{padding-left:18px;padding-right:18px}
+  .sec-title{font-size:clamp(25px,7.2vw,31px);line-height:1.12}
+  .sec-desc{font-size:15px;line-height:1.55}
+  .doodle-tag{font-size:14px}
+
+  /* ---- HERO: tanpa tablet/printer/doodle ---- */
+  .hero{padding:18px 0 26px}
+  .hero .hero-grid{gap:0}
+  .hero .hero-visual,.hero-visual{display:none!important}
+  .hero h1{font-size:clamp(32px,9.4vw,42px);line-height:1.04}
+  .hero-lead{font-size:15.5px;line-height:1.6;margin-top:14px}
+  .hero-ctas{flex-direction:column;gap:10px;margin-top:20px}
+  .hero-ctas .btn{width:100%;justify-content:center;padding:13px 18px;font-size:15px;white-space:nowrap}
+  .hero-price-pill{display:flex;width:100%;margin-top:14px;font-size:12.5px}
+  .hero .trust-strip{grid-template-columns:1fr 1fr;gap:14px 10px;padding:14px 16px;margin-top:22px;border-radius:20px}
+  .hero .trust-strip .ts-item{padding:0;gap:10px}
+  .hero .trust-strip .ts-item+.ts-item{border:0}
+  .hero .trust-strip .ts-ic{width:34px;height:34px}
+  .hero .trust-strip .ts-ic svg{width:18px;height:18px}
+  .hero .trust-strip .ts-tx b{font-size:12.5px}
+  .hero .trust-strip .ts-tx span{display:none}
+  .marquee-bar{font-size:13px}
+
+  /* ---- MASALAH: bubble saja, tanpa foto & ilustrasi ---- */
+  .v2-prob{padding:36px 0 40px}
+  .pb-photo{display:none!important}
+  .pb-grid{gap:16px}
+  .pb-hint{font-size:17px}
+  .pb-tenang{margin-top:14px;font-size:20px}
+  .pb-tenang svg{display:none}
+  .cmp{margin-top:26px;padding:12px;border-radius:20px}
+  .cmp-ic,.cmp-art,.cmp-arrow{display:none}
+  .cmp-head{margin-bottom:12px;gap:4px}
+  .cmp-head h3{font-size:21px}
+  .cmp-head p{font-size:13.5px}
+  .cmp-grid{gap:10px}
+  .cmp-col{border-radius:16px}
+  .cmp-bar{padding:11px 14px;gap:10px}
+  .cmp-bar>i{width:30px;height:30px}
+  .cmp-bar>i svg{width:15px;height:15px}
+  .cmp-bar b{font-size:15.5px}
+  .cmp-bar small{font-size:12.5px}
+  .cmp-list{gap:8px;padding:10px 14px 14px}
+  .cmp-list li{font-size:14px;gap:9px}
+
+  /* ---- STORYBOARD: gambar disembunyikan, tinggal daftar langkah ---- */
+  .sb{padding:34px 0 14px}
+  .sb-head{margin-bottom:16px}
+  .sb-sheet{display:none}
+  .sb-board{gap:0}
+  .sb-steps{gap:8px}
+  .sb-hd{padding:11px 12px}
+  .sb-name{font-size:15px}
+  .sb-more h3{font-size:17px}
+  .sb-more p{font-size:14px;margin-bottom:14px}
+  .sb-outro{margin-top:20px;font-size:17px}
+
+  /* ---- KENAPA NOCTAPOS: daftar 1 kolom ringkas ---- */
+  .knm-sec{padding:38px 0}
+  .knm-bg-arch{display:none}
+  .knm-title{font-size:clamp(25px,7.2vw,31px)}
+  .knm-desc{font-size:14.5px}
+  .knm-grid{grid-template-columns:1fr;gap:8px}
+  .knm-card{flex-direction:row;align-items:center;gap:12px;padding:12px 14px;border-radius:14px}
+  .knm-ic{flex:none;width:34px;height:34px}
+  .knm-txt h3{font-size:13px;margin-bottom:2px}
+  .knm-txt p{font-size:13px;line-height:1.4}
+  .knm-cta{margin-top:18px}
+
+  /* ---- HARGA ---- */
+  .fp-wrap{padding-top:38px;padding-bottom:38px}
+  .pricing-grid{gap:16px;margin-top:22px}
+  .p-card{padding:22px 18px 18px;border-radius:20px}
+  .p-pop-badge{left:18px}
+  .p-amount b{font-size:30px}
+  .p-spec-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:14px;padding:3px 0}
+  .p-foot-note{font-size:13px;line-height:1.55;margin-top:20px}
+
+  /* ---- ARTIKEL: kartu teks saja, tanpa gambar ---- */
+  .am-grid{gap:10px;margin-top:20px}
+  .am-card{border-radius:16px}
+  .am-img{display:none}
+  .am-body{margin-top:0;border-radius:0;padding:14px 16px;gap:6px;text-align:left}
+  .am-tags{justify-content:flex-start}
+  .am-body h3{font-size:16px;line-height:1.3}
+  .am-body p{font-size:13.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .am-body small{font-size:12px}
+
+  /* ---- FAQ, CTA, FOOTER ---- */
+  .chat-board .chat-row:nth-child(n+7){display:none}   /* tampil 3 tanya-jawab, sisanya ada di halaman FAQ */
+  .chat-board{padding:14px}
+  .chat-bubble{font-size:14.5px}
+  .cta2{padding:28px 0}
+  footer .foot-grid{grid-template-columns:1fr 1fr;gap:22px 14px}
+  footer .foot-grid>div:first-child{grid-column:1/-1}
+}
