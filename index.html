@@ -27,6 +27,14 @@
 @media(max-width:1000px){.trust-strip{grid-template-columns:1fr 1fr;border-radius:32px;gap:16px 0;padding:20px}.ts-item:nth-child(3){border-left:0}}
 @media(max-width:560px){.trust-strip{grid-template-columns:1fr;border-radius:26px;gap:0;padding:6px 18px;margin-top:34px}.ts-item{padding:14px 0}.ts-item+.ts-item{border-left:0;border-top:1px solid var(--border)}}
 </style>
+<style>
+/* Revisi: pill harga hero, kalimat segmen usaha, baris spesifikasi paket */
+.hero-price-pill{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:8px 16px;border-radius:999px;background:#E8F8F1;border:1px solid #BFEBD9;color:#0B6B4F;font-size:13.5px;font-weight:700;line-height:1.35;max-width:100%}
+.hero-seg{margin-top:12px;font-size:14.5px;line-height:1.55;color:var(--muted)}
+.hero-seg b{color:var(--ink)}
+.p-spec-row b{text-align:right}
+@media(max-width:560px){.hero-price-pill{font-size:12.5px;padding:8px 14px;border-radius:16px}}
+</style>
 </head>
 <body>
 
@@ -77,13 +85,17 @@
 
             <p class="hero-lead">Lebih dari sekadar kasir konter dan agen BRILink. Pisahkan saldo laci &amp; bank otomatis, atur absensi dan gaji karyawan, hingga rekomendasi kulakan AI. Dilengkapi mode darurat (offline) agar Anda tetap bisa jualan saat WiFi putus.</p>
 
+            <p class="hero-seg">Kini tersedia mode tampilan khusus untuk <b>Minimarket/Ritel</b> dan <b>F&amp;B/Kedai Kopi/UMKM</b>, lengkap dengan Barang Non-Stok, Catatan Meja &amp; Kalkulator HPP Resep.</p>
+
             <div class="hero-ctas">
               <a data-app="daftar" href="Daftar.html" class="btn btn-dark">
                 <span>Coba Gratis Sekarang</span>
                 <span>&rarr;</span>
               </a>
-              <a href="#fitur" class="btn btn-outline">Lihat Fitur</a>
+              <a href="fitur.html" class="btn btn-outline">Lihat Fitur</a>
             </div>
+
+            <div class="hero-price-pill">🔥 Mulai Rp 1.300-an/hari (Rp 39.200/bln) • Coba Gratis 7 Hari Fitur PRO</div>
           </div>
 
           <!-- Right Column: Tablet landscape (dashboard + notifikasi iOS) + printer -->
@@ -446,7 +458,7 @@
 
           <span class="knm-eyebrow">NOCTAPOS VS APLIKASI LAIN</span>
           <h2 class="knm-title">Kenapa Harus NoctaPOS?</h2>
-          <p class="knm-desc">Dirancang khusus untuk konter pulsa dan agen BRILink, dengan fitur, kontrol, dan laporan yang biasanya tidak ada di kasir umum.</p>
+          <p class="knm-desc">Dirancang khusus untuk konter pulsa dan agen BRILink, dengan fitur, kontrol, dan laporan yang biasanya tidak ada di kasir umum. Kini juga mendukung mode tampilan khusus untuk Minimarket/Ritel dan F&amp;B/Kedai Kopi/UMKM (Barang Non-Stok, Catatan Meja, &amp; Kalkulator HPP Resep).</p>
         </div>
 
         <!-- 2. Grid 6 Kartu (3 Kolom x 2 Baris, Ikon di Kiri) -->
@@ -571,11 +583,11 @@
         <!-- Grid 3 Kartu Harga Sejajar -->
         <div class="pricing-grid rv">
 
-          <!-- 1. PAKET BASIC -->
+          <!-- 1. PAKET STARTER -->
           <article class="p-card">
             <div class="p-top">
               <div class="p-head">
-                <h3>Basic</h3>
+                <h3>Starter</h3>
                 <p>Untuk konter kecil &amp; usaha pemula.</p>
               </div>
 
@@ -593,12 +605,16 @@
                   <b>1</b>
                 </div>
                 <div class="p-spec-row">
-                  <span>Pengguna</span>
-                  <b>maks 3</b>
+                  <span>Akun Login</span>
+                  <b>2 (1 Owner + 1 Kasir)</b>
+                </div>
+                <div class="p-spec-row">
+                  <span>Produk</span>
+                  <b>Maks. 300 SKU</b>
                 </div>
               </div>
 
-              <!-- Dropdown Fitur Basic -->
+              <!-- Dropdown Fitur Starter -->
               <details class="p-dropdown">
                 <summary class="p-drop-btn">
                   <span>Lihat rincian fitur paket</span>
@@ -606,17 +622,19 @@
                 </summary>
                 <div class="p-drop-body">
                   <ul class="p-feat-list">
-                    <li class="yes"><span>&#10003;</span> Transaksi &amp; Pisah Kas BRILink</li>
-                    <li class="yes"><span>&#10003;</span> Manajemen Produk, SN, Cetak Label</li>
-                    <li class="yes"><span>&#10003;</span> Buku Kas &amp; Hutang</li>
-                    <li class="no"><span>&times;</span> Tanpa Modul HR &amp; Absensi GPS</li>
-                    <li class="no"><span>&times;</span> Tanpa Analisis AI &amp; Poin Member</li>
+                    <li class="yes"><span>&#10003;</span> Kasir Offline-First &amp; Pisah Kas BRILink</li>
+                    <li class="yes"><span>&#10003;</span> Buka/Tutup Shift Kas</li>
+                    <li class="yes"><span>&#10003;</span> Buku Hutang</li>
+                    <li class="yes"><span>&#10003;</span> Input SN Satuan</li>
+                    <li class="yes"><span>&#10003;</span> Cetak Label Barcode</li>
+                    <li class="no"><span>&times;</span> Tanpa Absensi GPS &amp; Analisis AI</li>
+                    <li class="no"><span>&times;</span> Tanpa Poin Member</li>
                   </ul>
                 </div>
               </details>
             </div>
 
-            <a href="register.html" class="p-cta outline">Mulai Basic Gratis</a>
+            <a data-app="daftar" href="Daftar.html" class="p-cta outline">Mulai Starter Gratis</a>
           </article>
 
           <!-- 2. PAKET PRO (PALING POPULER) -->
@@ -640,11 +658,15 @@
               <div class="p-specs">
                 <div class="p-spec-row">
                   <span>Cabang</span>
-                  <b>1</b>
+                  <b>1 (bisa Add-on)</b>
                 </div>
                 <div class="p-spec-row">
-                  <span>Pengguna</span>
-                  <b>maks 10</b>
+                  <span>Akun Login</span>
+                  <b>6 (1 Owner + 5 Staf)</b>
+                </div>
+                <div class="p-spec-row">
+                  <span>Produk</span>
+                  <b>Unlimited SKU</b>
                 </div>
               </div>
 
@@ -655,18 +677,21 @@
                   <svg class="p-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                 </summary>
                 <div class="p-drop-body">
-                  <p class="p-feat-intro">Semua di Basic, ditambah:</p>
+                  <p class="p-feat-intro">Semua fitur Starter, ditambah:</p>
                   <ul class="p-feat-list">
-                    <li class="yes"><span>&#10003;</span> Modul HR (Absensi GPS, KPI, Gaji)</li>
-                    <li class="yes"><span>&#10003;</span> Analisis Kulakan Berbasis AI</li>
-                    <li class="yes"><span>&#10003;</span> Notifikasi Telegram Real-time</li>
-                    <li class="yes"><span>&#10003;</span> Poin Member &amp; Tukar Hadiah</li>
+                    <li class="yes"><span>&#10003;</span> Batch SN &amp; Manajemen Retur</li>
+                    <li class="yes"><span>&#10003;</span> Kalkulator HPP &amp; Resep <b>(Sudah Rilis!)</b></li>
+                    <li class="yes"><span>&#10003;</span> Poin Member</li>
+                    <li class="yes"><span>&#10003;</span> Absensi GPS &amp; Biometrik Wajah + Survei 360 + Slip Gaji</li>
+                    <li class="yes"><span>&#10003;</span> Notifikasi Bot Resmi @NoctaPOS_Bot</li>
+                    <li class="yes"><span>&#10003;</span> Saran Kulakan AI (6x/bln) &amp; Evaluasi AI HRD (1x/bln)</li>
+                    <li class="yes"><span>&#10003;</span> Ekspor Excel/PDF</li>
                   </ul>
                 </div>
               </details>
             </div>
 
-            <a href="register.html" class="p-cta primary">Coba Pro Gratis</a>
+            <a data-app="daftar" href="Daftar.html" class="p-cta primary">Coba Pro Gratis</a>
           </article>
 
           <!-- 3. PAKET ULTIMATE -->
@@ -688,11 +713,15 @@
               <div class="p-specs">
                 <div class="p-spec-row">
                   <span>Cabang</span>
-                  <b>maks 2</b>
+                  <b>s/d 2 Toko (bisa Add-on)</b>
                 </div>
                 <div class="p-spec-row">
-                  <span>Pengguna</span>
-                  <b>maks 15</b>
+                  <span>Akun Login</span>
+                  <b>16 (1 Owner + 15 Staf)</b>
+                </div>
+                <div class="p-spec-row">
+                  <span>Produk</span>
+                  <b>Unlimited SKU</b>
                 </div>
               </div>
 
@@ -704,21 +733,23 @@
                 </summary>
                 <div class="p-drop-body">
                   <ul class="p-feat-list">
-                    <li class="yes"><span>&#10003;</span> Mendapatkan <b>SEMUA</b> Fitur Paket Pro</li>
-                    <li class="yes"><span>&#10003;</span> Support multi-cabang dengan stok terpusat.</li>
+                    <li class="yes"><span>&#10003;</span> Mendapatkan <b>SEMUA</b> fitur Paket Pro</li>
+                    <li class="yes"><span>&#10003;</span> Manajemen 2 Cabang: Salin Katalog 1-Klik &amp; Poin Member Lintas Cabang</li>
+                    <li class="yes"><span>&#10003;</span> Saran Kulakan AI Unlimited</li>
+                    <li class="yes"><span>&#10003;</span> Evaluasi AI HRD (4x/bln)</li>
                   </ul>
                 </div>
               </details>
             </div>
 
-            <a href="register.html" class="p-cta dark">Pilih Ultimate</a>
+            <a data-app="daftar" href="Daftar.html" class="p-cta dark">Pilih Ultimate</a>
           </article>
 
         </div>
 
         <!-- Catatan Kaki Harga -->
         <p class="p-foot-note rv">
-          Butuh kapasitas lebih besar? Tersedia Add-on di paket Pro &amp; Ultimate (+1 cabang atau +5 karyawan). Harga promo diskon 20% berlaku selama 6 bulan pertama. <a href="perbandingan-fitur.html">Lihat perbandingan semua fitur di sini &rarr;</a>
+          Add-on +3 Akun Staf (Rp 20.000/bln) dan Add-on +1 Cabang Toko (Rp 35.000/bln). Diskon 20% berlaku otomatis selama 6 bulan pertama (atau hemat hingga 25% untuk paket tahunan 12 bulan). <a href="perbandingan-fitur.html">Lihat perbandingan semua fitur di sini &rarr;</a>
         </p>
 
       </div>
