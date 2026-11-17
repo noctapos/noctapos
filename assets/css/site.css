@@ -3518,13 +3518,37 @@ body.dm-lock{overflow:hidden}
 
 @media(min-width:721px){.ft thead th{position:sticky;top:92px;z-index:5}}
 @media(max-width:720px){
-  .ft thead th.pro{position:relative}
-  .ft-card{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:24px}
-  .ft{min-width:600px;table-layout:auto}
-  .ft .ft-label{position:sticky;left:0;z-index:4;background:#fff;width:170px;min-width:170px;box-shadow:6px 0 10px -8px rgba(11,25,51,.18);font-size:14px}
-  .ft .ft-group th{position:sticky;left:0}
-  .ft th,.ft td{padding:12px 10px}
-  .ft-plan b{font-size:19px}.ft-plan .ft-amt{font-size:20px}
+  /* Tabel perbandingan jadi kartu per baris: tanpa scroll samping, 3 kolom paket selalu terlihat */
+  .ft-card{overflow:visible;border-radius:22px;padding:6px 6px 14px}
+  .ft,.ft thead,.ft tbody,.ft tfoot{display:block;width:100%;min-width:0}
+  .ft tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ft th,.ft td{padding:0;min-width:0}
+  .ft thead .ft-label,.ft tfoot td:first-child{display:none}
+  /* header paket */
+  .ft thead th.ft-plan{position:relative;padding:30px 4px 14px;border-bottom:1px solid var(--border);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+  .ft thead th.pro{background:#E9F6F1;border-radius:16px 16px 0 0}
+  .ft-plan b{font-size:16px}
+  .ft-plan .ft-tag{display:none}
+  .ft-plan .ft-strike{font-size:10.5px;margin-top:4px;text-align:center}
+  .ft-plan .ft-amt{font-size:17px;line-height:1.15;text-align:center}
+  .ft-plan .ft-amt small{display:block;font-size:10.5px}
+  .ft .ft-badge{top:9px;font-size:9.5px;padding:3px 8px;max-width:calc(100% - 4px)}
+  .ft-plan .btn,.ft tfoot .btn{width:100%;max-width:none;margin-top:10px;padding:9px 4px;font-size:12px;line-height:1.25;white-space:normal;text-align:center;justify-content:center}
+  .ft-plan .btn span{display:none}
+  /* baris fitur */
+  .ft tbody tr:not(.ft-group){border-bottom:1px solid rgba(11,25,51,.07)}
+  .ft tbody tr:not(.ft-group) th,.ft tbody tr:not(.ft-group) td{border-bottom:0}
+  .ft .ft-label{position:static;width:auto;min-width:0;box-shadow:none;background:transparent;grid-column:1/-1;text-align:left;font-size:14px;padding:12px 8px 6px}
+  .ft .ft-group th{grid-column:1/-1;padding:22px 8px 6px;font-size:23px;position:static}
+  .ft tbody td{padding:2px 2px 12px;display:flex;flex-direction:column;align-items:center;gap:5px}
+  .ft tbody td::before{font-size:10.5px;font-weight:600;color:var(--muted);line-height:1}
+  .ft tbody tr td:nth-child(2)::before{content:"Basic"}
+  .ft tbody tr td:nth-child(3)::before{content:"Pro"}
+  .ft tbody tr td:nth-child(4)::before{content:"Ultimate"}
+  .ft .v{font-size:14px;text-align:center}
+  .ft tfoot tr{padding-top:6px}
+  .ft tfoot td{padding:10px 4px 0}
+  .ft tfoot .pro{border-radius:0 0 16px 16px;padding-bottom:10px}
 }
 
 /* ===== KARTU "PAKET MANA YANG COCOK" + CATATAN ===== */
