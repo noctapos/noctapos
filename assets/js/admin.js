@@ -1,12 +1,11 @@
 /* NoctaPOS — admin konten (artikel + panduan).
-   KEAMANAN: di situs live halaman ini harus dijaga Cloudflare Access (dicek di sini lewat /cdn-cgi/access/get-identity).
-   Form password hanya muncul di localhost untuk pengembangan. Lihat SETUP-CLOUDFLARE.md. */
+   KEAMANAN: Menggunakan form login dengan Cookie HttpOnly dan verifikasi HMAC-SHA256
+   di file functions/api/admin/_middleware.js. Bebas dari Cloudflare Access. */
 (function () {
   'use strict';
   var S = window.ArticleStore, $ = function (s) { return document.querySelector(s); };
   var DEV = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
   var SITE = DEV ? 'https://noctapos.id' : location.origin;
-  var DEV_HASH = '825c16b51b6146b95f9fced2d52772bc00750c790fdf45b2c5c280f16bd70256'; /* SHA-256, hanya untuk localhost */
   var PATH = { artikel: 'detail.html', panduan: 'panduan-detail.html' };
   var TXT = { artikel: 'Artikel baru', panduan: 'Panduan baru' };
   var ICON = ['M4 2h8v12H4zM6 5h4M6 8h4', 'M2 5l6-3 6 3v7l-6 3-6-3zM2 5l6 3 6-3M8 8v7', 'M2 6l1-3h10l1 3v1a2 2 0 01-4 0 2 2 0 01-4 0 2 2 0 01-4 0zM3 9v5h10V9', 'M3 13V7M8 13V3M13 13V9', 'M8 2a6 6 0 100 12A6 6 0 008 2zM8 5v3l2 1', 'M2 8h12M8 2v12'];
@@ -42,7 +41,6 @@
   }
 
   /* ---------- akses ---------- */
-  function sha256(s) { return crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join(''); }); }
   function showPanel(who) {
     $('#login').hidden = true; $('#locked').hidden = true; $('#panel').hidden = false;
     $('#who').textContent = who || '';
@@ -59,7 +57,13 @@
 
     fetch('/api/admin/content?type=artikel')
       .then(function (r) { if (!r.ok) throw new Error('x'); return r.json(); })
-      .then(function () { showPanel('Admin NoctaPOS'); })
+      .then(function (data) { 
+        if (Array.isArray(data)) {
+            showPanel('Admin NoctaPOS'); 
+        } else {
+            throw new Error('Format data salah');
+        }
+      })
       .catch(function () { 
         $('#panel').hidden = true; 
         $('#locked').hidden = true; 
@@ -103,7 +107,7 @@
   function loadCats(sel) {
     var el = $('#f-cat'), keep = el.value;
     return S.cats(T).then(function (l) {
-      if (sel && sel !== '__new' && l.indexOf(sel) < 0) l.push(sel); /* hanya kategori yang diminta eksplisit (saat mengedit) */
+      if (sel && sel !== '__new' && l.indexOf(sel) < 0) l.push(sel); 
       el.innerHTML = l.map(function (c) { return '<option>' + esc(c) + '</option>'; }).join('') + '<option value="__new">+ Tambah kategori baru…</option>';
       var want = sel || keep;
       el.value = l.indexOf(want) >= 0 ? want : (l[0] || '__new');
@@ -177,7 +181,6 @@
     setType(T).then(function () { coverRefresh(); });
   }
   function setBody(html) { q.setContents([]); q.clipboard.dangerouslyPasteHTML(0, safeHtml(html), 'silent'); }
-  /* artikel lama = file statis (artikel/xxx.html): ambil isinya supaya bisa diedit penuh */
   function loadLegacy(url) {
     return fetch(url, { cache: 'no-store', credentials: 'same-origin' }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); }).then(function (t) {
       var d = new DOMParser().parseFromString(t, 'text/html'), r = d.querySelector('article.post') || d.querySelector('.post') || d.querySelector('main') || d.body;
