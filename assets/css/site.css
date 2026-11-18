@@ -4311,3 +4311,18 @@ body.sb-lock{overflow:hidden}
   .pb-in>*,.pb-i,.pb-i::before,.pb-d,.pb-b,.pb-photo{transition:none!important}
   .nav-sheet-links>*,.nav-sheet-acts>*{opacity:1;translate:none}
 }
+
+/* ---------- Fix 2026-11-18b: kotak biru/bayangan saat bubble diketuk di HP ---------- */
+.pb-b,.pb-x,.pb-i,.nav-toggle,.nav-sheet a{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+.pb-b{touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.pb-b:focus{outline:none}
+.pb-b:focus-visible{outline:2px solid var(--c,var(--em));outline-offset:3px}
+@media(max-width:720px){
+  /* hover "nempel" setelah tap tidak boleh memunculkan bayangan/skala di baris akordeon */
+  .pb-b,.pb-b:hover,.pb-b:active,.pb-b:focus,.pb-i.on .pb-b{box-shadow:none!important;transform:none!important;background:none;transition:none}
+  .pb-b:focus-visible{outline-offset:-3px;border-radius:30px}
+  /* isi mulai muncul bersamaan dengan panel membuka, jadi tidak ada kotak kosong sesaat */
+  .pb-d,.pb-i.rev .pb-d{transition:grid-template-rows .5s cubic-bezier(.22,1,.36,1)}
+  .pb-i.on .pb-in>*{transition:opacity .4s ease calc(.03s + var(--k,0) * .07s),translate .5s cubic-bezier(.22,1,.36,1) calc(.03s + var(--k,0) * .07s)}
+  .pb-i{transition:border-color .35s ease,box-shadow .35s ease,background-color .35s ease}
+}
