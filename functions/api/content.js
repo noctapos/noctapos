@@ -4,7 +4,7 @@
    POST   /api/admin/content            body: objek konten tanpa id -> buat baru
    PUT    /api/admin/content?id=xxx     body: objek konten          -> ubah
    DELETE /api/admin/content?id=xxx                                 -> hapus */
-import { HttpError, handle, json, kind, readJson, buildRecord, rowToItem, uniqueSlug, ensureCatStmt, minutesOf, newId } from '../../_lib/shared.js';
+import { HttpError, handle, json, kind, readJson, buildRecord, rowToItem, uniqueSlug, ensureCatStmt, minutesOf, newId } from '../_lib/shared.js';
 
 const INSERT = 'INSERT INTO content (id,type,slug,title,category,tags,excerpt,cover,cover_alt,cover_pos,grad,html,minutes,popular,status,legacy_url,meta_title,meta_desc,created_at,updated_at) ' +
   'VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20)';
