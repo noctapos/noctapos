@@ -51,26 +51,53 @@
   function boot() {
     $('#logout').addEventListener('click', function () {
       if (!okLeave()) return;
-      dirty = false;
-      if (DEV) { sessionStorage.removeItem('nocta_admin_ok'); location.reload(); } else location.href = '/cdn-cgi/access/logout';
-    });
-    if (DEV) {
-      if (sessionStorage.getItem('nocta_admin_ok') === '1') return showPanel('lokal');
-      $('#login').hidden = false;
-      var fails = 0, until = 0;
-      $('#loginForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var wait = Math.ceil((until - Date.now()) / 1000);
-        if (wait > 0) { $('#loginErr').textContent = 'Terlalu banyak percobaan. Tunggu ' + wait + ' detik.'; return; }
-        if (!window.crypto || !crypto.subtle) { $('#loginErr').textContent = 'Browser tidak mendukung. Buka lewat http://localhost.'; return; }
-        sha256($('#pw').value).then(function (h) {
-          if (h === DEV_HASH) { sessionStorage.setItem('nocta_admin_ok', '1'); showPanel('lokal'); return; }
-          if (++fails >= 5) { fails = 0; until = Date.now() + 30000; }
-          $('#loginErr').textContent = 'Password salah.';
-        });
+      fetch('/api/admin/login', { method: 'DELETE' }).then(function () {
+        dirty = false;
+        location.reload();
       });
-      return;
-    }
+    });
+
+    fetch('/api/admin/content?type=artikel')
+      .then(function (r) { if (!r.ok) throw new Error('x'); return r.json(); })
+      .then(function () { showPanel('Admin NoctaPOS'); })
+      .catch(function () { 
+        $('#panel').hidden = true; 
+        $('#locked').hidden = true; 
+        $('#login').hidden = false;
+      });
+
+    $('#loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var em = $('#em').value.trim();
+      var pw = $('#pw').value;
+      if (!em || !pw) return;
+      
+      var btn = this.querySelector('button');
+      btn.textContent = 'Memeriksa...';
+      btn.disabled = true;
+
+      fetch('/api/admin/login', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: em, password: pw })
+      })
+      .then(function (r) { 
+        return r.json().then(function(data) {
+          if (!r.ok) throw new Error(data.error || 'Gagal masuk');
+          return data;
+        });
+      })
+      .then(function () {
+        $('#loginErr').textContent = '';
+        showPanel('Admin NoctaPOS');
+      })
+      .catch(function (er) {
+        $('#loginErr').textContent = er.message;
+        btn.textContent = 'Masuk';
+        btn.disabled = false;
+      });
+    });
+  }
     /* produksi: Cloudflare Access sudah menahan permintaan sebelum halaman ini terkirim; ini lapisan cadangan */
     fetch('/cdn-cgi/access/get-identity', { credentials: 'same-origin', cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw new Error('x'); return r.json(); })
