@@ -7,3 +7,4 @@ scene-5.png  (21:45 Tutup kas & gaji)
 
 Rasio disarankan 16:10 (contoh 1600x1000 px). Kalau pakai .jpg / .webp,
 ganti ekstensi di atribut src pada index.html.
+cek
