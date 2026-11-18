@@ -5,64 +5,84 @@
      POLICY_AUD   = "Application Audience (AUD) Tag" dari aplikasi Access
      ADMIN_EMAILS = (opsional) daftar email dipisah koma, lapisan tambahan di atas policy Access
    Khusus pengembangan lokal: DEV_BYPASS_AUTH=1 di .dev.vars (hanya berlaku di localhost). */
+
 import { json } from '../../_lib/shared.js';
 
 const NOSTORE = { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' };
-let JWKS = { at: 0, keys: [] };
 
-function b64u(s) {
-  s = s.replace(/-/g, '+').replace(/_/g, '/');
-  while (s.length % 4) s += '=';
-  return Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
-}
-const dec = (s) => JSON.parse(new TextDecoder().decode(b64u(s)));
-
-async function getKeys(team, force) {
-  if (!force && JWKS.keys.length && Date.now() - JWKS.at < 3600_000) return JWKS.keys;
-  const r = await fetch('https://' + team + '/cdn-cgi/access/certs');
-  if (!r.ok) throw new Error('jwks ' + r.status);
-  JWKS = { at: Date.now(), keys: (await r.json()).keys || [] };
-  return JWKS.keys;
-}
-
-async function verifyJwt(token, env) {
-  const p = token.split('.');
-  if (p.length !== 3) throw new Error('format');
-  const header = dec(p[0]), payload = dec(p[1]);
-  if (header.alg !== 'RS256') throw new Error('alg');
-  let jwk = (await getKeys(env.TEAM_DOMAIN)).find((k) => k.kid === header.kid);
-  if (!jwk) jwk = (await getKeys(env.TEAM_DOMAIN, true)).find((k) => k.kid === header.kid);
-  if (!jwk) throw new Error('kid');
-  const key = await crypto.subtle.importKey('jwk', jwk, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['verify']);
-  const ok = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', key, b64u(p[2]), new TextEncoder().encode(p[0] + '.' + p[1]));
-  if (!ok) throw new Error('signature');
-  const now = Date.now() / 1000;
-  if (typeof payload.exp !== 'number' || payload.exp < now) throw new Error('expired');
-  if (payload.nbf && payload.nbf > now + 60) throw new Error('nbf');
-  if (payload.iss !== 'https://' + env.TEAM_DOMAIN) throw new Error('iss');
-  const aud = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
-  if (!aud.includes(env.POLICY_AUD)) throw new Error('aud');
-  return payload;
+async function signSession(text, secret) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(text));
+  return Array.prototype.map.call(new Uint8Array(sig), x => ('0' + x.toString(16)).slice(-2)).join('');
 }
 
 export async function onRequest({ request, env, next }) {
   const url = new URL(request.url);
-  const local = /^(localhost|127\.0\.0\.1)$/.test(url.hostname) && env.DEV_BYPASS_AUTH === '1';
+  const secret = env.ADMIN_SECRET || 'nocta-rahasia';
 
-  if (!local) {
-    if (!env.TEAM_DOMAIN || !env.POLICY_AUD) return json({ error: 'Server belum dikonfigurasi (TEAM_DOMAIN / POLICY_AUD).' }, 500, NOSTORE);
-    const token = request.headers.get('Cf-Access-Jwt-Assertion');
-    if (!token) return json({ error: 'Belum login.' }, 401, NOSTORE);
-    let payload;
-    try { payload = await verifyJwt(token, env); }
-    catch (e) { return json({ error: 'Akses ditolak.' }, 403, NOSTORE); }
-    if (env.ADMIN_EMAILS) {
-      const allow = env.ADMIN_EMAILS.split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
-      if (allow.length && !allow.includes(String(payload.email || '').toLowerCase())) return json({ error: 'Akses ditolak.' }, 403, NOSTORE);
+  // 1. Endpoint Login (Menerima Email & Password)
+  if (url.pathname === '/api/admin/login' && request.method === 'POST') {
+    try {
+      const body = await request.json();
+      const userEmail = (body.email || '').trim().toLowerCase();
+      
+      // Ambil daftar email yang diizinkan dari variabel Cloudflare
+      const allowedEmails = (env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
+
+      // Cek apakah email terdaftar di whitelist
+      if (!allowedEmails.includes(userEmail)) {
+        return json({ error: 'Email tidak terdaftar atau tidak memiliki akses.' }, 401, NOSTORE);
+      }
+
+      // Cek kecocokan password
+      if (!env.ADMIN_SECRET || body.password !== env.ADMIN_SECRET) {
+        return json({ error: 'Password salah.' }, 401, NOSTORE);
+      }
+      
+      const exp = Math.floor(Date.now() / 1000) + (8 * 3600);
+      const data = 'admin.' + exp;
+      const signature = await signSession(data, secret);
+      
+      const out = json({ ok: true }, 200, NOSTORE);
+      out.headers.set('Set-Cookie', `nocta_sess=${data}.${signature}; HttpOnly; Secure; SameSite=Strict; Path=/api/admin; Max-Age=28800`);
+      return out;
+    } catch(e) { 
+      return json({ error: 'Format salah' }, 400, NOSTORE); 
     }
   }
 
-  /* Perlindungan CSRF untuk operasi tulis: harus same-origin dan berbentuk JSON. */
+  // 2. Endpoint Logout
+  if (url.pathname === '/api/admin/login' && request.method === 'DELETE') {
+    const out = json({ ok: true }, 200, NOSTORE);
+    out.headers.set('Set-Cookie', 'nocta_sess=; HttpOnly; Secure; SameSite=Strict; Path=/api/admin; Max-Age=0');
+    return out;
+  }
+
+  // 3. Verifikasi Cookie
+  const cookie = request.headers.get('Cookie') || '';
+  const match = cookie.match(/(?:^|;\s*)nocta_sess=([^;]+)/);
+  let isAuth = false;
+  
+  if (match) {
+    const parts = match[1].split('.');
+    if (parts.length === 3) {
+      const data = parts[0] + '.' + parts[1];
+      const sig = parts[2];
+      const expectedSig = await signSession(data, secret);
+      const exp = parseInt(parts[1], 10);
+      
+      if (sig === expectedSig && (Date.now() / 1000) < exp) {
+        isAuth = true;
+      }
+    }
+  }
+
+  if (!isAuth) {
+    return json({ error: 'Akses ditolak.' }, 401, NOSTORE);
+  }
+
+  // 4. Perlindungan CSRF
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     if (request.headers.get('Origin') !== url.origin) return json({ error: 'Origin tidak valid.' }, 403, NOSTORE);
     if (request.method !== 'DELETE' && !/^application\/json/i.test(request.headers.get('Content-Type') || '')) {
