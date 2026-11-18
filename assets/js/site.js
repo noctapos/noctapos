@@ -524,3 +524,62 @@ $$('.chip').forEach(c=>c.addEventListener('click',()=>{$$('.chip').forEach(x=>x.
   box.addEventListener('click', function (e) { if (e.target === box) close(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && box.classList.contains('on')) close(); });
 })();
+
+/* ---------- NAV: garis hijau mengikuti section yang sedang dilihat ---------- */
+(function () {
+  'use strict';
+  var path = location.pathname.toLowerCase();
+  var onHome = !!document.getElementById('beranda');
+  function links() { return Array.prototype.slice.call(document.querySelectorAll('.nav-links > a, .nav-sheet-links > a')); }
+  function dds() { return Array.prototype.slice.call(document.querySelectorAll('.nav-links .nav-dd-btn, .nav-sheet-links .nav-dd-btn')); }
+  function paint(key, supportOn) {
+    links().forEach(function (a) {
+      var h = (a.getAttribute('href') || ''), hash = h.indexOf('#') > -1 ? h.split('#')[1] : '';
+      var on = key === 'kontak' ? /contact\.html/.test(h) : (key && hash === key);
+      a.classList.toggle('active', !!on);
+    });
+    dds().forEach(function (b) { b.classList.toggle('active', !!supportOn); });
+  }
+  if (onHome) {
+    /* masalah ikut Beranda; faq menyalakan menu Support selama FAQ masih di layar */
+    var order = [['beranda', 'beranda'], ['masalah', 'beranda'], ['day', 'day'], ['kenapa', 'kenapa'], ['harga', 'harga'], ['artikel', 'artikel'], ['faq', 'support']];
+    var ticking = false;
+    function check() {
+      ticking = false;
+      var key = 'beranda', line = 140;
+      order.forEach(function (o) {
+        var el = document.getElementById(o[0]); if (!el) return;
+        var r = el.getBoundingClientRect();
+        if (r.top <= line) key = (o[0] === 'faq' && r.bottom <= line) ? null : o[1];
+      });
+      paint(key === 'support' ? null : key, key === 'support');
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(check); } }
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    addEventListener('hashchange', onScroll);
+    check();
+  } else if (/contact\.html/.test(path)) {
+    paint('kontak', false);
+  } else if (/artikel/.test(path)) {
+    paint('artikel', false);
+  }
+})();
+
+/* ---------- Tombol kembali ke atas (floating) ---------- */
+(function () {
+  'use strict';
+  if (document.querySelector('.to-top')) return;
+  var b = document.createElement('button');
+  b.type = 'button'; b.className = 'to-top'; b.setAttribute('aria-label', 'Kembali ke atas');
+  b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+  document.body.appendChild(b);
+  var ticking = false;
+  function check() { ticking = false; b.classList.toggle('show', (window.pageYOffset || document.documentElement.scrollTop) > 500); }
+  addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(check); } }, { passive: true });
+  b.addEventListener('click', function () {
+    var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: rm ? 'auto' : 'smooth' });
+  });
+  check();
+})();
