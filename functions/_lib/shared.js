@@ -55,7 +55,8 @@ export async function sanitizeHtml(html) {
         }
         if (t === 'a') {
           const h = (el.getAttribute('href') || '').trim();
-          if (!/^(https?:|mailto:|\/|#)/i.test(h)) el.removeAttribute('href');
+          /* "//evil.com" (protocol-relative) sengaja ditolak */
+          if (!/^(https?:|mailto:|#|\/(?!\/))/i.test(h)) el.removeAttribute('href');
           else el.setAttribute('href', h);
         }
         if (t === 'img') {

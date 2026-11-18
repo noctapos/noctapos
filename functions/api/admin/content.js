@@ -1,4 +1,4 @@
-/* Semua rute di sini dijaga _middleware.js (JWT Access).
+/* Semua rute di sini dijaga _middleware.js (cookie sesi bertanda tangan).
    GET    /api/admin/content?type=all|artikel|panduan   -> semua konten (termasuk draft + html)
    GET    /api/admin/content?id=xxx                     -> satu konten (atau null)
    POST   /api/admin/content            body: objek konten tanpa id -> buat baru

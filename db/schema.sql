@@ -1,5 +1,6 @@
 -- NoctaPOS: penyimpanan artikel + panduan pengguna (Cloudflare D1)
--- Jalankan sekali:  npx wrangler d1 execute noctapos-db --remote --file=db/schema.sql
+-- Aman dijalankan berulang (semua IF NOT EXISTS / OR IGNORE):
+--   npx wrangler d1 execute noctapos-db --remote --file=db/schema.sql
 
 CREATE TABLE IF NOT EXISTS content (
   id         TEXT PRIMARY KEY,
@@ -45,3 +46,10 @@ INSERT OR IGNORE INTO categories (type, name, pos) VALUES
   ('panduan', 'Pengaturan & Personalisasi', 4),
   ('panduan', 'Bantuan & Pemecahan Masalah', 5),
   ('panduan', 'Fitur Lainnya', 6);
+
+-- Pembatas percobaan login (dipakai _middleware.js)
+CREATE TABLE IF NOT EXISTS login_attempts (
+  ip TEXT NOT NULL,
+  at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_login_attempts ON login_attempts (ip, at);

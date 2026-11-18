@@ -1,4 +1,5 @@
-/* GET    /api/admin/categories?type=artikel|panduan            -> daftar kategori (termasuk yang dipakai draft)
+/* Dijaga _middleware.js.
+   GET    /api/admin/categories?type=artikel|panduan            -> daftar kategori (termasuk yang dipakai draft)
    POST   /api/admin/categories        {type, name}             -> tambah (kalau sudah ada, dikembalikan nama yang ada)
    PUT    /api/admin/categories        {type, from, to}         -> ubah nama (digabung kalau nama baru sudah ada)
    DELETE /api/admin/categories?type=..&name=..                 -> hapus (ditolak kalau masih dipakai konten) */
