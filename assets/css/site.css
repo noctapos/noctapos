@@ -4194,3 +4194,120 @@ body.sb-lock{overflow:hidden}
 @media(max-width:380px){
   .navbar .nav-actions .btn{padding:0 13px!important;font-size:13.5px!important;gap:6px}
 }
+
+/* =====================================================================
+   REVISI 2026-11-18
+   1) Menu hamburger mobile: buka-tutup halus (hanya transform/opacity/clip-path, tanpa blur animasi)
+   2) Masalah Harian: bubble membuka tanpa animasi layout (tidak ada transisi width/left/right/filter)
+   ===================================================================== */
+
+/* ---------- Hamburger + panel menu ---------- */
+.nav-toggle{transition:background .3s ease,scale .25s cubic-bezier(.22,1,.36,1)}
+.nav-toggle:active{scale:.92}
+.nav-toggle span{transition:transform .4s cubic-bezier(.22,1,.36,1),opacity .18s ease}
+.nav-sheet{
+  --nez:cubic-bezier(.22,1,.36,1);
+  display:block;animation:none;
+  backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(246,244,239,.99);
+  visibility:hidden;opacity:0;pointer-events:none;
+  transform:translateY(-6px);transform-origin:top right;
+  clip-path:inset(0 0 100% 0 round 26px);
+  transition:clip-path .28s cubic-bezier(.4,0,.2,1),opacity .2s ease,transform .28s cubic-bezier(.4,0,.2,1),visibility 0s linear .28s;
+  will-change:clip-path,opacity,transform;
+}
+.nav-sheet.open{
+  visibility:visible;opacity:1;pointer-events:auto;transform:none;
+  clip-path:inset(-60px -40px -60px -40px round 26px);
+  transition:clip-path .48s var(--nez),opacity .16s ease,transform .48s var(--nez),visibility 0s;
+}
+.nav-sheet-links>*,.nav-sheet-acts>*{opacity:0;translate:0 6px;transition:opacity .15s ease,translate .15s ease}
+.nav-sheet.open .nav-sheet-links>*,.nav-sheet.open .nav-sheet-acts>*{
+  opacity:1;translate:0 0;
+  transition:opacity .35s ease calc(80ms + var(--i,0) * 28ms),translate .5s var(--nez) calc(80ms + var(--i,0) * 28ms);
+}
+.nav-sheet-links>:nth-child(2){--i:1}.nav-sheet-links>:nth-child(3){--i:2}.nav-sheet-links>:nth-child(4){--i:3}
+.nav-sheet-links>:nth-child(5){--i:4}.nav-sheet-links>:nth-child(6){--i:5}.nav-sheet-links>:nth-child(7){--i:6}
+.nav-sheet-acts>:nth-child(1){--i:7}.nav-sheet-acts>:nth-child(2){--i:8}
+
+/* ---------- Masalah Harian: desktop & tablet ---------- */
+@media(min-width:721px){
+  .pb-stage{--ez:cubic-bezier(.22,1,.36,1);--dur:.8s;overflow-anchor:none}
+  /* bubble tidak pernah mengubah ukuran/posisi layout; hanya bergeser dengan translate (compositor) */
+  .pb-i,.pb-i.on{width:var(--s,112px)}
+  .pb-i{
+    transition:translate var(--dur) var(--ez),opacity .45s ease,scale .6s var(--ez),z-index 0s var(--dur);
+    will-change:translate,scale,opacity;
+  }
+  .pb-i.on{transition:translate var(--dur) var(--ez),opacity .45s ease,scale .6s var(--ez),z-index 0s;filter:none}
+  /* bayangan pill: elemen statis yang hanya memudar masuk setelah pill terbuka (murah, tidak dihitung per frame) */
+  .pb-i::after{
+    content:"";position:absolute;z-index:-2;left:0;width:100cqw;pointer-events:none;
+    top:calc((var(--s,112px) - var(--ph)) / 2);bottom:calc((var(--s,112px) - var(--ph)) / 2);
+    border-radius:999px;box-shadow:0 30px 48px -26px rgba(11,25,51,.5);
+    opacity:0;transition:opacity .2s ease;
+  }
+  .pb-i.rev::after{left:auto;right:0}
+  .pb-i.on::after{opacity:1;transition:opacity .4s ease calc(var(--dur) - .15s)}
+  /* semua bubble berhenti melayang saat ada yang terbuka, supaya animasi buka tidak berebut frame */
+  .pb-stage.open .pb-b{animation-play-state:paused}
+  .pb-i.on.pbi1{left:5%;translate:-5cqw 0}
+  .pb-i.on.pbi2{right:5%;translate:5cqw 0}
+  .pb-i.on.pbi3{left:0}
+  .pb-i.on.pbi4{right:0}
+  .pb-i.on.pbi5{left:calc(50% - 57px);translate:calc(57px - 50cqw) 0}
+
+  /* pill putih: ukuran tetap, dibuka dengan clip-path (tidak ada animasi layout) */
+  .pb-i::before{
+    left:0;right:auto;width:100cqw;
+    top:calc((var(--s,112px) - var(--ph)) / 2);bottom:calc((var(--s,112px) - var(--ph)) / 2);
+    opacity:0;box-shadow:none;
+    border:1.5px solid color-mix(in srgb,var(--c,var(--em)) 32%,#fff);
+    clip-path:inset(calc((var(--ph) - var(--s,112px)) / 2) calc(100% - var(--s,112px)) calc((var(--ph) - var(--s,112px)) / 2) 0 round 999px);
+    transition:clip-path var(--dur) var(--ez),opacity .2s ease .5s;
+  }
+  .pb-i.rev::before{
+    left:auto;right:0;
+    clip-path:inset(calc((var(--ph) - var(--s,112px)) / 2) 0 calc((var(--ph) - var(--s,112px)) / 2) calc(100% - var(--s,112px)) round 999px);
+  }
+  .pb-i.on::before,.pb-i.rev.on::before{
+    top:calc((var(--s,112px) - var(--ph)) / 2);bottom:calc((var(--s,112px) - var(--ph)) / 2);
+    opacity:1;clip-path:inset(0 0 0 0 round 999px);
+    transition:clip-path var(--dur) var(--ez),opacity .05s ease;
+  }
+  .pb-i.on .pb-b{box-shadow:0 0 0 3px var(--c),0 6px 12px -8px rgba(11,25,51,.3)}
+
+  .pb-stage.open .pb-photo{opacity:.35;filter:none}
+  .pb-photo{transition:opacity .5s ease}
+  .pb-stage.open .pb-i:not(.on){filter:none}
+
+  /* isi panel: hanya opacity + translate, tanpa blur */
+  .pb-in>*{opacity:0;translate:0 10px;filter:none;transition:opacity .2s ease,translate .2s ease}
+  .pb-i.on .pb-in>*{
+    opacity:1;translate:0 0;
+    transition:opacity .5s ease calc(.22s + var(--k,0) * .09s),translate .7s var(--ez) calc(.22s + var(--k,0) * .09s);
+  }
+  .pb-b{transition:box-shadow .4s ease,transform .45s var(--ez)}
+  .pb-i.on .pb-b{transform:scale(1.05)}
+  .pb-b:active{transform:scale(.94)}
+}
+
+/* ---------- Masalah Harian: HP (akordeon) ---------- */
+@media(max-width:720px){
+  .pb-stage{overflow-anchor:none}
+  .pb-i{transition:border-color .45s ease,box-shadow .45s ease,background-color .45s ease;filter:none;will-change:auto}
+  .pb-i.on{background:color-mix(in srgb,var(--c,var(--em)) 4%,#fff)}
+  .pb-d,.pb-i.rev .pb-d{transition:grid-template-rows .6s cubic-bezier(.22,1,.36,1)}
+  .pb-in>*{opacity:0;translate:0 8px;filter:none;transition:opacity .18s ease,translate .2s ease}
+  .pb-i.on .pb-in>*{
+    opacity:1;translate:0 0;
+    transition:opacity .45s ease calc(.12s + var(--k,0) * .08s),translate .6s cubic-bezier(.22,1,.36,1) calc(.12s + var(--k,0) * .08s);
+  }
+  .pb-b .ic{transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+  .pb-i.on .pb-b .ic{transform:scale(1.06) rotate(-6deg)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .nav-sheet,.nav-sheet-links>*,.nav-sheet-acts>*,.nav-toggle,.nav-toggle span,
+  .pb-in>*,.pb-i,.pb-i::before,.pb-d,.pb-b,.pb-photo{transition:none!important}
+  .nav-sheet-links>*,.nav-sheet-acts>*{opacity:1;translate:none}
+}

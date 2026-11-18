@@ -12,7 +12,7 @@
   btn.setAttribute('aria-label', 'Buka menu'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', 'navSheet');
   btn.innerHTML = '<span></span><span></span><span></span>';
   var sheet = document.createElement('div');
-  sheet.className = 'nav-sheet'; sheet.id = 'navSheet'; sheet.hidden = true;
+  sheet.className = 'nav-sheet'; sheet.id = 'navSheet';
   function copy(src, cls) {
     if (!src) return;
     var c = src.cloneNode(true); c.className = cls; c.removeAttribute('id');
@@ -22,14 +22,18 @@
   copy(bar.querySelector('.nav-links'), 'nav-sheet-links');
   copy(bar.querySelector('.nav-actions'), 'nav-sheet-acts');
   bar.appendChild(btn); wrap.appendChild(sheet);
+  var isOpen = false;
   function set(v) {
-    sheet.hidden = !v; btn.setAttribute('aria-expanded', v ? 'true' : 'false');
+    if (v === isOpen) return;
+    isOpen = v;
+    btn.setAttribute('aria-expanded', v ? 'true' : 'false');
     btn.setAttribute('aria-label', v ? 'Tutup menu' : 'Buka menu'); btn.classList.toggle('on', v);
+    sheet.classList.toggle('open', v);
   }
-  btn.addEventListener('click', function (e) { e.stopPropagation(); set(sheet.hidden); });
+  btn.addEventListener('click', function (e) { e.stopPropagation(); set(!isOpen); });
   sheet.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
-  document.addEventListener('click', function (e) { if (!sheet.hidden && !wrap.contains(e.target)) set(false); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) { set(false); btn.focus(); } });
+  document.addEventListener('click', function (e) { if (isOpen && !wrap.contains(e.target)) set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen) { set(false); btn.focus(); } });
   window.matchMedia('(min-width: 961px)').addEventListener('change', function (m) { if (m.matches) set(false); });
 })();
 
