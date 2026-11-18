@@ -2,7 +2,7 @@
    POST   /api/admin/categories        {type, name}             -> tambah (kalau sudah ada, dikembalikan nama yang ada)
    PUT    /api/admin/categories        {type, from, to}         -> ubah nama (digabung kalau nama baru sudah ada)
    DELETE /api/admin/categories?type=..&name=..                 -> hapus (ditolak kalau masih dipakai konten) */
-import { HttpError, handle, json, kind, readJson, listCats, ensureCatStmt, cleanCat } from '../../_lib/shared.js';
+import { HttpError, handle, json, kind, readJson, listCats, ensureCatStmt, cleanCat } from '../_lib/shared.js';
 
 export const onRequestGet = ({ request, env }) => handle(async () => {
   const type = kind(new URL(request.url).searchParams.get('type'));
