@@ -98,13 +98,7 @@
       });
     });
   }
-    /* produksi: Cloudflare Access sudah menahan permintaan sebelum halaman ini terkirim; ini lapisan cadangan */
-    fetch('/cdn-cgi/access/get-identity', { credentials: 'same-origin', cache: 'no-store' })
-      .then(function (r) { if (!r.ok) throw new Error('x'); return r.json(); })
-      .then(function (j) { showPanel(j && j.email ? j.email : 'admin'); })
-      .catch(function () { $('#panel').hidden = true; $('#locked').hidden = false; });
-  }
-
+   
   /* ---------- tipe & kategori ---------- */
   function loadCats(sel) {
     var el = $('#f-cat'), keep = el.value;
