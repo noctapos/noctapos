@@ -2,118 +2,200 @@
 <html lang="id"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" /><meta name="color-scheme" content="light only" /><meta name="referrer" content="no-referrer" /><title>Admin Konten — NoctaPOS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" />
 <style>
-:root{color-scheme:light only;--paper:#F4F2EC;--ink:#0B1933;--em:#12A97E;--em-d:#0b7d5c;--em-soft:rgba(18,169,126,.12);--warn-soft:rgba(242,181,68,.22);--muted:rgba(11,25,51,.62);--bd:rgba(11,25,51,.12);--bds:rgba(11,25,51,.2);--shadow:0 18px 44px -16px rgba(11,25,51,.14),0 2px 8px rgba(11,25,51,.05);--disp:'Bricolage Grotesque',system-ui,sans-serif}
+:root{color-scheme:light only;--bg:#F7F7F4;--ink:#0B1933;--em:#12A97E;--em-d:#0b7d5c;--em-soft:rgba(18,169,126,.1);--warn-soft:rgba(242,181,68,.22);--muted:rgba(11,25,51,.6);--bd:rgba(11,25,51,.12);--bds:rgba(11,25,51,.22);--r:10px}
 *{box-sizing:border-box}
-body{margin:0;font-family:Poppins,system-ui,sans-serif;color:var(--ink);background:#F6F5F0;min-height:100vh;position:relative;overflow-x:hidden}
-.bg{position:fixed;inset:0;z-index:0;pointer-events:none}.bg i{position:absolute;border-radius:50%;background:var(--em-soft)}
-.bg .a{width:340px;height:340px;left:-120px;top:-110px}.bg .b{width:420px;height:420px;right:-170px;top:60px;background:rgba(18,169,126,.15)}.bg .c{width:300px;height:420px;left:-170px;top:58%;border-radius:45%;background:rgba(18,169,126,.1)}.bg .d{width:360px;height:360px;right:-150px;top:72%;background:rgba(18,169,126,.12)}
-.bg b{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--em);opacity:.55}
-.wrap{position:relative;z-index:1;max-width:840px;margin:0 auto;padding:44px 16px 56px}
-.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
-.tag{display:inline-flex;align-items:center;gap:7px;background:var(--em-soft);color:var(--em-d);font:600 13px Poppins,sans-serif;padding:6px 14px;border-radius:99px;border:1px solid rgba(18,169,126,.25)}
-h1{font:800 clamp(32px,5vw,44px)/1.05 var(--disp);letter-spacing:-.03em;margin:12px 0 6px}h2{font:700 19px var(--disp);margin:0;display:flex;align-items:center;gap:10px}
-.sub{color:var(--muted);margin:0;font-size:15px}.hact{display:flex;gap:10px;align-items:center}.hact a{font-size:13px;font-weight:600;color:var(--em-d);text-decoration:none}
-.card{background:rgba(255,255,255,.94);border:1px solid var(--bd);border-radius:26px;padding:28px;box-shadow:var(--shadow);margin-bottom:22px}
-label{display:block;font-size:13px;font-weight:600;margin:16px 0 7px}.card>label:first-child{margin-top:0}
-input,textarea,select{width:100%;padding:12px 15px;border:1.5px solid var(--bd);border-radius:14px;font:inherit;font-size:15px;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--em);transition:border-color .2s,box-shadow .2s}
-input:focus,textarea:focus,select:focus{outline:0;border-color:var(--em);box-shadow:0 0 0 4px var(--em-soft)}
-input::placeholder,textarea::placeholder{color:rgba(11,25,51,.38);-webkit-text-fill-color:rgba(11,25,51,.38)}textarea{min-height:84px;resize:vertical}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-button,.btn{font:600 13.5px Poppins,sans-serif;min-height:44px;padding:0 20px;border-radius:99px;border:1.5px solid var(--bds);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .2s,box-shadow .2s}
-button:hover,.btn:hover{transform:translateY(-1px);box-shadow:0 8px 18px -8px rgba(11,25,51,.3)}
-.pri{background:var(--em);border-color:var(--em);color:#fff;box-shadow:0 10px 22px -8px rgba(18,169,126,.7)}
-.i{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.acts-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:24px}
-#msg{display:inline-flex;align-items:center;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:99px;flex:1;min-width:200px}#msg:empty{display:none}#msg.ok{background:var(--em-soft);color:var(--em-d)}#msg.err{background:rgba(192,57,43,.1);color:#c0392b}
-.ql-toolbar.ql-snow{border:1.5px solid var(--bd);border-radius:14px 14px 0 0;background:#fff;font-family:inherit}.ql-container.ql-snow{border:1.5px solid var(--bd);border-top:0;border-radius:0 0 14px 14px;font-family:Poppins,sans-serif}
-#editor{height:300px;font-size:15.5px;background:#fff}.ql-editor{color:var(--ink);line-height:1.7}.ql-editor.ql-blank::before{color:rgba(11,25,51,.38);font-style:normal}
-.row{display:flex;justify-content:space-between;gap:12px;padding:14px 0;border-top:1px solid var(--bd);align-items:center}.row:first-child{border-top:0}.row b{font-size:14.5px;line-height:1.35;display:block}.row small{display:block;margin-top:4px;color:var(--muted);font-size:12.5px}
-.pill{font:600 10.5px Poppins,sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:2px 9px;border-radius:99px;margin-right:7px}.pill.ok{background:var(--em-soft);color:var(--em-d)}.pill.dr{background:var(--warn-soft);color:#8a5d00}
-.acts{display:flex;gap:8px;align-items:center;flex-shrink:0}.acts button{min-height:34px;padding:0 16px;font-size:12.5px}.acts a{font-size:12.5px;color:var(--em-d);font-weight:600;margin-right:6px;text-decoration:underline}
-.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.tools .btn,.tools button{min-height:40px}
-.note{font-size:12.5px;color:var(--muted);background:var(--warn-soft);border-radius:14px;padding:11px 14px;margin:16px 0 0;line-height:1.5}
-.login{max-width:430px;margin:8vh auto 0}.login .card{padding:34px}.login h1{font-size:32px;margin-top:18px}#loginErr{color:#c0392b;font-size:14px;margin:8px 0 12px;min-height:20px}
-.seg{display:inline-flex;padding:4px;border-radius:99px;background:rgba(11,25,51,.07);gap:4px;margin-bottom:6px}.seg button{min-height:38px;border:0;background:transparent;box-shadow:none;padding:0 20px}.seg button:hover{transform:none;box-shadow:none}.seg button.on{background:#fff;box-shadow:0 2px 8px rgba(11,25,51,.14);color:var(--em-d)}.seg button:disabled{opacity:.5;cursor:not-allowed}
-.hint{font-size:12.5px;color:var(--muted);margin:6px 0 0}.chk{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;margin:16px 0 0;cursor:pointer}.chk input{width:20px;height:20px;padding:0;accent-color:var(--em)}
-.ftabs{display:flex;gap:8px;margin:14px 0 4px;flex-wrap:wrap}.ftabs button{min-height:34px;padding:0 16px;font-size:12.5px}.ftabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}.pill.tp{background:rgba(11,25,51,.08);color:var(--ink)}.pill.gp{background:rgba(99,102,241,.14);color:#4338ca}
-.foot{position:relative;z-index:1;height:110px;margin-top:10px;background:linear-gradient(180deg,#0c5646,#0B1933);clip-path:ellipse(75% 100% at 50% 100%)}
-@media(max-width:620px){.g2{grid-template-columns:1fr}.card{padding:20px;border-radius:22px}.row{flex-direction:column;align-items:flex-start}}
-
+[hidden]{display:none!important}
+body{margin:0;font:14px/1.5 Poppins,system-ui,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh}
+h1,h2,h3{margin:0}
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--bd)}
+.top-in{max-width:1120px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:20px;min-height:56px;flex-wrap:wrap}
+.brand{font:600 16px Poppins,sans-serif;letter-spacing:-.01em;white-space:nowrap}.brand i{font-style:normal;color:var(--em)}.brand small{font-weight:500;color:var(--muted);margin-left:6px;font-size:13px}
+.nav{display:flex;gap:2px;flex:1}
+.tab{border:0;background:transparent;box-shadow:none;min-height:56px;padding:0 14px;border-radius:0;border-bottom:2px solid transparent;color:var(--muted);font:500 14px Poppins,sans-serif;cursor:pointer}
+.tab:hover{color:var(--ink)}.tab.on{color:var(--ink);border-bottom-color:var(--em)}
+.hact{display:flex;gap:14px;align-items:center}.hact a{font-size:13px;color:var(--muted);text-decoration:none}.hact a:hover{color:var(--em-d)}.who{display:none}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 56px}
+/* form basics */
+label{display:block;font-size:12.5px;font-weight:600;margin:14px 0 6px}
+input,textarea,select{width:100%;padding:9px 12px;border:1px solid var(--bds);border-radius:var(--r);font:inherit;font-size:14px;background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--em);transition:border-color .15s,box-shadow .15s}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--em);box-shadow:0 0 0 3px var(--em-soft)}
+input::placeholder,textarea::placeholder{color:rgba(11,25,51,.38);-webkit-text-fill-color:rgba(11,25,51,.38)}textarea{min-height:76px;resize:vertical}
+button,.btn{font:500 13px Poppins,sans-serif;min-height:38px;padding:0 16px;border-radius:var(--r);border:1px solid var(--bds);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+button:hover,.btn:hover{border-color:var(--ink)}
+.pri{background:var(--em);border-color:var(--em);color:#fff}.pri:hover{background:var(--em-d);border-color:var(--em-d)}
+.sm{min-height:30px!important;padding:0 12px!important;font-size:12.5px!important}
+.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.hint{font-size:12px;color:var(--muted);margin:5px 0 0;line-height:1.45;word-break:break-word}
+.lbl-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.cnt{font-size:11.5px;font-weight:600;color:var(--muted)}.cnt.bad{color:#b45309}.cnt.good{color:var(--em-d)}
+.card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:20px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.note{font-size:12.5px;color:#7a5200;background:var(--warn-soft);border-radius:var(--r);padding:10px 12px;margin:14px 0 0;line-height:1.5}
+/* editor layout */
+.ed{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:start}
+.ed-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px}.ed-h h1{font:600 18px Poppins,sans-serif}.sub{color:var(--muted);font-size:13px;margin:0}
+#f-title{font-size:20px;font-weight:600;border:0;border-bottom:1px solid var(--bd);border-radius:0;padding:8px 0;box-shadow:none}
+#f-title:focus{border-bottom-color:var(--em);box-shadow:none}
+.ql-toolbar.ql-snow{border:1px solid var(--bds);border-radius:var(--r) var(--r) 0 0;background:#fff;font-family:inherit}.ql-container.ql-snow{border:1px solid var(--bds);border-top:0;border-radius:0 0 var(--r) var(--r);font-family:Poppins,sans-serif}
+#editor{height:min(52vh,460px);min-height:280px;font-size:15px;background:#fff}.ql-editor{color:var(--ink);line-height:1.7}.ql-editor.ql-blank::before{color:rgba(11,25,51,.38);font-style:normal}
+.actions{position:sticky;bottom:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#fff;margin:18px -20px -20px;padding:12px 20px;border-top:1px solid var(--bd);border-radius:0 0 14px 14px}
+#msg{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:60;max-width:92vw;font-size:13px;font-weight:500;padding:10px 18px;border-radius:99px;background:var(--ink);color:#fff;box-shadow:0 8px 24px -8px rgba(11,25,51,.5)}
+#msg:empty{display:none}#msg.ok{background:var(--em-d)}#msg.err{background:#b3372b}
+/* sidebar */
+.side .seg{width:100%}.side>label:first-child{margin-top:0}
+.seg{display:flex;padding:3px;border-radius:var(--r);background:rgba(11,25,51,.06);gap:3px}.seg button{flex:1;min-height:32px;border:0;background:transparent;padding:0 10px;font-size:12.5px}.seg button:hover{border:0}.seg button.on{background:#fff;box-shadow:0 1px 3px rgba(11,25,51,.15);color:var(--em-d)}.seg button:disabled{opacity:.55;cursor:not-allowed}
+.chk{display:flex;align-items:center;gap:9px;font-weight:500;font-size:13px;margin:14px 0 0;cursor:pointer}.chk input{width:18px;height:18px;padding:0;accent-color:var(--em)}
+details{border-top:1px solid var(--bd);margin-top:16px;padding-top:2px}
+summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:600;font-size:13px;padding:10px 0}
+summary::-webkit-details-marker{display:none}summary::after{content:'+';font-size:18px;font-weight:400;color:var(--muted);line-height:1}details[open]>summary::after{content:'–'}
+.score{display:inline-block;font:600 11.5px Poppins,sans-serif;padding:2px 9px;border-radius:99px;background:var(--warn-soft);color:#8a5d00;margin-left:6px}.score.ok{background:var(--em-soft);color:var(--em-d)}
 .g0{background:linear-gradient(135deg,#12b886,#0B1933)}.g1{background:linear-gradient(135deg,#f59e0b,#ef4444)}.g2{background:linear-gradient(135deg,#3b82f6,#0B1933)}.g3{background:linear-gradient(135deg,#7c3aed,#3b82f6)}.g4{background:linear-gradient(135deg,#0ea5a4,#12b886)}.g5{background:linear-gradient(135deg,#334155,#12b886)}
-.cover-prev{position:relative;overflow:hidden;aspect-ratio:16/9;max-width:420px;border-radius:20px;margin-top:12px;display:grid;place-items:center;color:rgba(255,255,255,.92);border:1px solid var(--bd)}
-.cover-prev img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.cover-prev svg{width:72px;height:72px;fill:none;stroke:currentColor;stroke-width:.7;stroke-linecap:round;stroke-linejoin:round}
-.cover-prev .cp-err{position:relative;background:rgba(192,57,43,.92);color:#fff;font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:99px}
-.cover-prev .cp-lbl{position:absolute;left:12px;bottom:10px;font-size:11px;font-weight:600;background:rgba(11,25,51,.55);color:#fff;padding:3px 10px;border-radius:99px}
-.lbl-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.cnt{font-size:12px;font-weight:600;color:var(--muted)}.cnt.bad{color:#b45309}.cnt.good{color:var(--em-d)}
-.sec-h{font:700 17px var(--disp);margin:30px 0 4px;padding-top:24px;border-top:1px dashed var(--bds);display:flex;align-items:center;gap:8px}
-.serp{border:1.5px solid var(--bd);border-radius:16px;padding:14px 16px;background:#fff;margin-top:14px}.serp small{color:#5f6368;font-size:12px;word-break:break-all;display:block}.serp b{display:block;color:#1a0dab;font:500 18px/1.3 Arial,sans-serif;margin:3px 0}.serp span{color:#4d5156;font:13px/1.5 Arial,sans-serif;display:block}
-.seo-list{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:7px}.seo-list li{font-size:13px;line-height:1.45;padding:8px 12px 8px 36px;border-radius:12px;position:relative;background:rgba(11,25,51,.04)}.seo-list li::before{content:'!';position:absolute;left:11px;top:7px;width:18px;height:18px;border-radius:50%;background:var(--warn-soft);color:#8a5d00;font-weight:700;font-size:12px;display:grid;place-items:center}.seo-list li.ok{background:var(--em-soft)}.seo-list li.ok::before{content:'\2713';background:var(--em);color:#fff}
-.score{display:inline-block;font:700 12px Poppins,sans-serif;padding:3px 12px;border-radius:99px;margin-left:8px;background:var(--warn-soft);color:#8a5d00}.score.ok{background:var(--em-soft);color:var(--em-d)}
-.lockmsg{display:flex;gap:10px;align-items:flex-start}.who{font-size:12.5px;color:var(--muted);font-weight:600}
-.addrow{display:flex;gap:10px;margin-top:14px}.addrow input{flex:1}.addrow button{flex-shrink:0}
-.sm{min-height:34px!important;padding:0 16px!important;font-size:12.5px!important}
-@media(max-width:620px){.addrow{flex-direction:column}}
+.cover-prev{position:relative;overflow:hidden;aspect-ratio:16/9;width:100%;border-radius:var(--r);margin-top:12px;display:grid;place-items:center;color:rgba(255,255,255,.92);border:1px solid var(--bd)}
+.cover-prev img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.cover-prev svg{width:56px;height:56px;fill:none;stroke:currentColor;stroke-width:.7;stroke-linecap:round;stroke-linejoin:round}
+.cover-prev .cp-err{position:relative;background:rgba(192,57,43,.92);color:#fff;font-size:12px;font-weight:600;padding:6px 12px;border-radius:99px}
+.cover-prev .cp-lbl{position:absolute;left:10px;bottom:8px;font-size:10.5px;font-weight:600;background:rgba(11,25,51,.55);color:#fff;padding:2px 9px;border-radius:99px}
+.serp{border:1px solid var(--bd);border-radius:var(--r);padding:11px 13px;background:#fff;margin-top:12px}.serp small{color:#5f6368;font-size:11.5px;word-break:break-all;display:block}.serp b{display:block;color:#1a0dab;font:500 16px/1.3 Arial,sans-serif;margin:2px 0}.serp span{color:#4d5156;font:12.5px/1.5 Arial,sans-serif;display:block}
+.seo-list{list-style:none;margin:12px 0 4px;padding:0;display:grid;gap:5px}.seo-list li{font-size:12px;line-height:1.4;padding:6px 10px 6px 30px;border-radius:8px;position:relative;background:rgba(11,25,51,.04)}.seo-list li::before{content:'!';position:absolute;left:8px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--warn-soft);color:#8a5d00;font-weight:700;font-size:11px;display:grid;place-items:center}.seo-list li.ok{background:var(--em-soft)}.seo-list li.ok::before{content:'\2713';background:var(--em);color:#fff}
+/* list + categories */
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px}.bar input[type=search]{flex:1;min-width:180px;width:auto}
+.ftabs{display:flex;gap:6px}.ftabs button{min-height:34px;padding:0 14px;font-size:12.5px}.ftabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--bd);align-items:center}.row:first-child{border-top:0}.row b{font-size:14px;line-height:1.35;display:block;font-weight:500}.row small{display:block;margin-top:3px;color:var(--muted);font-size:12px}
+.pill{font:600 10px Poppins,sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:99px;margin-right:6px}.pill.ok{background:var(--em-soft);color:var(--em-d)}.pill.dr{background:var(--warn-soft);color:#8a5d00}.pill.tp{background:rgba(11,25,51,.07)}.pill.gp{background:rgba(99,102,241,.13);color:#4338ca}
+.acts{display:flex;gap:6px;align-items:center;flex-shrink:0}.acts button{min-height:30px;padding:0 12px;font-size:12.5px}.acts a{font-size:12.5px;color:var(--em-d);font-weight:500;margin-right:6px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--bd)}
+.addrow{display:flex;gap:8px;margin-top:14px}.addrow input{flex:1}
+.narrow{max-width:640px}
+h2{font:600 16px Poppins,sans-serif}
+/* login */
+.login{max-width:400px;margin:10vh auto 0;padding:0 16px}.login .card{padding:28px}.login h1{font:600 20px Poppins,sans-serif;margin:18px 0 4px}#loginErr{color:#c0392b;font-size:13px;margin:8px 0 12px;min-height:20px}
+@media(max-width:860px){.ed{grid-template-columns:1fr}.nav{order:3;flex-basis:100%;overflow-x:auto}.tab{min-height:44px}}
+@media(max-width:560px){.cols{grid-template-columns:1fr}.row{flex-direction:column;align-items:flex-start}.addrow{flex-direction:column}.card{padding:16px}.actions{margin:18px -16px -16px;padding:12px 16px}}
 </style></head><body>
-<div class="bg"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i><b style="left:38px;top:96px"></b><b style="right:60px;top:64%;width:11px;height:11px"></b></div>
-<div class="wrap">
-<noscript><p class="note">Halaman admin membutuhkan JavaScript.</p></noscript>
-<section id="login" class="login" hidden><div class="card"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" height="38" style="display:block;width:auto"><g transform="translate(40,40) scale(0.625)"><rect x="16" y="16" width="480" height="480" rx="120" fill="#0B1933"/><path d="M115 110L175 110 175 220 337 402 397 402 397 200 337 220 337 300 175 110Z" fill="#fff"/><rect x="115" y="110" width="60" height="292" fill="#fff"/><rect x="337" y="200" width="60" height="202" fill="#fff"/><polygon points="205,110 310,110 280,215" fill="#0FAF80"/><polygon points="310,110 397,200 310,200" fill="#12A97E"/></g><text x="420" y="245" font-family="Bricolage Grotesque, system-ui, sans-serif" font-size="145" font-weight="800" letter-spacing="-3"><tspan fill="#0B1933">Nocta</tspan><tspan fill="#12A97E">POS</tspan></text></svg>
-<h1>Masuk Admin</h1><p class="sub">Mode lokal (localhost). Di situs live, akses dijaga Cloudflare Access.</p>
+
+<section id="login" class="login" hidden><div class="card">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" height="36" style="display:block;width:auto"><g transform="translate(40,40) scale(0.625)"><rect x="16" y="16" width="480" height="480" rx="120" fill="#0B1933"/><path d="M115 110L175 110 175 220 337 402 397 402 397 200 337 220 337 300 175 110Z" fill="#fff"/><rect x="115" y="110" width="60" height="292" fill="#fff"/><rect x="337" y="200" width="60" height="202" fill="#fff"/><polygon points="205,110 310,110 280,215" fill="#0FAF80"/><polygon points="310,110 397,200 310,200" fill="#12A97E"/></g><text x="420" y="245" font-family="Poppins, system-ui, sans-serif" font-size="145" font-weight="700" letter-spacing="-3"><tspan fill="#0B1933">Nocta</tspan><tspan fill="#12A97E">POS</tspan></text></svg>
+<h1>Masuk Admin</h1><p class="sub">Khusus pengelola konten.</p>
 <form id="loginForm">
-  <label for="em">Email Terdaftar</label>
+  <label for="em">Email</label>
   <input id="em" type="email" autocomplete="username" placeholder="email@domain.com" required />
   <label for="pw">Password</label>
   <input id="pw" type="password" autocomplete="current-password" required />
   <p id="loginErr"></p>
-    <button class="pri" type="submit" style="width:100%">Masuk</button>
-  </form>
+  <button class="pri" type="submit" style="width:100%">Masuk</button>
+</form></div></section>
+
+<section id="locked" class="login" hidden><div class="card"><h1>Akses ditolak</h1><p class="sub">Halaman ini hanya untuk pengelola. Muat ulang halaman lalu login kembali.</p></div></section>
+
+<div id="panel" hidden>
+<header class="top"><div class="top-in">
+  <div class="brand">Nocta<i>POS</i><small>Admin</small></div>
+  <nav class="nav" aria-label="Menu admin">
+    <button type="button" class="tab on" data-tab="editor">Editor</button>
+    <button type="button" class="tab" data-tab="list">Konten</button>
+    <button type="button" class="tab" data-tab="cats">Kategori</button>
+  </nav>
+  <div class="hact"><span class="who" id="who"></span><a href="artikel.html" target="_blank" rel="noopener">Blog &rarr;</a><a href="panduan-pengguna.html" target="_blank" rel="noopener">Panduan &rarr;</a><button id="logout" type="button" class="sm">Keluar</button></div>
+</div></header>
+
+<main class="wrap">
+
+<!-- ========== EDITOR ========== -->
+<section data-view="editor">
+<div class="ed">
+  <div class="card">
+    <div class="ed-h"><h1>Editor</h1><p class="sub" id="mode">Artikel baru</p></div>
+    <div class="lbl-row"><label for="f-title" style="margin:6px 0 0">Judul</label><span class="cnt" id="c-title"></span></div>
+    <input id="f-title" maxlength="140" placeholder="Judul yang bikin pemilik konter penasaran" />
+
+    <div class="lbl-row"><label for="f-excerpt">Ringkasan <span style="font-weight:400;color:var(--muted)">(tampil di kartu &amp; hasil pencarian)</span></label><span class="cnt" id="c-ex"></span></div>
+    <textarea id="f-excerpt" maxlength="220" placeholder="Satu atau dua kalimat yang mengundang untuk membaca."></textarea>
+
+    <label>Isi konten</label><div id="editor"></div>
+    <p class="hint" id="edHint">Pakai Heading untuk subjudul. Gambar lewat tombol gambar (link https:// atau assets/), jangan tempel file langsung.</p>
+    <div id="legacyNote" class="note" hidden></div>
+
+    <div class="actions">
+      <button id="btnPost" class="pri" type="button"><svg class="i" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg><span>Post</span></button>
+      <button id="btnDraft" type="button">Simpan draft</button>
+      <button id="btnReset" type="button">Konten baru</button>
+    </div>
+  </div>
+
+  <aside class="card side">
+    <label>Jenis konten</label>
+    <div class="seg" role="group" aria-label="Jenis konten"><button type="button" id="t-artikel" class="on">Artikel</button><button type="button" id="t-panduan">Panduan</button></div>
+    <p class="hint" id="typeHint">Tampil di halaman Artikel (artikel.html).</p>
+
+    <label for="f-cat">Kategori</label><select id="f-cat"></select>
+
+    <label for="f-slug">Slug</label><input id="f-slug" maxlength="80" autocomplete="off" /><p class="hint" id="slugHint"></p>
+
+    <div data-for="artikel"><label for="f-tags">Tag <span style="font-weight:400;color:var(--muted)">(maks. 2, pisah koma)</span></label><input id="f-tags" placeholder="Kas Laci, BRILink" /></div>
+    <div data-for="panduan" hidden><label class="chk"><input id="f-pop" type="checkbox" />Tampilkan di &ldquo;Tutorial Populer&rdquo;</label></div>
+
+    <details>
+      <summary>Gambar sampul</summary>
+      <label for="f-cover" style="margin-top:4px">Link gambar (opsional)</label><input id="f-cover" placeholder="https://… atau assets/img/nama.jpg" inputmode="url" />
+      <label for="f-calt">Teks alternatif</label><input id="f-calt" maxlength="125" placeholder="Deskripsikan isi gambar" />
+      <div class="cols">
+        <div><label for="f-cpos">Fokus potongan</label><select id="f-cpos"><option value="center">Tengah</option><option value="top">Atas</option><option value="bottom">Bawah</option></select></div>
+        <div><label for="f-grad">Warna bawaan</label><select id="f-grad"><option value="0">Hijau</option><option value="1">Oranye</option><option value="2">Biru</option><option value="3">Ungu</option><option value="4">Tosca</option><option value="5">Abu-abu</option></select></div>
+      </div>
+      <div class="cover-prev g0" id="coverPrev"></div>
+      <p class="hint">Ukuran ideal 1200&times;630 px. Gambar dipotong mengisi kartu, tulisan penting di tengah.</p>
+    </details>
+
+    <details>
+      <summary><span>SEO<span class="score" id="seoScore"></span></span></summary>
+      <p class="hint" style="margin-top:0">Boleh dikosongkan, judul &amp; ringkasan dipakai otomatis.</p>
+      <div class="lbl-row"><label for="f-mtitle">Judul SEO</label><span class="cnt" id="c-mt"></span></div><input id="f-mtitle" maxlength="70" placeholder="Maks. 60 karakter, kata kunci di depan" />
+      <div class="lbl-row"><label for="f-mdesc">Meta deskripsi</label><span class="cnt" id="c-md"></span></div><textarea id="f-mdesc" maxlength="170" style="min-height:64px" placeholder="120–160 karakter, ajak orang klik."></textarea>
+      <div class="serp" aria-label="Pratinjau tampilan di Google"><small id="serpU"></small><b id="serpT"></b><span id="serpD"></span></div>
+      <ul class="seo-list" id="seoList"></ul>
+    </details>
+  </aside>
 </div>
 </section>
 
-  <section id="locked" class="login" hidden><div class="card"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" height="38" style="display:block;width:auto"><g transform="translate(40,40) scale(0.625)"><rect x="16" y="16" width="480" height="480" rx="120" fill="#0B1933"/><path d="M115 110L175 110 175 220 337 402 397 402 397 200 337 220 337 300 175 110Z" fill="#fff"/><rect x="115" y="110" width="60" height="292" fill="#fff"/><rect x="337" y="200" width="60" height="202" fill="#fff"/><polygon points="205,110 310,110 280,215" fill="#0FAF80"/><polygon points="310,110 397,200 310,200" fill="#12A97E"/></g><text x="420" y="245" font-family="Bricolage Grotesque, system-ui, sans-serif" font-size="145" font-weight="800" letter-spacing="-3"><tspan fill="#0B1933">Nocta</tspan><tspan fill="#12A97E">POS</tspan></text></svg>
-<h1>Akses ditolak</h1><p class="sub">Halaman ini hanya bisa dibuka lewat Cloudflare Access (login email resmi pengelola).</p>
-<p class="note">Kalau kamu pengelola: buka halaman ini lewat alamat situs asli (bukan file lokal), lalu login dengan email yang terdaftar di kebijakan Access. Kalau Access belum dipasang, ikuti langkah di <code>SETUP-CLOUDFLARE.md</code>.</p></div></section>
-<div id="panel" hidden>
-<div class="head"><div><span class="tag"><svg class="i" style="width:14px;height:14px" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Kelola Artikel &amp; Panduan</span><h1>Admin Konten</h1><p class="sub" id="mode">Artikel baru</p></div>
-<div class="hact"><span class="who" id="who"></span><a href="artikel.html" target="_blank" rel="noopener">Lihat blog &rarr;</a><a href="panduan-pengguna.html" target="_blank" rel="noopener">Lihat panduan &rarr;</a><button id="logout" type="button" style="min-height:38px">Keluar</button></div></div>
+<!-- ========== DAFTAR KONTEN ========== -->
+<section data-view="list" hidden>
+<div class="card">
+  <div class="bar">
+    <div class="ftabs" id="ftabs"><button type="button" data-f="all" class="on">Semua</button><button type="button" data-f="artikel">Artikel</button><button type="button" data-f="panduan">Panduan</button></div>
+    <input id="lq" type="search" placeholder="Cari judul atau kategori…" aria-label="Cari konten" />
+  </div>
+  <div id="list"></div>
+  <div class="tools">
+    <button id="btnExport" type="button" class="sm">Ekspor JSON (cadangan)</button>
+    <label class="btn sm" style="margin:0">Impor JSON<input id="importFile" type="file" accept="application/json" hidden /></label>
+    <button id="btnMap" type="button" class="sm">Unduh sitemap.xml</button>
+  </div>
+  <p class="hint">Impor menimpa semua konten sejenis (artikel atau panduan) yang ada di server. Ekspor dulu sebagai cadangan.</p>
+</div>
+</section>
 
-<div class="card"><label>Jenis konten</label><div class="seg" role="group" aria-label="Jenis konten"><button type="button" id="t-artikel" class="on">Artikel Blog</button><button type="button" id="t-panduan">Panduan Pengguna</button></div><p class="hint" id="typeHint">Tampil di halaman Artikel (artikel.html).</p>
-<div class="lbl-row"><label for="f-title">Judul</label><span class="cnt" id="c-title"></span></div><input id="f-title" maxlength="140" placeholder="Judul yang bikin pemilik konter penasaran" />
-<div class="g2"><div><label for="f-slug">Slug (alamat konten)</label><input id="f-slug" maxlength="80" autocomplete="off" /><p class="hint" id="slugHint"></p></div>
-<div><label for="f-cat">Kategori</label><select id="f-cat"></select><p class="hint">Tambah lewat &ldquo;+ Tambah kategori baru&rdquo;. Ubah nama / hapus di kartu <b>Kelola kategori</b> di bawah.</p></div></div>
-<div class="g2"><div data-for="artikel"><label for="f-tags">Tag (maksimal 2, pisah koma)</label><input id="f-tags" placeholder="Kas Laci, BRILink" /></div><div data-for="panduan" hidden><label class="chk" style="margin-top:38px"><input id="f-pop" type="checkbox" />Tampilkan di &ldquo;Tutorial Populer&rdquo;</label></div><div><label for="f-grad">Warna sampul bawaan (kalau tanpa gambar)</label><select id="f-grad"><option value="0">Hijau</option><option value="1">Oranye</option><option value="2">Biru</option><option value="3">Ungu</option><option value="4">Tosca</option><option value="5">Abu-abu</option></select></div></div>
+<!-- ========== KATEGORI ========== -->
+<section data-view="cats" hidden>
+<div class="card narrow">
+  <h2>Kategori</h2>
+  <p class="hint">Dipakai sebagai filter di halaman Artikel dan Panduan. Kategori yang masih dipakai konten tidak bisa dihapus; ubah namanya untuk menggabungkan.</p>
+  <div class="seg" role="group" aria-label="Jenis kategori" style="margin-top:12px"><button type="button" id="cm-artikel" class="on">Artikel</button><button type="button" id="cm-panduan">Panduan</button></div>
+  <div id="cmList"></div>
+  <div class="addrow"><input id="cmNew" maxlength="40" placeholder="Nama kategori baru" aria-label="Nama kategori baru" /><button id="cmAdd" class="pri sm" type="button">Tambah</button></div>
+  <p id="cmMsg" class="hint" role="status"></p>
+</div>
+</section>
 
-<label for="f-cover">Link gambar sampul (opsional)</label><input id="f-cover" placeholder="https://… atau assets/img/nama-file.jpg" inputmode="url" />
-<div class="g2"><div><label for="f-cpos">Fokus potongan gambar</label><select id="f-cpos"><option value="center">Tengah</option><option value="top">Atas</option><option value="bottom">Bawah</option></select></div><div><label for="f-calt">Teks alternatif sampul (SEO &amp; aksesibilitas)</label><input id="f-calt" maxlength="125" placeholder="Deskripsikan isi gambar" /></div></div>
-<p class="hint">Gambar otomatis dipotong mengisi kotak seukuran template (sama seperti kartu hijau/oranye). Ukuran ideal 1200&times;630 px (rasio 1,9:1), tulisan penting di tengah.</p>
-<div class="cover-prev g0" id="coverPrev"></div>
+</main>
+</div>
 
-<div class="lbl-row"><label for="f-excerpt">Ringkasan (tampil di kartu &amp; hasil pencarian)</label><span class="cnt" id="c-ex"></span></div><textarea id="f-excerpt" maxlength="220" placeholder="Satu atau dua kalimat yang mengundang untuk membaca."></textarea>
-<label>Isi konten</label><div id="editor"></div><p class="hint" id="edHint">Pakai <b>Heading</b> untuk subjudul. Gambar: pakai tombol gambar (link https:// atau assets/), jangan tempel/seret file gambar langsung.</p>
-<div id="legacyNote" class="note" hidden></div>
-
-<h3 class="sec-h"><svg class="i" style="color:var(--em)" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>SEO<span class="score" id="seoScore"></span></h3>
-<p class="hint">Dikosongkan pun aman: judul &amp; ringkasan dipakai otomatis. Isi kalau mau tampilan di Google lebih rapi.</p>
-<div class="lbl-row"><label for="f-mtitle">Judul SEO (opsional)</label><span class="cnt" id="c-mt"></span></div><input id="f-mtitle" maxlength="70" placeholder="Maks. 60 karakter, kata kunci utama di depan" />
-<div class="lbl-row"><label for="f-mdesc">Meta deskripsi (opsional)</label><span class="cnt" id="c-md"></span></div><textarea id="f-mdesc" maxlength="170" style="min-height:70px" placeholder="120–160 karakter. Ajak orang klik, sebut manfaatnya."></textarea>
-<div class="serp" aria-label="Pratinjau tampilan di Google"><small id="serpU"></small><b id="serpT"></b><span id="serpD"></span></div>
-<ul class="seo-list" id="seoList"></ul>
-
-<div class="acts-bar"><button id="btnPost" class="pri" type="button"><svg class="i" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg><span>Post</span></button><button id="btnDraft" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Simpan draft</button><button id="btnReset" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Konten baru</button><span id="msg" role="status"></span></div></div>
-
-<div class="card"><h2>Kelola kategori</h2><p class="hint">Kategori tampil sebagai filter di halaman Artikel dan Pusat Panduan. Kategori yang masih dipakai konten tidak bisa dihapus; ubah namanya kalau mau digabung ke kategori lain.</p>
-<div class="seg" role="group" aria-label="Jenis kategori" style="margin-top:12px"><button type="button" id="cm-artikel" class="on">Kategori Artikel</button><button type="button" id="cm-panduan">Kategori Panduan</button></div>
-<div id="cmList"></div><div class="addrow"><input id="cmNew" maxlength="40" placeholder="Nama kategori baru" aria-label="Nama kategori baru" /><button id="cmAdd" class="pri sm" type="button">Tambah</button></div><p id="cmMsg" class="hint" role="status"></p></div>
-
-<div class="card"><h2><svg class="i" style="width:22px;height:22px;color:var(--em)" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8M8 9h2"/></svg>Semua konten</h2><div class="ftabs" id="ftabs"><button type="button" data-f="all" class="on">Semua</button><button type="button" data-f="artikel">Artikel</button><button type="button" data-f="panduan">Panduan</button></div><input id="lq" type="search" placeholder="Cari judul atau kategori…" aria-label="Cari konten" style="margin-top:10px" /><div id="list" style="margin-top:8px"></div>
-<div class="tools"><button id="btnExport" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Ekspor JSON (cadangan)</button><label class="btn" style="margin:0"><svg class="i" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Impor JSON<input id="importFile" type="file" accept="application/json" hidden /></label><button id="btnMap" type="button"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>Unduh sitemap.xml</button></div>
-<p class="note">Mode tes: konten tersimpan di browser ini saja. Ekspor JSON untuk cadangan dan untuk pindah ke database Cloudflare nanti. sitemap.xml diunggah ke folder utama situs, lalu kirim ke Google Search Console.</p></div>
-</div></div>
-<div class="foot"></div>
+<p id="msg" role="status"></p>
+<noscript><p class="note" style="margin:20px">Halaman admin membutuhkan JavaScript.</p></noscript>
 <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 <script src="assets/js/articles-store.js"></script>
 <script src="assets/js/admin.js"></script>
+<script src="assets/js/admin-ui.js"></script>
 </body></html>
