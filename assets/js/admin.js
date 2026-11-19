@@ -285,17 +285,103 @@
   }
   function sitemap() { window.open('/sitemap.xml', '_blank', 'noopener'); } /* sitemap dibuat otomatis oleh server */
 
+  /* ---------- gambar di editor: ukuran, rata kiri/tengah/kanan, pindah atas/bawah, teks alternatif ---------- */
+  function registerImage() {
+    try {
+      var Base = Quill.import('formats/image'), KEYS = ['alt', 'width', 'data-align'];
+      class NoctaImage extends Base {
+        static formats(node) { var f = {}; KEYS.forEach(function (k) { if (node.hasAttribute(k)) f[k] = node.getAttribute(k); }); return f; }
+        format(name, value) {
+          if (KEYS.indexOf(name) < 0) return super.format(name, value);
+          if (value) this.domNode.setAttribute(name, value); else this.domNode.removeAttribute(name);
+        }
+      }
+      Quill.register(NoctaImage, true);
+    } catch (e) { console.error('format gambar:', e); }
+  }
+  /* gambar selalu ditaruh di barisnya sendiri supaya mudah dipindah */
+  function insertImage(u, alt) {
+    var r = q.getSelection(true) || { index: Math.max(0, q.getLength() - 1) }, idx = r.index;
+    var ln = q.getLine(idx), start = q.getIndex(ln[0]);
+    if (ln[0].length() > 1 && idx > start) { q.insertText(idx, '\n', 'user'); idx++; }
+    q.insertEmbed(idx, 'image', u, 'user');
+    if (q.getLine(idx)[0].length() > 2) q.insertText(idx + 1, '\n', 'user');
+    if (alt) q.formatText(idx, 1, 'alt', alt, 'user');
+    q.setSelection(idx + 1, 0, 'silent');
+  }
+  function imageTools() {
+    var bar = $('#imgBar'), frame = $('#imgFrame'), range = $('#imgRange'), rv = $('#imgRv'), sel = null, tm, Delta = Quill.import('delta');
+    if (!bar || !frame) return;
+    q.container.appendChild(frame); q.container.appendChild(bar);
+    function hide() { sel = null; bar.hidden = true; frame.hidden = true; }
+    function idxOf() { var b = sel && Quill.find(sel); return b ? q.getIndex(b) : -1; }
+    function fmt(name, val) { var i = idxOf(); if (i < 0) return; q.formatText(i, 1, name, val, 'user'); setTimeout(place, 0); }
+    function place() {
+      if (!sel || !q.root.contains(sel)) return hide();
+      var c = q.container.getBoundingClientRect(), r = sel.getBoundingClientRect(), v = q.root.getBoundingClientRect();
+      if (r.bottom < v.top + 4 || r.top > v.bottom - 4) { bar.hidden = true; frame.hidden = true; return; }
+      frame.hidden = false; bar.hidden = false;
+      frame.style.left = (r.left - c.left) + 'px'; frame.style.top = (r.top - c.top) + 'px'; frame.style.width = r.width + 'px'; frame.style.height = r.height + 'px';
+      var bh = bar.offsetHeight, top = r.top - c.top - bh - 8;
+      if (top < 4) top = r.bottom - c.top + 8;
+      if (top + bh > c.height - 4) top = 8;
+      bar.style.top = top + 'px'; bar.style.left = Math.max(4, Math.min(r.left - c.left, c.width - bar.offsetWidth - 4)) + 'px';
+      var w = sel.getAttribute('width') || '', al = sel.getAttribute('data-align') || '', pct = w ? parseInt(w, 10) : Math.min(100, Math.round(r.width / (q.root.clientWidth || 1) * 100));
+      Array.prototype.forEach.call(bar.querySelectorAll('[data-w]'), function (b) { b.classList.toggle('on', b.dataset.w === w); });
+      Array.prototype.forEach.call(bar.querySelectorAll('[data-a]'), function (b) { b.classList.toggle('on', b.dataset.a === al); });
+      if (document.activeElement !== range) range.value = pct || 100;
+      rv.textContent = (pct || 100) + '%';
+    }
+    function move(dir) {
+      var i = idxOf(); if (i < 0) return;
+      var ln = q.getLine(i)[0], start = q.getIndex(ln), len = ln.length(), nb = dir < 0 ? ln.prev : ln.next;
+      if (!nb) return;
+      var nlen = nb.length(), content = q.getContents(start, len), d = new Delta(), ni;
+      if (dir < 0) { d.retain(start - nlen).concat(content).retain(nlen).delete(len); ni = start - nlen + (i - start); }
+      else { d.retain(start).delete(len).retain(nlen).concat(content); ni = start + nlen + (i - start); }
+      q.updateContents(d, 'user');
+      var leaf = q.getLeaf(ni)[0];
+      sel = leaf && leaf.domNode && leaf.domNode.tagName === 'IMG' ? leaf.domNode : null;
+      if (sel) { sel.scrollIntoView({ block: 'nearest' }); place(); } else hide();
+    }
+    q.root.addEventListener('click', function (e) { if (e.target && e.target.tagName === 'IMG') { sel = e.target; place(); } });
+    document.addEventListener('mousedown', function (e) {
+      if (!sel || bar.contains(e.target) || (e.target.tagName === 'IMG' && q.root.contains(e.target))) return;
+      hide();
+    });
+    q.root.addEventListener('scroll', place); window.addEventListener('resize', place);
+    q.on('text-change', function () { if (sel) setTimeout(place, 0); });
+    bar.addEventListener('mousedown', function (e) { if (e.target.tagName !== 'INPUT') e.preventDefault(); });
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b || !sel) return;
+      if (b.dataset.w) fmt('width', sel.getAttribute('width') === b.dataset.w ? false : b.dataset.w);          /* klik lagi = kembali ke ukuran asli */
+      else if (b.dataset.a) fmt('data-align', sel.getAttribute('data-align') === b.dataset.a ? false : b.dataset.a);
+      else if (b.dataset.m) move(+b.dataset.m);
+      else if (b.dataset.act === 'alt') {
+        var v = prompt('Teks alternatif gambar (deskripsi singkat, bagus untuk SEO):', sel.getAttribute('alt') || '');
+        if (v !== null) fmt('alt', v.trim().slice(0, 125));
+      } else if (b.dataset.act === 'del') {
+        var i = idxOf(); if (i < 0) return;
+        q.deleteText(i, 1, 'user'); hide();
+        var ln = q.getLine(Math.min(i, Math.max(0, q.getLength() - 1)))[0];
+        if (ln && ln.length() === 1 && q.getLength() > 1) q.deleteText(q.getIndex(ln), 1, 'user');   /* buang baris kosong sisa gambar */
+      }
+    });
+    range.addEventListener('input', function () { rv.textContent = range.value + '%'; clearTimeout(tm); tm = setTimeout(function () { fmt('width', range.value + '%'); }, 120); });
+  }
+
   /* ---------- init ---------- */
   function init() {
+    registerImage();
     q = new Quill('#editor', { theme: 'snow', placeholder: 'Tulis isi di sini…', modules: { toolbar: { container: [[{ header: [2, 3, false] }], ['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['blockquote', 'link', 'image'], ['clean']], handlers: { image: function () {
       var u = (prompt('Link gambar (https://… atau assets/…):') || '').trim();
       if (!u) return;
       if (!isImg(u)) return msg('Link gambar harus diawali https:// atau assets/');
       var alt = (prompt('Teks alternatif gambar (deskripsi singkat, bagus untuk SEO):') || '').trim().slice(0, 125);
-      var r = q.getSelection(true) || { index: q.getLength() };
-      q.insertEmbed(r.index, 'image', u, 'user'); if (alt) q.formatText(r.index, 1, { alt: alt }, 'user'); q.setSelection(r.index + 1);
+      insertImage(u, alt);
     } } } } });
     q.on('text-change', function (d, o, src) { if (src === 'user') setDirty(true); later(); });
+    try { imageTools(); } catch (e) { console.error('alat gambar:', e); }
     ['title', 'slug', 'tags', 'excerpt', 'cover', 'calt', 'mtitle', 'mdesc', 'grad', 'cpos', 'pop', 'cat'].forEach(function (k) {
       $('#f-' + k).addEventListener('input', function () { if (k !== 'cat' || this.value !== '__new') setDirty(true); if (k === 'cover' || k === 'grad' || k === 'cpos') coverRefresh(); later(); });
     });

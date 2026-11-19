@@ -51,7 +51,7 @@ export async function sanitizeHtml(html) {
         if (!OK_TAGS.has(t)) { el.removeAndKeepContent(); return; }
         for (const [name] of [...el.attributes]) {
           const n = name.toLowerCase();
-          if (!((t === 'a' && n === 'href') || (t === 'img' && (n === 'src' || n === 'alt')))) el.removeAttribute(name);
+          if (!((t === 'a' && n === 'href') || (t === 'img' && (n === 'src' || n === 'alt' || n === 'width' || n === 'data-align')))) el.removeAttribute(name);
         }
         if (t === 'a') {
           const h = (el.getAttribute('href') || '').trim();
@@ -63,6 +63,11 @@ export async function sanitizeHtml(html) {
           const s = (el.getAttribute('src') || '').trim();
           if (!/^(https?:\/\/|assets\/)/i.test(s)) { el.remove(); return; }
           el.setAttribute('src', s);
+          /* ukuran (10-100%) dan rata (left/center/right) dari editor; nilai lain dibuang */
+          const w = (el.getAttribute('width') || '').trim();
+          if (w && !/^(100|[1-9]\d)%$/.test(w)) el.removeAttribute('width');
+          const al = (el.getAttribute('data-align') || '').trim();
+          if (al && !/^(left|center|right)$/.test(al)) el.removeAttribute('data-align');
         }
       }
     });
