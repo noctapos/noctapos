@@ -8,9 +8,9 @@
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function tgl(i) { var d = new Date(i); return d.getDate() + ' ' + BLN[d.getMonth()] + ' ' + d.getFullYear(); }
   function menit(a) { return a.minutes || Math.max(1, Math.round((a.html || '').replace(/<[^>]*>/g, ' ').trim().split(/\s+/).length / 200)); }
-  function href(a) { return (!a.html && a.legacyUrl) || 'detail.html?slug=' + encodeURIComponent(a.slug); }
+  function href(a) { return (!a.html && a.legacyUrl && a.legacyUrl.replace(/\.html$/i, '')) || 'detail?slug=' + encodeURIComponent(a.slug); }
   function isImg(u) { return /^(https?:\/\/|assets\/)/i.test(u || ''); }
-  var SITE = (location.protocol === 'file:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) ? 'https://noctapos.id' : location.origin;
+  var SITE = 'https://noctapos.id'; /* selalu domain utama, supaya canonical sama dengan yang dibuat server */
   function absUrl(u) { return /^https?:/i.test(u) ? u : SITE + '/' + String(u).replace(/^\//, ''); }
   function setMeta(k, v, prop) {
     var at = prop ? 'property' : 'name', el = document.querySelector('meta[' + at + '="' + k + '"]');
@@ -88,7 +88,7 @@
     var slug = new URLSearchParams(location.search).get('slug') || '';
     S.getBySlug(slug).then(function (a) {
       if (!a) { setMeta('robots', 'noindex'); root.innerHTML = '<div class="post"><p class="crumb"><a href="artikel.html">&lsaquo; Semua artikel</a></p><h1>Artikel tidak ditemukan</h1><p>Artikel yang kamu cari belum ada atau sudah dihapus.</p></div>'; return; }
-      seo(a, { path: 'detail.html', brand: 'NoctaPOS', crumbs: [['Beranda', '/'], ['Artikel', 'artikel.html']] });
+      seo(a, { path: 'detail', brand: 'NoctaPOS', crumbs: [['Beranda', '/'], ['Artikel', 'artikel']] });
       var tg = (a.tags || []).map(function (t, i) { return '<span class="tg t' + (i + (a.grad | 0)) % 5 + '">' + esc(t) + '</span>'; }).join('');
       root.innerHTML = '<article class="post"><p class="crumb"><a href="artikel.html">&lsaquo; Semua artikel</a></p><div class="am-tags" style="justify-content:flex-start;margin-top:14px">' + tg + '</div><h1>' + esc(a.title) + '</h1><p class="meta">' + tgl(a.createdAt) + ' &middot; ' + menit(a) + ' menit baca</p>' + cover(a, 'post') + '<p class="lead">' + esc(a.excerpt) + '</p>' + clean(a.html) +
         '<div class="post-cta"><div><b style="font-size:20px">Coba NoctaPOS gratis</b><p style="font-size:15px;opacity:.8;margin:4px 0 0">Kas cocok, stok jelas, tetap jalan saat offline.</p></div><a data-app="daftar" href="Daftar.html" class="btn btn-em">Coba Gratis &rarr;</a></div><h3 class="rel-h">Artikel lainnya</h3><div class="am-grid" id="relGrid"></div></article>';
@@ -113,7 +113,7 @@
     return out;
   }
   var CAT_LIMIT = 6;
-  function gHref(a) { return 'panduan-detail.html?slug=' + encodeURIComponent(a.slug); }
+  function gHref(a) { return 'panduan-detail?slug=' + encodeURIComponent(a.slug); }
   function gCard(a) {
     return '<a class="gd-card" href="' + esc(gHref(a)) + '"><span class="gd-ic">' + gIcon(a.category) + '</span><span class="gd-tx"><small>' + esc(a.category) + '</small><b>' + esc(a.title) + '</b><span>' + esc(a.excerpt) + '</span></span><span class="gd-go" aria-hidden="true">&rarr;</span></a>';
   }
@@ -172,7 +172,7 @@
       var a = r[0], all = r[1];
       var home = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Beranda"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>';
       if (!a) { setMeta('robots', 'noindex'); gPost.innerHTML = '<div class="gd-main" style="grid-column:1/-1"><h1>Panduan tidak ditemukan</h1><p>Panduan yang kamu cari belum ada atau sudah dihapus.</p><p><a class="btn btn-em" href="panduan-pengguna.html">&lsaquo; Kembali ke Pusat Panduan</a></p></div>'; return; }
-      seo(a, { path: 'panduan-detail.html', brand: 'Panduan NoctaPOS', crumbs: [['Beranda', '/'], ['Pusat Panduan', 'panduan-pengguna.html'], [a.category, 'panduan-pengguna.html?cat=' + encodeURIComponent(a.category)]] });
+      seo(a, { path: 'panduan-detail', brand: 'Panduan NoctaPOS', crumbs: [['Beranda', '/'], ['Pusat Panduan', 'panduan-pengguna'], [a.category, 'panduan-pengguna?cat=' + encodeURIComponent(a.category)]] });
       var same = all.filter(function (x) { return x.category === a.category; }).reverse(), idx = same.map(function (x) { return x.id; }).indexOf(a.id);
       var others = catList(all, r[2]).filter(function (c) { return c.n !== a.category; }).map(function (c) { return '<a href="panduan-pengguna.html?cat=' + encodeURIComponent(c.n) + '">' + esc(c.n) + '</a>'; }).join('');
       var side = '<aside class="gd-side"><form class="gd-sq" action="panduan-pengguna.html" role="search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input name="q" placeholder="Cari panduan…" aria-label="Cari panduan"></form><h2>Lainnya dalam ' + esc(a.category) + '</h2><nav class="gd-sl">' +

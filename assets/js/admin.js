@@ -6,7 +6,7 @@
   var S = window.ArticleStore, $ = function (s) { return document.querySelector(s); };
   var DEV = location.protocol === 'file:' || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
   var SITE = DEV ? 'https://noctapos.id' : location.origin;
-  var PATH = { artikel: 'detail.html', panduan: 'panduan-detail.html' };
+  var PATH = { artikel: 'detail', panduan: 'panduan-detail' };
   var TXT = { artikel: 'Artikel baru', panduan: 'Panduan baru' };
   var ICON = ['M4 2h8v12H4zM6 5h4M6 8h4', 'M2 5l6-3 6 3v7l-6 3-6-3zM2 5l6 3 6-3M8 8v7', 'M2 6l1-3h10l1 3v1a2 2 0 01-4 0 2 2 0 01-4 0 2 2 0 01-4 0zM3 9v5h10V9', 'M3 13V7M8 13V3M13 13V9', 'M8 2a6 6 0 100 12A6 6 0 008 2zM8 5v3l2 1', 'M2 8h12M8 2v12'];
   var q, cur = null, slugTouched = false, T = 'artikel', F = 'all', CM = 'artikel', dirty = false, busy = false, tok = 0, lastCat = '', seoT;
@@ -36,8 +36,8 @@
     return (q.getText().trim() || q.root.querySelector('img')) ? h : '';
   }
   function pubHref(a) {
-    if (a.type === 'panduan') return 'panduan-detail.html?slug=' + encodeURIComponent(a.slug);
-    return (!a.html && a.legacyUrl) || 'detail.html?slug=' + encodeURIComponent(a.slug);
+    if (a.type === 'panduan') return 'panduan-detail?slug=' + encodeURIComponent(a.slug);
+    return (!a.html && a.legacyUrl && a.legacyUrl.replace(/\.html$/i, '')) || 'detail?slug=' + encodeURIComponent(a.slug);
   }
 
   /* ---------- akses ---------- */
@@ -283,16 +283,7 @@
       return o;
     });
   }
-  function xmlEsc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function sitemap() {
-    S.list({ type: 'all', published: true }).then(function (all) {
-      var u = [['/', ''], ['/artikel.html', ''], ['/panduan-pengguna.html', '']].map(function (p) { return '<url><loc>' + SITE + p[0] + '</loc></url>'; });
-      all.forEach(function (a) { u.push('<url><loc>' + xmlEsc(SITE + '/' + pubHref(a)) + '</loc><lastmod>' + String(a.updatedAt || a.createdAt).slice(0, 10) + '</lastmod></url>'); });
-      var x = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + u.join('\n') + '\n</urlset>\n';
-      var l = document.createElement('a'); l.href = URL.createObjectURL(new Blob([x], { type: 'application/xml' })); l.download = 'sitemap.xml'; l.click();
-      msg('sitemap.xml berisi ' + u.length + ' URL. Unggah ke folder utama situs.', true);
-    });
-  }
+  function sitemap() { window.open('/sitemap.xml', '_blank', 'noopener'); } /* sitemap dibuat otomatis oleh server */
 
   /* ---------- init ---------- */
   function init() {
