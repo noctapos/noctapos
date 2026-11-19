@@ -335,10 +335,11 @@
     function move(dir) {
       var i = idxOf(); if (i < 0) return;
       var ln = q.getLine(i)[0], start = q.getIndex(ln), len = ln.length(), nb = dir < 0 ? ln.prev : ln.next;
-      if (!nb) return;
-      var nlen = nb.length(), content = q.getContents(start, len), d = new Delta(), ni;
-      if (dir < 0) { d.retain(start - nlen).concat(content).retain(nlen).delete(len); ni = start - nlen + (i - start); }
-      else { d.retain(start).delete(len).retain(nlen).concat(content); ni = start + nlen + (i - start); }
+      if (!nb) return msg(dir < 0 ? 'Gambar sudah di posisi paling atas.' : 'Gambar sudah di posisi paling bawah.');
+      var nlen = nb.length(), content = q.getContents(start, len), d, ni;
+      /* Delta.concat() mengembalikan Delta BARU, jadi hasilnya harus ditampung ke d */
+      if (dir < 0) { d = new Delta().retain(start - nlen).concat(content).retain(nlen).delete(len); ni = start - nlen + (i - start); }
+      else { d = new Delta().retain(start).delete(len).retain(nlen).concat(content); ni = start + nlen + (i - start); }
       q.updateContents(d, 'user');
       var leaf = q.getLeaf(ni)[0];
       sel = leaf && leaf.domNode && leaf.domNode.tagName === 'IMG' ? leaf.domNode : null;
@@ -350,6 +351,13 @@
       hide();
     });
     q.root.addEventListener('scroll', place); window.addEventListener('resize', place);
+    /* seret gambar: sembunyikan bar, dan halaman ikut menggulir saat gambar dibawa ke tepi layar */
+    q.root.addEventListener('dragstart', function (e) { if (e.target && e.target.tagName === 'IMG') hide(); });
+    document.addEventListener('dragover', function (e) {
+      if (!q.root.contains(e.target)) return;
+      var y = e.clientY, h = window.innerHeight;
+      if (y < 150) window.scrollBy(0, -20); else if (y > h - 90) window.scrollBy(0, 20);
+    });
     q.on('text-change', function () { if (sel) setTimeout(place, 0); });
     bar.addEventListener('mousedown', function (e) { if (e.target.tagName !== 'INPUT') e.preventDefault(); });
     bar.addEventListener('click', function (e) {

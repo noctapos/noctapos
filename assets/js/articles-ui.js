@@ -91,7 +91,7 @@
       seo(a, { path: 'detail', brand: 'NoctaPOS', crumbs: [['Beranda', '/'], ['Artikel', 'artikel']] });
       var tg = (a.tags || []).map(function (t, i) { return '<span class="tg t' + (i + (a.grad | 0)) % 5 + '">' + esc(t) + '</span>'; }).join('');
       root.innerHTML = '<article class="post"><p class="crumb"><a href="artikel.html">&lsaquo; Semua artikel</a></p><div class="am-tags" style="justify-content:flex-start;margin-top:14px">' + tg + '</div><h1>' + esc(a.title) + '</h1><p class="meta">' + tgl(a.createdAt) + ' &middot; ' + menit(a) + ' menit baca</p>' + cover(a, 'post') + '<p class="lead">' + esc(a.excerpt) + '</p>' + clean(a.html) +
-        '<div class="post-cta"><div><b style="font-size:20px">Coba NoctaPOS gratis</b><p style="font-size:15px;opacity:.8;margin:4px 0 0">Kas cocok, stok jelas, tetap jalan saat offline.</p></div><a data-app="daftar" href="Daftar.html" class="btn btn-em">Coba Gratis &rarr;</a></div><h3 class="rel-h">Artikel lainnya</h3><div class="am-grid" id="relGrid"></div></article>';
+        '<div class="post-cta"><div><b style="font-size:20px">Coba NoctaPOS gratis</b><p style="font-size:15px;opacity:.8;margin:4px 0 0">Kas cocok, stok jelas, tetap jalan saat offline.</p></div><a data-app="daftar" href="https://app.noctapos.id/daftar" class="btn btn-em">Coba Gratis &rarr;</a></div><h3 class="rel-h">Artikel lainnya</h3><div class="am-grid" id="relGrid"></div></article>';
       S.list({ published: true }).then(function (l) { $('#relGrid').innerHTML = l.filter(function (x) { return x.id !== a.id; }).slice(0, 3).map(function (a) { return card(a); }).join(''); });
     });
   }
