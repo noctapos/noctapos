@@ -15,6 +15,13 @@
   /* klik "Edit" di daftar konten -> pindah ke tab Editor (admin.js yang mengisi formulir) */
   $('#list').addEventListener('click', function (e) { if (e.target.dataset && e.target.dataset.e) show('editor'); });
 
+  /* tombol mata: tampilkan / sembunyikan password */
+  var eye = $('#pwEye'), pw = $('#pw');
+  if (eye && pw) eye.addEventListener('click', function () {
+    var s = pw.type === 'password'; pw.type = s ? 'text' : 'password';
+    eye.classList.toggle('on', s); eye.setAttribute('aria-label', s ? 'Sembunyikan password' : 'Tampilkan password');
+  });
+
   /* pesan (#msg) hilang sendiri setelah beberapa detik */
   var m = $('#msg'), t;
   new MutationObserver(function () {
