@@ -1,6 +1,6 @@
 /* NoctaPOS — admin konten (artikel + panduan).
-   KEAMANAN: Menggunakan form login dengan Cookie HttpOnly dan verifikasi HMAC-SHA256
-   di file functions/api/admin/_middleware.js. Bebas dari Cloudflare Access. */
+   KEAMANAN: login lewat form + cookie sesi HttpOnly bertanda tangan HMAC
+   (diverifikasi di functions/api/admin/_middleware.js). */
 (function () {
   'use strict';
   var S = window.ArticleStore, $ = function (s) { return document.querySelector(s); };
@@ -351,7 +351,7 @@
     $('#btnMap').addEventListener('click', sitemap);
     $('#importFile').addEventListener('change', function () {
       var f = this.files[0], inp = this; if (!f) return;
-      if (!confirm('Impor akan menimpa konten sejenis (artikel / panduan) yang ada di browser ini. Sudah ekspor cadangan?')) { inp.value = ''; return; }
+      if (!confirm('Impor akan menimpa konten sejenis (artikel / panduan) yang ada di server. Sudah ekspor cadangan?')) { inp.value = ''; return; }
       f.text().then(function (t) { return S.importJson(JSON.stringify(validImport(t))); }).then(function (n) { msg(n + ' konten diimpor.', true); renderList(); renderCats(); loadCats(); }).catch(function (e) { msg(e.message); }).then(function () { inp.value = ''; });
     });
     setType('artikel').then(function () { coverRefresh(); });
