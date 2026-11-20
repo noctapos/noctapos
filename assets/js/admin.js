@@ -388,6 +388,18 @@
     range.addEventListener('input', function () { rv.textContent = range.value + '%'; clearTimeout(tm); tm = setTimeout(function () { fmt('width', range.value + '%'); }, 120); });
   }
 
+  /* tombol tinggi editor: Kecil / Sedang / Besar (selain tarik pojok kanan bawah editor) */
+  function heightButtons() {
+    var hb = document.querySelectorAll('[data-h]');
+    Array.prototype.forEach.call(hb, function (b) {
+      b.addEventListener('click', function () {
+        q.container.style.height = b.dataset.h + 'px';
+        Array.prototype.forEach.call(hb, function (x) { x.classList.toggle('on', x === b); });
+        window.dispatchEvent(new Event('resize'));
+      });
+    });
+  }
+
   /* ---------- init ---------- */
   function init() {
     registerImage();
@@ -400,6 +412,7 @@
     } } } } });
     q.on('text-change', function (d, o, src) { if (src === 'user') setDirty(true); later(); });
     try { imageTools(); } catch (e) { console.error('alat gambar:', e); }
+    heightButtons();
     ['title', 'slug', 'tags', 'excerpt', 'cover', 'calt', 'mtitle', 'mdesc', 'grad', 'cpos', 'pop', 'cat'].forEach(function (k) {
       $('#f-' + k).addEventListener('input', function () { if (k !== 'cat' || this.value !== '__new') setDirty(true); if (k === 'cover' || k === 'grad' || k === 'cpos') coverRefresh(); later(); });
     });
