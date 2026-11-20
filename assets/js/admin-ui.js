@@ -22,6 +22,16 @@
     eye.classList.toggle('on', s); eye.setAttribute('aria-label', s ? 'Sembunyikan password' : 'Tampilkan password');
   });
 
+  /* tinggi editor: tombol Kecil / Sedang / Besar (selain tarik pojok kanan bawah) */
+  var ed = $('#editor'), hb = document.querySelectorAll('[data-h]');
+  Array.prototype.forEach.call(hb, function (b) {
+    b.addEventListener('click', function () {
+      ed.style.height = b.dataset.h + 'px';
+      Array.prototype.forEach.call(hb, function (x) { x.classList.toggle('on', x === b); });
+      window.dispatchEvent(new Event('resize'));
+    });
+  });
+
   /* pesan (#msg) hilang sendiri setelah beberapa detik */
   var m = $('#msg'), t;
   new MutationObserver(function () {

@@ -351,13 +351,23 @@
       hide();
     });
     q.root.addEventListener('scroll', place); window.addEventListener('resize', place);
-    /* seret gambar: sembunyikan bar, dan halaman ikut menggulir saat gambar dibawa ke tepi layar */
-    q.root.addEventListener('dragstart', function (e) { if (e.target && e.target.tagName === 'IMG') hide(); });
-    document.addEventListener('dragover', function (e) {
-      if (!q.root.contains(e.target)) return;
-      var y = e.clientY, h = window.innerHeight;
-      if (y < 150) window.scrollBy(0, -20); else if (y > h - 90) window.scrollBy(0, 20);
+    /* seret gambar: bar disembunyikan; isi editor menggulir sendiri saat gambar dibawa ke tepi atas/bawah editor,
+       dan halaman ikut menggulir kalau gambar dibawa ke tepi layar */
+    var dragY = null, lastOver = 0, raf = 0;
+    function stopDrag() { dragY = null; }
+    function tick() {
+      if (dragY === null || Date.now() - lastOver > 1500) { dragY = null; raf = 0; return; }
+      var r = q.root.getBoundingClientRect();
+      if (dragY < r.top + 56) q.root.scrollTop -= 14; else if (dragY > r.bottom - 56) q.root.scrollTop += 14;
+      if (dragY < 100) window.scrollBy(0, -10); else if (dragY > window.innerHeight - 60) window.scrollBy(0, 10);
+      raf = requestAnimationFrame(tick);
+    }
+    q.root.addEventListener('dragstart', function (e) {
+      if (!e.target || e.target.tagName !== 'IMG') return;
+      hide(); dragY = e.clientY; lastOver = Date.now(); if (!raf) raf = requestAnimationFrame(tick);
     });
+    document.addEventListener('dragover', function (e) { if (dragY !== null) { dragY = e.clientY; lastOver = Date.now(); } });
+    ['dragend', 'drop', 'mouseup'].forEach(function (n) { document.addEventListener(n, stopDrag); });
     q.on('text-change', function () { if (sel) setTimeout(place, 0); });
     bar.addEventListener('mousedown', function (e) { if (e.target.tagName !== 'INPUT') e.preventDefault(); });
     bar.addEventListener('click', function (e) {

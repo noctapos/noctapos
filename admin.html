@@ -62,8 +62,8 @@ button:hover,.btn:hover{border-color:var(--em);color:var(--em-d)}
 .ed-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px}.ed-h h1{font:700 19px Poppins,sans-serif}
 #f-title{font-size:20px;font-weight:600;border:0;border-bottom:1.5px solid var(--bd);border-radius:0;padding:8px 0;box-shadow:none}
 #f-title:focus{border-bottom-color:var(--em);box-shadow:none}
-.ql-toolbar.ql-snow{position:sticky;top:62px;z-index:15;border:1.5px solid var(--bd);border-radius:var(--r) var(--r) 0 0;background:#fff;font-family:inherit}.ql-container.ql-snow{border:1.5px solid var(--bd);border-top:0;border-radius:0 0 var(--r) var(--r);font-family:Poppins,sans-serif}
-#editor{height:auto;min-height:320px;font-size:15px;background:#fff}.ql-editor{height:auto;min-height:320px;overflow-y:visible}.ql-editor img::selection{background:transparent}.ql-editor{color:var(--ink);line-height:1.7}.ql-editor.ql-blank::before{color:rgba(11,25,51,.38);font-style:normal}
+.ql-toolbar.ql-snow{border:1.5px solid var(--bd);border-radius:var(--r) var(--r) 0 0;background:#fff;font-family:inherit}.ql-container.ql-snow{border:1.5px solid var(--bd);border-top:0;border-radius:0 0 var(--r) var(--r);font-family:Poppins,sans-serif}
+#editor{height:min(62vh,520px);min-height:240px;resize:vertical;overflow:hidden;font-size:15px;background:#fff}.ql-editor img::selection{background:transparent}.ql-editor{color:var(--ink);line-height:1.7}.ql-editor.ql-blank::before{color:rgba(11,25,51,.38);font-style:normal}
 .actions{position:sticky;bottom:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#fff;margin:18px -22px -22px;padding:13px 22px;border-top:1px solid var(--bd);border-radius:0 0 18px 18px}
 #msg{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:60;max-width:92vw;font-size:13px;font-weight:500;padding:10px 18px;border-radius:99px;background:var(--ink);color:#fff;box-shadow:0 8px 24px -8px rgba(11,25,51,.5)}
 #msg:empty{display:none}#msg.ok{background:var(--em-d)}#msg.err{background:#b3372b}
@@ -96,7 +96,9 @@ summary::-webkit-details-marker{display:none}summary::after{content:'+';font-siz
 .ib-g{display:flex;gap:4px;align-items:center}.imgbar button{min-height:28px;padding:0 9px;font-size:12px;border-radius:8px;border-width:1px}.imgbar button.on{background:var(--em);border-color:var(--em);color:#fff}
 .imgbar input[type=range]{width:90px;padding:0;border:0;box-shadow:none;accent-color:var(--em)}.imgbar b{font-size:11.5px;min-width:34px;color:var(--muted)}
 .imgframe{position:absolute;z-index:5;pointer-events:none;outline:2px solid var(--em);outline-offset:2px;border-radius:4px}
-@media(max-width:860px){.ql-toolbar.ql-snow{top:104px}.ed{grid-template-columns:1fr}.nav{order:3;flex-basis:100%;overflow-x:auto}.tab{min-height:40px}}
+/* tinggi editor */
+.edsize{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--muted)}.edsize button{min-height:28px;padding:0 11px;font-size:12px;border-radius:8px}.edsize button.on{background:var(--em-soft);border-color:var(--em);color:var(--em-d)}
+@media(max-width:860px){.ed{grid-template-columns:1fr}.nav{order:3;flex-basis:100%;overflow-x:auto}.tab{min-height:40px}}
 @media(max-width:560px){.cols{grid-template-columns:1fr}.row{flex-direction:column;align-items:flex-start}.addrow{flex-direction:column}.card{padding:16px}.actions{margin:18px -16px -16px;padding:12px 16px}.wordmark{font-size:30px}}
 </style></head><body>
 
@@ -154,6 +156,7 @@ summary::-webkit-details-marker{display:none}summary::after{content:'+';font-siz
       <span class="ib-g"><button type="button" data-m="-1" title="Pindah ke atas" aria-label="Pindah ke atas">&uarr;</button><button type="button" data-m="1" title="Pindah ke bawah" aria-label="Pindah ke bawah">&darr;</button><button type="button" data-act="alt">Alt</button><button type="button" data-act="del">Hapus</button></span>
     </div>
     <div id="imgFrame" class="imgframe" hidden></div>
+    <div class="edsize"><span>Tinggi editor:</span><button type="button" data-h="300">Kecil</button><button type="button" data-h="520" class="on">Sedang</button><button type="button" data-h="800">Besar</button><span>atau tarik pojok kanan bawah editor.</span></div>
     <p class="hint" id="edHint">Pakai Heading untuk subjudul. Gambar lewat tombol gambar (link https:// atau assets/), jangan tempel file langsung. Klik gambar di editor untuk mengatur ukuran, posisi, dan teks alternatifnya.</p>
     <div id="legacyNote" class="note" hidden></div>
 
