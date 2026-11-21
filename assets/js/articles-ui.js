@@ -47,6 +47,11 @@
     var tg = (big ? ['Pilihan Editor'] : a.tags && a.tags.length ? a.tags : [a.category]).slice(0, 2).map(function (t, i) { return '<span class="tg t' + (i + (a.grad | 0)) % 5 + '">' + esc(t) + '</span>'; }).join('');
     return '<a class="am-card' + (big === true ? ' big' : '') + '" href="' + esc(href(a)) + '" data-cat="' + esc(a.category) + '">' + cover(a) + '<div class="am-body"><div class="am-tags">' + tg + '</div><h3>' + esc(a.title) + '</h3><p>' + esc(a.excerpt) + '</p><small>' + tgl(a.createdAt) + ' &middot; ' + menit(a) + ' menit baca</small></div></a>';
   }
+  /* kartu ringkas untuk "Artikel lainnya": thumbnail kecil + judul + tanggal, tanpa deskripsi */
+  function relCard(a) {
+    var t = (a.tags && a.tags.length ? a.tags[0] : a.category);
+    return '<a class="rel-card" href="' + esc(href(a)) + '"><div class="rel-th">' + cover(a) + '</div><div class="rel-tx"><span class="tg t' + ((a.grad | 0) % 5) + '">' + esc(t) + '</span><b>' + esc(a.title) + '</b><small>' + tgl(a.createdAt) + ' &middot; ' + menit(a) + ' menit baca</small></div></a>';
+  }
   function clean(html) {
     var OK = { P: 1, BR: 1, H2: 1, H3: 1, H4: 1, STRONG: 1, B: 1, EM: 1, I: 1, U: 1, S: 1, UL: 1, OL: 1, LI: 1, BLOCKQUOTE: 1, A: 1, PRE: 1, CODE: 1, IMG: 1 };
     var doc = new DOMParser().parseFromString('<body>' + html + '</body>', 'text/html');
@@ -91,8 +96,14 @@
       seo(a, { path: 'detail', brand: 'NoctaPOS', crumbs: [['Beranda', '/'], ['Artikel', 'artikel']] });
       var tg = (a.tags || []).map(function (t, i) { return '<span class="tg t' + (i + (a.grad | 0)) % 5 + '">' + esc(t) + '</span>'; }).join('');
       root.innerHTML = '<article class="post"><p class="crumb"><a href="artikel.html">&lsaquo; Semua artikel</a></p><div class="am-tags" style="justify-content:flex-start;margin-top:14px">' + tg + '</div><h1>' + esc(a.title) + '</h1><p class="meta">' + tgl(a.createdAt) + ' &middot; ' + menit(a) + ' menit baca</p>' + cover(a, 'post') + '<p class="lead">' + esc(a.excerpt) + '</p>' + clean(a.html) +
-        '<div class="post-cta"><div><b style="font-size:20px">Coba NoctaPOS gratis</b><p style="font-size:15px;opacity:.8;margin:4px 0 0">Kas cocok, stok jelas, tetap jalan saat offline.</p></div><a data-app="daftar" href="https://app.noctapos.id/daftar" class="btn btn-em">Coba Gratis &rarr;</a></div><h3 class="rel-h">Artikel lainnya</h3><div class="am-grid" id="relGrid"></div></article>';
-      S.list({ published: true }).then(function (l) { $('#relGrid').innerHTML = l.filter(function (x) { return x.id !== a.id; }).slice(0, 3).map(function (a) { return card(a); }).join(''); });
+        '<div class="post-cta"><div><b style="font-size:20px">Coba NoctaPOS gratis</b><p style="font-size:15px;opacity:.8;margin:4px 0 0">Kas cocok, stok jelas, tetap jalan saat offline.</p></div><a data-app="daftar" href="https://app.noctapos.id/daftar" class="btn btn-em">Coba Gratis &rarr;</a></div><h3 class="rel-h">Artikel lainnya</h3><div class="rel-grid" id="relGrid"></div></article>';
+      /* 2 artikel lain: yang sekategori didahulukan (tautan internal yang relevan) */
+      S.list({ published: true }).then(function (l) {
+        var rest = l.filter(function (x) { return x.id !== a.id; });
+        var rel = rest.filter(function (x) { return x.category === a.category; }).concat(rest.filter(function (x) { return x.category !== a.category; })).slice(0, 2);
+        if (!rel.length) { var h3 = $('.rel-h'); if (h3) h3.remove(); $('#relGrid').remove(); return; }
+        $('#relGrid').innerHTML = rel.map(relCard).join('');
+      });
     });
   }
 
