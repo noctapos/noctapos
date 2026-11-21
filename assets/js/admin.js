@@ -15,7 +15,7 @@
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function slugify(t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80); }
   function msg(t, ok, id) { var m = $(id || '#msg'); m.textContent = t; if (!id) m.className = t ? (ok ? 'ok' : 'err') : ''; }
-  function isImg(u) { return /^(https?:\/\/|assets\/)/i.test(u || ''); }
+  function isImg(u) { return /^(https?:\/\/|assets\/|\/media\/)/i.test(u || ''); }
   function setDirty(v) { dirty = v; }
   function okLeave() { return !dirty || confirm('Ada perubahan yang belum disimpan. Lanjut dan buang perubahan?'); }
   window.addEventListener('beforeunload', function (e) { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
@@ -220,7 +220,7 @@
     var title = $('#f-title').value.trim(), cat = $('#f-cat').value, ex = $('#f-excerpt').value.trim(), html = getHtml(), cover = $('#f-cover').value.trim();
     if (!title || !cat || cat === '__new' || !ex) return msg('Judul, kategori, dan ringkasan wajib diisi.');
     if (status === 'published' && !html && !(cur && cur.legacyUrl)) return msg('Isi konten masih kosong.');
-    if (cover && !isImg(cover)) return msg('Link gambar sampul harus diawali https:// atau assets/');
+    if (cover && !isImg(cover)) return msg('Link gambar sampul harus diawali https://, assets/ atau /media/');
     if (/src=["']data:/i.test(html)) return msg('Ada gambar yang ditempel/diseret langsung. Hapus, lalu masukkan lewat tombol gambar (pakai link https:// atau assets/).');
     if (status === 'draft' && cur && cur.status === 'published' && !confirm('Konten ini sedang terbit. Simpan sebagai draft akan menyembunyikannya dari publik. Lanjut?')) return;
     var art = {
@@ -400,19 +400,123 @@
     });
   }
 
+  /* ---------- galeri gambar: unggah + kecilkan + kompres otomatis (disimpan di D1, disajikan lewat /media/...) ---------- */
+  var MEDIA = { maxW: 1200, targetKB: 180, cb: null };
+  function mediaApi(path, opt) {
+    opt = opt || {};
+    var init = { method: opt.method || 'GET', credentials: 'same-origin', cache: 'no-store', headers: {} };
+    if (opt.body !== undefined) { init.headers['Content-Type'] = 'application/json'; init.body = JSON.stringify(opt.body); }
+    return fetch(path, init).then(function (r) {
+      return r.text().then(function (t) {
+        var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {}
+        if (!r.ok) throw new Error((j && j.error) || (r.status === 401 || r.status === 403 ? 'Sesi login habis. Muat ulang halaman.' : 'Gagal (' + r.status + ').'));
+        return j;
+      });
+    }, function () { throw new Error('Tidak bisa terhubung ke server.'); });
+  }
+  function blobToBase64(blob) {
+    return new Promise(function (res, rej) {
+      var fr = new FileReader();
+      fr.onload = function () { res(String(fr.result).split(',')[1]); };
+      fr.onerror = function () { rej(new Error('Gagal membaca gambar.')); };
+      fr.readAsDataURL(blob);
+    });
+  }
+  function toBlob(canvas, type, q) { return new Promise(function (res) { canvas.toBlob(res, type, q); }); }
+
+  /* kecilkan (maks. 1200 px lebar) lalu kompres ke WebP; kualitas/ukuran diturunkan bertahap sampai <= ~180 KB */
+  async function compressImage(file) {
+    var bmp;
+    try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
+    catch (e) { try { bmp = await createImageBitmap(file); } catch (e2) { throw new Error('Format gambar tidak didukung. Pakai JPG, PNG, atau WebP.'); } }
+    var scale = Math.min(1, MEDIA.maxW / bmp.width), q = 0.82, out = null, w = bmp.width, h = bmp.height;
+    for (var i = 0; i < 12; i++) {
+      w = Math.max(1, Math.round(bmp.width * scale)); h = Math.max(1, Math.round(bmp.height * scale));
+      var c = document.createElement('canvas'); c.width = w; c.height = h;
+      var x = c.getContext('2d'); x.drawImage(bmp, 0, 0, w, h);
+      out = await toBlob(c, 'image/webp', q);
+      if (!out || out.type !== 'image/webp') {            /* browser lama tanpa WebP -> JPEG berlatar putih */
+        x.globalCompositeOperation = 'destination-over'; x.fillStyle = '#fff'; x.fillRect(0, 0, w, h);
+        out = await toBlob(c, 'image/jpeg', q);
+      }
+      if (!out) throw new Error('Gagal memproses gambar.');
+      if (out.size <= MEDIA.targetKB * 1024) break;
+      if (q > 0.55) q -= 0.09; else if (w > 640) scale *= 0.85; else break;
+    }
+    if (bmp.close) bmp.close();
+    return { blob: out, w: w, h: h };
+  }
+  async function uploadFile(file, status) {
+    if (!/^image\//i.test(file.type)) throw new Error('File harus berupa gambar (JPG, PNG, atau WebP).');
+    if (file.size > 25 * 1024 * 1024) throw new Error('File terlalu besar (maks. 25 MB).');
+    status('Mengecilkan dan mengompres…');
+    var r = await compressImage(file);
+    status('Mengunggah (' + Math.round(r.blob.size / 1024) + ' KB)…');
+    return mediaApi('/api/admin/media', { method: 'POST', body: { name: file.name, w: r.w, h: r.h, data: await blobToBase64(r.blob) } });
+  }
+
+  function mdMsg(t) { $('#mdMsg').textContent = t; }
+  function closeMedia() { $('#mediaDlg').hidden = true; MEDIA.cb = null; }
+  function pickMedia(url) { var cb = MEDIA.cb; closeMedia(); if (cb) cb(url); }
+  function renderGrid(items) {
+    var g = $('#mdGrid'); g.textContent = '';
+    if (!items.length) { var p = document.createElement('p'); p.className = 'hint'; p.textContent = 'Belum ada gambar. Unggah yang pertama.'; g.appendChild(p); return; }
+    items.forEach(function (m) {
+      var d = document.createElement('div'); d.className = 'mi'; d.tabIndex = 0; d.setAttribute('role', 'button'); d.setAttribute('aria-label', 'Pilih gambar ' + m.name);
+      var im = document.createElement('img'); im.src = m.url; im.alt = ''; im.loading = 'lazy';
+      var s = document.createElement('span'); s.textContent = Math.round(m.bytes / 1024) + ' KB · ' + m.w + '×' + m.h;
+      var x = document.createElement('button'); x.type = 'button'; x.className = 'mx'; x.textContent = '✕'; x.title = 'Hapus dari galeri'; x.setAttribute('aria-label', 'Hapus gambar');
+      d.addEventListener('click', function () { pickMedia(m.url); });
+      d.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target === d) pickMedia(m.url); });
+      x.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (!confirm('Hapus gambar ini dari galeri?')) return;
+        mediaApi('/api/admin/media?id=' + encodeURIComponent(m.id), { method: 'DELETE' }).then(loadGrid, function (err) { mdMsg(err.message); });
+      });
+      d.appendChild(im); d.appendChild(s); d.appendChild(x); g.appendChild(d);
+    });
+  }
+  function loadGrid() { mediaApi('/api/admin/media').then(renderGrid, function (e) { mdMsg(e.message); }); }
+  function openMedia(cb) {
+    MEDIA.cb = cb; $('#mediaDlg').hidden = false;
+    mdMsg('Gambar otomatis dikecilkan (maks. 1200 px) dan dikompres ke WebP.'); loadGrid();
+  }
+  function mediaInit() {
+    var dlg = $('#mediaDlg'); if (!dlg) return;
+    $('#mdClose').addEventListener('click', closeMedia);
+    dlg.addEventListener('mousedown', function (e) { if (e.target === dlg) closeMedia(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !dlg.hidden) closeMedia(); });
+    $('#mdPick').addEventListener('click', function () { $('#mdFile').click(); });
+    $('#mdFile').addEventListener('change', async function () {
+      var f = this.files && this.files[0]; this.value = ''; if (!f) return;
+      var b = $('#mdPick'); b.disabled = true;
+      try { var r = await uploadFile(f, mdMsg); pickMedia(r.url); }
+      catch (e) { mdMsg(e.message); }
+      finally { b.disabled = false; }
+    });
+    $('#mdUse').addEventListener('click', function () {
+      var u = $('#mdLink').value.trim();
+      if (!isImg(u)) return mdMsg('Link harus diawali https://, assets/ atau /media/');
+      $('#mdLink').value = ''; pickMedia(u);
+    });
+    $('#btnCoverPick').addEventListener('click', function () {
+      openMedia(function (u) { var el = $('#f-cover'); el.value = u; el.dispatchEvent(new Event('input', { bubbles: true })); });
+    });
+  }
+
   /* ---------- init ---------- */
   function init() {
     registerImage();
     q = new Quill('#editor', { theme: 'snow', placeholder: 'Tulis isi di sini…', modules: { toolbar: { container: [[{ header: [2, 3, false] }], ['bold', 'italic', 'underline'], [{ list: 'ordered' }, { list: 'bullet' }], ['blockquote', 'link', 'image'], ['clean']], handlers: { image: function () {
-      var u = (prompt('Link gambar (https://… atau assets/…):') || '').trim();
-      if (!u) return;
-      if (!isImg(u)) return msg('Link gambar harus diawali https:// atau assets/');
-      var alt = (prompt('Teks alternatif gambar (deskripsi singkat, bagus untuk SEO):') || '').trim().slice(0, 125);
-      insertImage(u, alt);
+      openMedia(function (u) {
+        var alt = (prompt('Teks alternatif gambar (deskripsi singkat, bagus untuk SEO):') || '').trim().slice(0, 125);
+        insertImage(u, alt);
+      });
     } } } } });
     q.on('text-change', function (d, o, src) { if (src === 'user') setDirty(true); later(); });
     try { imageTools(); } catch (e) { console.error('alat gambar:', e); }
     heightButtons();
+    try { mediaInit(); } catch (e) { console.error('galeri gambar:', e); }
     ['title', 'slug', 'tags', 'excerpt', 'cover', 'calt', 'mtitle', 'mdesc', 'grad', 'cpos', 'pop', 'cat'].forEach(function (k) {
       $('#f-' + k).addEventListener('input', function () { if (k !== 'cat' || this.value !== '__new') setDirty(true); if (k === 'cover' || k === 'grad' || k === 'cpos') coverRefresh(); later(); });
     });

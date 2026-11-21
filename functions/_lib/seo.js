@@ -7,7 +7,7 @@ export const SITE = 'https://noctapos.id';
 /* Halaman statis yang masuk sitemap (tanpa .html). Tambah/hapus sesuai kebutuhan. */
 export const STATIC_PAGES = ['', 'fitur', 'bandingkan', 'perbandingan-fitur', 'faq', 'contact', 'artikel', 'panduan-pengguna'];
 
-const isImg = (u) => /^(https?:\/\/|assets\/)/i.test(u || '');
+const isImg = (u) => /^(https?:\/\/|assets\/|\/media\/)/i.test(u || '');
 export const absUrl = (u) => (/^https?:/i.test(u) ? u : SITE + '/' + String(u).replace(/^\//, ''));
 export const cleanPath = (p) => String(p || '').replace(/^\//, '').replace(/\.html$/i, '');
 export const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');

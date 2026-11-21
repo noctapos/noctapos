@@ -9,7 +9,7 @@
   function tgl(i) { var d = new Date(i); return d.getDate() + ' ' + BLN[d.getMonth()] + ' ' + d.getFullYear(); }
   function menit(a) { return a.minutes || Math.max(1, Math.round((a.html || '').replace(/<[^>]*>/g, ' ').trim().split(/\s+/).length / 200)); }
   function href(a) { return (!a.html && a.legacyUrl && a.legacyUrl.replace(/\.html$/i, '')) || 'detail?slug=' + encodeURIComponent(a.slug); }
-  function isImg(u) { return /^(https?:\/\/|assets\/)/i.test(u || ''); }
+  function isImg(u) { return /^(https?:\/\/|assets\/|\/media\/)/i.test(u || ''); }
   var SITE = 'https://noctapos.id'; /* selalu domain utama, supaya canonical sama dengan yang dibuat server */
   function absUrl(u) { return /^https?:/i.test(u) ? u : SITE + '/' + String(u).replace(/^\//, ''); }
   function setMeta(k, v, prop) {
@@ -60,7 +60,7 @@
         walk(c);
         if (!OK[c.tagName]) { if (/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED)$/.test(c.tagName)) c.remove(); else c.replaceWith.apply(c, c.childNodes); return; }
         Array.prototype.slice.call(c.attributes).forEach(function (at) { if (!(c.tagName === 'A' && at.name === 'href') && !(c.tagName === 'IMG' && (at.name === 'src' || at.name === 'alt' || at.name === 'width' || at.name === 'data-align'))) c.removeAttribute(at.name); });
-        if (c.tagName === 'IMG') { if (!/^(https?:\/\/|assets\/)/i.test(c.getAttribute('src') || '')) { c.remove(); return; } c.setAttribute('loading', 'lazy'); c.setAttribute('decoding', 'async'); if (!c.hasAttribute('alt')) c.setAttribute('alt', ''); var iw = c.getAttribute('width') || '', ia = c.getAttribute('data-align') || ''; c.removeAttribute('width'); c.removeAttribute('data-align'); var ist = 'max-width:100%;height:auto;'; if (/^(100|[1-9]\d)%$/.test(iw)) ist += 'width:' + iw + ';'; if (ia === 'center') ist += 'display:block;margin:14px auto;'; else if (ia === 'left') ist += 'display:block;margin:14px auto 14px 0;'; else if (ia === 'right') ist += 'display:block;margin:14px 0 14px auto;'; c.setAttribute('style', ist); }
+        if (c.tagName === 'IMG') { if (!/^(https?:\/\/|assets\/|\/media\/)/i.test(c.getAttribute('src') || '')) { c.remove(); return; } c.setAttribute('loading', 'lazy'); c.setAttribute('decoding', 'async'); if (!c.hasAttribute('alt')) c.setAttribute('alt', ''); var iw = c.getAttribute('width') || '', ia = c.getAttribute('data-align') || ''; c.removeAttribute('width'); c.removeAttribute('data-align'); var ist = 'max-width:100%;height:auto;'; if (/^(100|[1-9]\d)%$/.test(iw)) ist += 'width:' + iw + ';'; if (ia === 'center') ist += 'display:block;margin:14px auto;'; else if (ia === 'left') ist += 'display:block;margin:14px auto 14px 0;'; else if (ia === 'right') ist += 'display:block;margin:14px 0 14px auto;'; c.setAttribute('style', ist); }
         if (c.tagName === 'A') { var h = c.getAttribute('href') || ''; if (!/^(https?:|mailto:|\/|#)/i.test(h)) c.removeAttribute('href'); var ext = /^https?:/i.test(h) && !/^https?:\/\/([a-z0-9-]+\.)*noctapos\.id/i.test(h) && h.indexOf(location.origin) !== 0; if (ext) { c.setAttribute('rel', 'noopener noreferrer'); c.setAttribute('target', '_blank'); } else { c.removeAttribute('rel'); c.removeAttribute('target'); } }
       });
     })(doc.body);

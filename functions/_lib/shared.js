@@ -61,7 +61,7 @@ export async function sanitizeHtml(html) {
         }
         if (t === 'img') {
           const s = (el.getAttribute('src') || '').trim();
-          if (!/^(https?:\/\/|assets\/)/i.test(s)) { el.remove(); return; }
+          if (!/^(https?:\/\/|assets\/|\/media\/)/i.test(s)) { el.remove(); return; }
           el.setAttribute('src', s);
           /* ukuran (10-100%) dan rata (left/center/right) dari editor; nilai lain dibuang */
           const w = (el.getAttribute('width') || '').trim();
@@ -88,7 +88,7 @@ export async function buildRecord(b, type) {
   if (!title || !category || !excerpt) throw new HttpError(400, 'Judul, kategori, dan ringkasan wajib diisi.');
 
   const cover = str(b.cover, 500);
-  if (cover && !/^(https:\/\/|assets\/)/i.test(cover)) throw new HttpError(400, 'Link gambar sampul harus diawali https:// atau assets/');
+  if (cover && !/^(https:\/\/|assets\/|\/media\/)/i.test(cover)) throw new HttpError(400, 'Link gambar sampul harus diawali https://, assets/ atau /media/');
 
   let html = String(b.html == null ? '' : b.html);
   if (html.length > 300_000) throw new HttpError(413, 'Isi konten terlalu panjang.');

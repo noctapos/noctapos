@@ -53,3 +53,16 @@ CREATE TABLE IF NOT EXISTS login_attempts (
   at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_login_attempts ON login_attempts (ip, at);
+
+-- Galeri gambar (diunggah dari admin; disajikan lewat /media/<id>.<ext>)
+CREATE TABLE IF NOT EXISTS media (
+  id         TEXT PRIMARY KEY,
+  mime       TEXT NOT NULL,
+  bytes      INTEGER NOT NULL,
+  w          INTEGER NOT NULL DEFAULT 0,
+  h          INTEGER NOT NULL DEFAULT 0,
+  name       TEXT NOT NULL DEFAULT '',
+  data       TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS ix_media_created ON media (created_at DESC);
