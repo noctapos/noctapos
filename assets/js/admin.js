@@ -401,7 +401,7 @@
   }
 
   /* ---------- galeri gambar: unggah + kecilkan + kompres otomatis (disimpan di D1, disajikan lewat /media/...) ---------- */
-  var MEDIA = { maxW: 1200, targetKB: 180, cb: null };
+  var MEDIA = { maxW: 1200, targetKB: 180, cb: null, sel: null, busy: false };
   function mediaApi(path, opt) {
     opt = opt || {};
     var init = { method: opt.method || 'GET', credentials: 'same-origin', cache: 'no-store', headers: {} };
@@ -456,49 +456,89 @@
   }
 
   function mdMsg(t) { $('#mdMsg').textContent = t; }
-  function closeMedia() { $('#mediaDlg').hidden = true; MEDIA.cb = null; }
+  function syncSel() {
+    Array.prototype.forEach.call(document.querySelectorAll('#mdGrid .mi'), function (d) { d.classList.toggle('sel', d.dataset.url === MEDIA.sel); });
+    $('#mdOk').disabled = !MEDIA.sel || MEDIA.busy;
+  }
+  function closeMedia() { $('#mediaDlg').hidden = true; MEDIA.cb = null; MEDIA.sel = null; }
   function pickMedia(url) { var cb = MEDIA.cb; closeMedia(); if (cb) cb(url); }
   function renderGrid(items) {
     var g = $('#mdGrid'); g.textContent = '';
-    if (!items.length) { var p = document.createElement('p'); p.className = 'hint'; p.textContent = 'Belum ada gambar. Unggah yang pertama.'; g.appendChild(p); return; }
+    if (MEDIA.sel && !items.some(function (m) { return m.url === MEDIA.sel; })) MEDIA.sel = null;
+    if (!items.length) { var p = document.createElement('p'); p.className = 'hint'; p.textContent = 'Belum ada gambar. Unggah yang pertama.'; g.appendChild(p); syncSel(); return; }
     items.forEach(function (m) {
-      var d = document.createElement('div'); d.className = 'mi'; d.tabIndex = 0; d.setAttribute('role', 'button'); d.setAttribute('aria-label', 'Pilih gambar ' + m.name);
+      var d = document.createElement('div'); d.className = 'mi'; d.dataset.url = m.url; d.tabIndex = 0; d.setAttribute('role', 'button'); d.setAttribute('aria-label', 'Pilih gambar ' + m.name);
       var im = document.createElement('img'); im.src = m.url; im.alt = ''; im.loading = 'lazy';
       var s = document.createElement('span'); s.textContent = Math.round(m.bytes / 1024) + ' KB · ' + m.w + '×' + m.h;
+      var ck = document.createElement('i'); ck.className = 'ck'; ck.textContent = '✓';
       var x = document.createElement('button'); x.type = 'button'; x.className = 'mx'; x.textContent = '✕'; x.title = 'Hapus dari galeri'; x.setAttribute('aria-label', 'Hapus gambar');
-      d.addEventListener('click', function () { pickMedia(m.url); });
-      d.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target === d) pickMedia(m.url); });
+      d.addEventListener('click', function () { MEDIA.sel = MEDIA.sel === m.url ? null : m.url; syncSel(); });           /* klik = pilih */
+      d.addEventListener('dblclick', function () { pickMedia(m.url); });                                                  /* klik 2x = langsung pakai */
+      d.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target === d) { e.preventDefault(); MEDIA.sel = m.url; syncSel(); } });
       x.addEventListener('click', function (e) {
         e.stopPropagation();
         if (!confirm('Hapus gambar ini dari galeri?')) return;
-        mediaApi('/api/admin/media?id=' + encodeURIComponent(m.id), { method: 'DELETE' }).then(loadGrid, function (err) { mdMsg(err.message); });
+        mediaApi('/api/admin/media?id=' + encodeURIComponent(m.id), { method: 'DELETE' }).then(function () { if (MEDIA.sel === m.url) MEDIA.sel = null; loadGrid(); }, function (err) { mdMsg(err.message); });
       });
-      d.appendChild(im); d.appendChild(s); d.appendChild(x); g.appendChild(d);
+      d.appendChild(im); d.appendChild(ck); d.appendChild(s); d.appendChild(x); g.appendChild(d);
     });
+    syncSel();
   }
   function loadGrid() { mediaApi('/api/admin/media').then(renderGrid, function (e) { mdMsg(e.message); }); }
   function openMedia(cb) {
-    MEDIA.cb = cb; $('#mediaDlg').hidden = false;
-    mdMsg('Gambar otomatis dikecilkan (maks. 1200 px) dan dikompres ke WebP.'); loadGrid();
+    MEDIA.cb = cb; MEDIA.sel = null; MEDIA.busy = false;
+    $('#mediaDlg').hidden = false; $('#mdLink').value = ''; syncSel();
+    mdMsg('Klik gambar untuk memilih, lalu tekan “Pakai gambar”. Klik dua kali untuk langsung memakai.'); loadGrid();
+    $('#mdZone').focus();
   }
+  function setBusy(b) {
+    MEDIA.busy = b; $('#mdZone').classList.toggle('busy', b);
+    ['#mdPick', '#mdUse'].forEach(function (s) { $(s).disabled = b; });
+    syncSel();
+  }
+  /* satu atau banyak file (dari tombol, seret-lepas, atau tempel): kompres, unggah, lalu pilih yang terakhir */
+  async function handleFiles(list) {
+    var files = Array.prototype.filter.call(list || [], function (f) { return /^image\//i.test(f.type); });
+    if (!files.length) return mdMsg('File harus berupa gambar (JPG, PNG, atau WebP).');
+    if (files.length > 10) { files = files.slice(0, 10); }
+    setBusy(true);
+    var last = '', errs = [];
+    for (var i = 0; i < files.length; i++) {
+      try {
+        var r = await uploadFile(files[i], function (t) { mdMsg((files.length > 1 ? '(' + (i + 1) + '/' + files.length + ') ' : '') + t); });
+        last = r.url;
+      } catch (e) { errs.push(files[i].name + ': ' + e.message); }
+    }
+    setBusy(false);
+    if (last) MEDIA.sel = last;
+    loadGrid();
+    mdMsg(errs.length ? errs.join(' · ') : 'Selesai. Tekan “Pakai gambar” untuk memakainya.');
+  }
+  function hasFiles(e) { var t = e.dataTransfer && e.dataTransfer.types; return !!t && Array.prototype.indexOf.call(t, 'Files') >= 0; }
   function mediaInit() {
-    var dlg = $('#mediaDlg'); if (!dlg) return;
+    var dlg = $('#mediaDlg'), zone = $('#mdZone'); if (!dlg) return;
     $('#mdClose').addEventListener('click', closeMedia);
+    $('#mdCancel').addEventListener('click', closeMedia);
+    $('#mdOk').addEventListener('click', function () { if (MEDIA.sel) pickMedia(MEDIA.sel); });
     dlg.addEventListener('mousedown', function (e) { if (e.target === dlg) closeMedia(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !dlg.hidden) closeMedia(); });
+    /* pilih file: tombol atas, kotak seret-lepas, atau Enter/Spasi di kotak */
     $('#mdPick').addEventListener('click', function () { $('#mdFile').click(); });
-    $('#mdFile').addEventListener('change', async function () {
-      var f = this.files && this.files[0]; this.value = ''; if (!f) return;
-      var b = $('#mdPick'); b.disabled = true;
-      try { var r = await uploadFile(f, mdMsg); pickMedia(r.url); }
-      catch (e) { mdMsg(e.message); }
-      finally { b.disabled = false; }
-    });
+    zone.addEventListener('click', function () { $('#mdFile').click(); });
+    zone.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('#mdFile').click(); } });
+    $('#mdFile').addEventListener('change', function () { var fs = this.files; if (fs && fs.length) handleFiles(Array.prototype.slice.call(fs)); this.value = ''; });
+    /* seret dan lepas: di mana saja di dalam jendela */
+    dlg.addEventListener('dragover', function (e) { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; zone.classList.add('over'); });
+    dlg.addEventListener('dragleave', function (e) { if (!dlg.contains(e.relatedTarget)) zone.classList.remove('over'); });
+    dlg.addEventListener('drop', function (e) { if (!hasFiles(e)) return; e.preventDefault(); zone.classList.remove('over'); handleFiles(Array.prototype.slice.call(e.dataTransfer.files)); });
+    /* tempel gambar dari clipboard (Ctrl+V), mis. hasil screenshot */
+    dlg.addEventListener('paste', function (e) { var fs = e.clipboardData && e.clipboardData.files; if (fs && fs.length) { e.preventDefault(); handleFiles(Array.prototype.slice.call(fs)); } });
     $('#mdUse').addEventListener('click', function () {
       var u = $('#mdLink').value.trim();
       if (!isImg(u)) return mdMsg('Link harus diawali https://, assets/ atau /media/');
-      $('#mdLink').value = ''; pickMedia(u);
+      pickMedia(u);
     });
+    $('#mdLink').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); $('#mdUse').click(); } });
     $('#btnCoverPick').addEventListener('click', function () {
       openMedia(function (u) { var el = $('#f-cover'); el.value = u; el.dispatchEvent(new Event('input', { bubbles: true })); });
     });
