@@ -5,7 +5,7 @@
 import { HttpError, handle, json, readJson, slugify } from '../../_lib/shared.js';
 
 const EXT = { 'image/webp': 'webp', 'image/jpeg': 'jpg', 'image/png': 'png' };
-const MAX_BYTES = 500_000, MAX_ITEMS = 1000;
+const MAX_BYTES = 500_000, MAX_ITEMS = 1000, MAX_TOTAL = 250_000_000;   /* total gambar (sebelum base64) dibatasi supaya database gratis (500 MB) tidak penuh */
 const urlOf = (id, mime) => '/media/' + id + '.' + EXT[mime];
 
 /* Jenis file ditentukan dari isinya (magic bytes), bukan dari "mime" kiriman klien. SVG/HTML otomatis ditolak. */
@@ -30,8 +30,9 @@ export const onRequestPost = ({ request, env }) => handle(async () => {
   if (bytes > MAX_BYTES) throw new HttpError(413, 'Gambar masih terlalu besar setelah dikompres (maks. 500 KB). Coba gambar yang lebih kecil.');
   const mime = sniff(data);
   if (!mime) throw new HttpError(400, 'Format harus WebP, JPEG, atau PNG.');
-  const n = (await env.DB.prepare('SELECT COUNT(*) AS n FROM media').first()).n;
-  if (n >= MAX_ITEMS) throw new HttpError(409, 'Galeri penuh (maks. ' + MAX_ITEMS + ' gambar). Hapus yang tidak terpakai dulu.');
+  const tot = await env.DB.prepare('SELECT COUNT(*) AS n, COALESCE(SUM(bytes), 0) AS s FROM media').first();
+  if (tot.n >= MAX_ITEMS) throw new HttpError(409, 'Galeri penuh (maks. ' + MAX_ITEMS + ' gambar). Hapus yang tidak terpakai dulu.');
+  if (tot.s + bytes > MAX_TOTAL) throw new HttpError(409, 'Penyimpanan galeri penuh (maks. 250 MB). Hapus gambar yang tidak terpakai dulu.');
 
   const dim = (v) => Math.min(8000, Math.max(1, Number(v) | 0));
   const base = slugify(String(b.name || '').replace(/\.[a-z0-9]{2,5}$/i, '')).slice(0, 40) || 'gambar';
@@ -51,8 +52,9 @@ export const onRequestPost = ({ request, env }) => handle(async () => {
 export const onRequestDelete = ({ request, env }) => handle(async () => {
   const id = String(new URL(request.url).searchParams.get('id') || '');
   if (!/^[a-z0-9][a-z0-9-]{0,60}$/.test(id)) throw new HttpError(400, 'id tidak valid.');
-  const pat = '%/media/' + id + '.%';
-  const used = (await env.DB.prepare('SELECT COUNT(*) AS n FROM content WHERE cover LIKE ?1 OR html LIKE ?1').bind(pat).first()).n;
+  /* instr(), bukan LIKE: D1 membatasi pola LIKE maksimal 50 byte, sedangkan id gambar bisa lebih panjang */
+  const needle = '/media/' + id + '.';
+  const used = (await env.DB.prepare('SELECT COUNT(*) AS n FROM content WHERE instr(cover, ?1) > 0 OR instr(html, ?1) > 0').bind(needle).first()).n;
   if (used) throw new HttpError(409, 'Gambar masih dipakai ' + used + ' konten. Ganti gambarnya di konten itu dulu.');
   await env.DB.prepare('DELETE FROM media WHERE id = ?1').bind(id).run();
   return json({ ok: true });

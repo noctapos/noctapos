@@ -424,13 +424,54 @@
   }
   function toBlob(canvas, type, q) { return new Promise(function (res) { canvas.toBlob(res, type, q); }); }
 
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function fmtSize(b) { return b >= 1048576 ? (b / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB'; }
+
+  /* ---- tampilan proses (progress) di kotak seret-lepas ---- */
+  var PG = { i: 0, n: 1 }, PG_LABEL = { 1: 'Membaca gambar…', 2: 'Mengecilkan dan mengompres…', 3: 'Mengunggah…', 4: 'Selesai' };
+  var PG_BASE = { 1: 0, 2: 8, 3: 48, 4: 95 }, PG_SPAN = { 1: 8, 2: 40, 3: 47, 4: 5 };
+  function pgStart(i, n, name) {
+    PG.i = i; PG.n = n;
+    var z = $('#mdZone'); z.dataset.st = 'run'; $('#mdProg').hidden = false;
+    var im = $('#pgThumb'); im.hidden = true; im.removeAttribute('src');
+    $('#pgName').textContent = name; $('#pgBadge').textContent = '';
+    pgStage(1, 0);
+  }
+  function pgStage(s, f) {
+    f = Math.max(0, Math.min(1, f || 0));
+    var pct = PG_BASE[s] + PG_SPAN[s] * f;
+    $('#pgBar').style.width = (((PG.i + pct / 100) / PG.n) * 100).toFixed(1) + '%';
+    Array.prototype.forEach.call(document.querySelectorAll('#pgSteps li'), function (li) {
+      var k = +li.dataset.s; li.className = k < s ? 'ok' : k === s ? 'on' : '';
+    });
+    $('#pgTitle').textContent = (PG.n > 1 ? 'Gambar ' + (PG.i + 1) + ' dari ' + PG.n + ' · ' : '') + PG_LABEL[s] + (s === 3 ? ' ' + Math.round(f * 100) + '%' : '');
+  }
+  function pgThumb(url) { var im = $('#pgThumb'); im.src = url; im.hidden = false; }
+  function pgDone(before, after) {
+    var z = $('#mdZone'); z.dataset.st = 'done'; $('#pgBadge').textContent = '✓';
+    $('#pgBar').style.width = (((PG.i + 1) / PG.n) * 100).toFixed(1) + '%';
+    Array.prototype.forEach.call(document.querySelectorAll('#pgSteps li'), function (li) { li.className = 'ok'; });
+    $('#pgTitle').textContent = 'Berhasil diunggah';
+    $('#pgName').textContent = fmtSize(before) + ' → ' + fmtSize(after) + (before > after ? ' (hemat ' + Math.round((1 - after / before) * 100) + '%)' : '');
+  }
+  function pgFail(text) {
+    $('#mdZone').dataset.st = 'fail'; $('#pgBadge').textContent = '✕';
+    $('#pgTitle').textContent = 'Gagal mengunggah'; $('#pgName').textContent = text;
+  }
+
   /* kecilkan (maks. 1200 px lebar) lalu kompres ke WebP; kualitas/ukuran diturunkan bertahap sampai <= ~180 KB */
   async function compressImage(file) {
     var bmp;
     try { bmp = await createImageBitmap(file, { imageOrientation: 'from-image' }); }
     catch (e) { try { bmp = await createImageBitmap(file); } catch (e2) { throw new Error('Format gambar tidak didukung. Pakai JPG, PNG, atau WebP.'); } }
+    try {                                                        /* thumbnail kecil untuk tampilan proses */
+      var tc = document.createElement('canvas'), ts = Math.min(1, 160 / Math.max(bmp.width, bmp.height));
+      tc.width = Math.max(1, Math.round(bmp.width * ts)); tc.height = Math.max(1, Math.round(bmp.height * ts));
+      tc.getContext('2d').drawImage(bmp, 0, 0, tc.width, tc.height); pgThumb(tc.toDataURL('image/jpeg', 0.7));
+    } catch (e3) {}
     var scale = Math.min(1, MEDIA.maxW / bmp.width), q = 0.82, out = null, w = bmp.width, h = bmp.height;
     for (var i = 0; i < 12; i++) {
+      pgStage(2, 1 - 1 / (i + 1.6)); await sleep(30);            /* beri waktu browser menggambar progress sebelum kerja berat */
       w = Math.max(1, Math.round(bmp.width * scale)); h = Math.max(1, Math.round(bmp.height * scale));
       var c = document.createElement('canvas'); c.width = w; c.height = h;
       var x = c.getContext('2d'); x.drawImage(bmp, 0, 0, w, h);
@@ -444,30 +485,49 @@
       if (q > 0.55) q -= 0.09; else if (w > 640) scale *= 0.85; else break;
     }
     if (bmp.close) bmp.close();
+    pgStage(2, 1);
     return { blob: out, w: w, h: h };
   }
-  async function uploadFile(file, status) {
+  /* unggah lewat XMLHttpRequest supaya persen unggahan bisa ditampilkan */
+  function postMedia(body, onProgress) {
+    return new Promise(function (res, rej) {
+      var x = new XMLHttpRequest();
+      x.open('POST', '/api/admin/media'); x.withCredentials = true; x.setRequestHeader('Content-Type', 'application/json');
+      x.upload.onprogress = function (e) { if (e.lengthComputable) onProgress(e.loaded / e.total); };
+      x.onerror = x.ontimeout = function () { rej(new Error('Tidak bisa terhubung ke server.')); };
+      x.onload = function () {
+        var j = null; try { j = x.responseText ? JSON.parse(x.responseText) : null; } catch (e) {}
+        if (x.status >= 200 && x.status < 300) return res(j);
+        rej(new Error((j && j.error) || (x.status === 401 || x.status === 403 ? 'Sesi login habis. Muat ulang halaman.' : 'Gagal (' + x.status + ').')));
+      };
+      x.send(JSON.stringify(body));
+    });
+  }
+  async function uploadFile(file) {
     if (!/^image\//i.test(file.type)) throw new Error('File harus berupa gambar (JPG, PNG, atau WebP).');
     if (file.size > 25 * 1024 * 1024) throw new Error('File terlalu besar (maks. 25 MB).');
-    status('Mengecilkan dan mengompres…');
+    pgStage(1, 1); await sleep(30);
     var r = await compressImage(file);
-    status('Mengunggah (' + Math.round(r.blob.size / 1024) + ' KB)…');
-    return mediaApi('/api/admin/media', { method: 'POST', body: { name: file.name, w: r.w, h: r.h, data: await blobToBase64(r.blob) } });
+    pgStage(3, 0);
+    var data = await blobToBase64(r.blob);
+    var res = await postMedia({ name: file.name, w: r.w, h: r.h, data: data }, function (f) { pgStage(3, f); });
+    pgStage(4, 1);
+    return res;
   }
 
-  function mdMsg(t) { $('#mdMsg').textContent = t; }
+  function mdMsg(t, kind) { var p = $('#mdMsg'); p.textContent = t; p.className = 'hint' + (kind ? ' ' + kind : ''); }
   function syncSel() {
     Array.prototype.forEach.call(document.querySelectorAll('#mdGrid .mi'), function (d) { d.classList.toggle('sel', d.dataset.url === MEDIA.sel); });
     $('#mdOk').disabled = !MEDIA.sel || MEDIA.busy;
   }
   function closeMedia() { $('#mediaDlg').hidden = true; MEDIA.cb = null; MEDIA.sel = null; }
   function pickMedia(url) { var cb = MEDIA.cb; closeMedia(); if (cb) cb(url); }
-  function renderGrid(items) {
+  function renderGrid(items, flash) {
     var g = $('#mdGrid'); g.textContent = '';
     if (MEDIA.sel && !items.some(function (m) { return m.url === MEDIA.sel; })) MEDIA.sel = null;
     if (!items.length) { var p = document.createElement('p'); p.className = 'hint'; p.textContent = 'Belum ada gambar. Unggah yang pertama.'; g.appendChild(p); syncSel(); return; }
     items.forEach(function (m) {
-      var d = document.createElement('div'); d.className = 'mi'; d.dataset.url = m.url; d.tabIndex = 0; d.setAttribute('role', 'button'); d.setAttribute('aria-label', 'Pilih gambar ' + m.name);
+      var d = document.createElement('div'); d.className = 'mi' + (flash && flash.indexOf(m.url) >= 0 ? ' new' : ''); d.dataset.url = m.url; d.tabIndex = 0; d.setAttribute('role', 'button'); d.setAttribute('aria-label', 'Pilih gambar ' + m.name);
       var im = document.createElement('img'); im.src = m.url; im.alt = ''; im.loading = 'lazy';
       var s = document.createElement('span'); s.textContent = Math.round(m.bytes / 1024) + ' KB · ' + m.w + '×' + m.h;
       var ck = document.createElement('i'); ck.className = 'ck'; ck.textContent = '✓';
@@ -478,41 +538,60 @@
       x.addEventListener('click', function (e) {
         e.stopPropagation();
         if (!confirm('Hapus gambar ini dari galeri?')) return;
-        mediaApi('/api/admin/media?id=' + encodeURIComponent(m.id), { method: 'DELETE' }).then(function () { if (MEDIA.sel === m.url) MEDIA.sel = null; loadGrid(); }, function (err) { mdMsg(err.message); });
+        d.style.opacity = '.4'; d.style.pointerEvents = 'none'; mdMsg('Menghapus gambar…');
+        mediaApi('/api/admin/media?id=' + encodeURIComponent(m.id), { method: 'DELETE' }).then(function () {
+          if (MEDIA.sel === m.url) MEDIA.sel = null; mdMsg('Gambar dihapus.', 'ok'); loadGrid();
+        }, function (err) { d.style.opacity = ''; d.style.pointerEvents = ''; mdMsg(err.message, 'err'); });
       });
       d.appendChild(im); d.appendChild(ck); d.appendChild(s); d.appendChild(x); g.appendChild(d);
     });
     syncSel();
+    if (flash && flash.length) { var sl = g.querySelector('.mi.sel') || g.querySelector('.mi.new'); if (sl && sl.scrollIntoView) sl.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   }
-  function loadGrid() { mediaApi('/api/admin/media').then(renderGrid, function (e) { mdMsg(e.message); }); }
+  function loadGrid(flash) { mediaApi('/api/admin/media').then(function (items) { renderGrid(items, flash); }, function (e) { mdMsg(e.message, 'err'); }); }
   function openMedia(cb) {
-    MEDIA.cb = cb; MEDIA.sel = null; MEDIA.busy = false;
+    MEDIA.cb = cb; MEDIA.sel = null;
     $('#mediaDlg').hidden = false; $('#mdLink').value = ''; syncSel();
-    mdMsg('Klik gambar untuk memilih, lalu tekan “Pakai gambar”. Klik dua kali untuk langsung memakai.'); loadGrid();
-    $('#mdZone').focus();
+    if (!MEDIA.busy) mdMsg('Klik gambar untuk memilih, lalu tekan “Pakai gambar”. Klik dua kali untuk langsung memakai.');
+    loadGrid(); $('#mdZone').focus();
   }
   function setBusy(b) {
-    MEDIA.busy = b; $('#mdZone').classList.toggle('busy', b);
+    MEDIA.busy = b; var z = $('#mdZone'); z.classList.toggle('busy', b); $('#mdProg').hidden = !b;
+    if (!b) delete z.dataset.st;
     ['#mdPick', '#mdUse'].forEach(function (s) { $(s).disabled = b; });
     syncSel();
   }
   /* satu atau banyak file (dari tombol, seret-lepas, atau tempel): kompres, unggah, lalu pilih yang terakhir */
   async function handleFiles(list) {
     var files = Array.prototype.filter.call(list || [], function (f) { return /^image\//i.test(f.type); });
-    if (!files.length) return mdMsg('File harus berupa gambar (JPG, PNG, atau WebP).');
-    if (files.length > 10) { files = files.slice(0, 10); }
-    setBusy(true);
-    var last = '', errs = [];
+    if (!files.length) return mdMsg('File harus berupa gambar (JPG, PNG, atau WebP).', 'err');
+    var extra = '';
+    if (files.length > 10) { files = files.slice(0, 10); extra = ' Hanya 10 gambar pertama yang diproses.'; }
+    setBusy(true); mdMsg('Memproses ' + files.length + ' gambar…');
+    var ok = [], errs = [];
     for (var i = 0; i < files.length; i++) {
+      var f = files[i];
+      pgStart(i, files.length, f.name);
       try {
-        var r = await uploadFile(files[i], function (t) { mdMsg((files.length > 1 ? '(' + (i + 1) + '/' + files.length + ') ' : '') + t); });
-        last = r.url;
-      } catch (e) { errs.push(files[i].name + ': ' + e.message); }
+        var r = await uploadFile(f);
+        ok.push(r.url); pgDone(f.size, r.bytes);
+        if (i < files.length - 1) await sleep(600);              /* tampilkan "Berhasil" sebentar sebelum file berikutnya */
+      } catch (e) {
+        errs.push(f.name + ': ' + e.message); pgFail(e.message); await sleep(2200);
+      }
     }
-    setBusy(false);
-    if (last) MEDIA.sel = last;
-    loadGrid();
-    mdMsg(errs.length ? errs.join(' · ') : 'Selesai. Tekan “Pakai gambar” untuk memakainya.');
+    if (ok.length) { MEDIA.sel = ok[ok.length - 1]; loadGrid(ok); await sleep(1100); }   /* gambar baru muncul di galeri selagi status "Berhasil" masih terlihat */
+    setBusy(false); $('#mdZone').focus();
+    if (errs.length) mdMsg(errs.join(' · ') + (ok.length ? ' (' + ok.length + ' lainnya berhasil)' : ''), 'err');
+    else mdMsg(ok.length + ' gambar berhasil diunggah dan dipilih. Tekan “Pakai gambar” untuk memakainya.' + extra, 'ok');
+  }
+  /* ambil file gambar dari clipboard: lewat items (paling andal untuk screenshot / "Copy image"), lalu files */
+  function clipFiles(e) {
+    var cd = e.clipboardData, out = [];
+    if (!cd) return out;
+    if (cd.items) Array.prototype.forEach.call(cd.items, function (it) { if (it.kind === 'file' && /^image\//i.test(it.type)) { var f = it.getAsFile(); if (f) out.push(f); } });
+    if (!out.length && cd.files && cd.files.length) out = Array.prototype.filter.call(cd.files, function (f) { return /^image\//i.test(f.type); });
+    return out;
   }
   function hasFiles(e) { var t = e.dataTransfer && e.dataTransfer.types; return !!t && Array.prototype.indexOf.call(t, 'Files') >= 0; }
   function mediaInit() {
@@ -531,8 +610,13 @@
     dlg.addEventListener('dragover', function (e) { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; zone.classList.add('over'); });
     dlg.addEventListener('dragleave', function (e) { if (!dlg.contains(e.relatedTarget)) zone.classList.remove('over'); });
     dlg.addEventListener('drop', function (e) { if (!hasFiles(e)) return; e.preventDefault(); zone.classList.remove('over'); handleFiles(Array.prototype.slice.call(e.dataTransfer.files)); });
-    /* tempel gambar dari clipboard (Ctrl+V), mis. hasil screenshot */
-    dlg.addEventListener('paste', function (e) { var fs = e.clipboardData && e.clipboardData.files; if (fs && fs.length) { e.preventDefault(); handleFiles(Array.prototype.slice.call(fs)); } });
+    /* tempel gambar dari clipboard (Ctrl+V), mis. screenshot. Dipasang di tingkat halaman supaya tetap jalan
+       walau fokus keyboard tidak sedang berada di dalam jendela; hanya aktif selama jendela terbuka. */
+    document.addEventListener('paste', function (e) {
+      if (dlg.hidden || MEDIA.busy) return;
+      var fs = clipFiles(e);
+      if (fs.length) { e.preventDefault(); handleFiles(fs); }          /* kalau yang ditempel teks (mis. link), dibiarkan normal */
+    });
     $('#mdUse').addEventListener('click', function () {
       var u = $('#mdLink').value.trim();
       if (!isImg(u)) return mdMsg('Link harus diawali https://, assets/ atau /media/');
